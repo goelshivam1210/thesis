@@ -1,0 +1,177 @@
+\documentclass[11pt,twoside]{report}
+
+%=====================================
+%==== Packages Used ==================
+%=====================================
+
+\usepackage{comment}
+
+% comment explaining Tufts Formatting rules, as per their website guidelines
+\begin{comment}
+The following comes from 
+
+    https://students.tufts.edu/registrar/make-request/apply-graduation/graduation-information-graduate-students
+
+The final thesis or dissertation should be assembled in the order:
+    -Title page
+    -Abstract (<= 350 words for PhD, <= 150 words for MS, doublespaced)
+    -Acknowledgements (optional)
+    -Table of Contents
+    -List of Tables (if applicable)
+    -List of Figures (if applicable)
+    -Text (main body of thesis)
+    -Appendix or appendices (if applicable)
+    -Endnotes (if compiled at end of the text)
+    -Bibliography
+
+All text material and preliminary pages, including the abstract, should be double-spaced. Notes, bibliographic references, and long quotations may be single-spaced. The left and right margins should be 1 inch wide. The top and bottom margins should be one full inch.
+
+The title page should be lowercase Roman numeral "i" but not typed. Subsequent pages should be typed as "ii, iii," etc., until the thesis proper is reached. The first page of the thesis proper is Arabic "1" and REPEATS THE TITLE ONLY (how stupid is this...). Pagination appears within the one-inch margin, recommended about 3/4" from the top and right-hand edges of the paper or 3/4" from the bottom edge of the paper, centered. Pagination that includes pages such as "10a," "10b," etc., should be avoided.
+
+Students are the copyright holders of their thesis/dissertation. No additional steps (e.g. formal registration, displaying ©) are necessary for students to become the copyright holder of their work. but screw it I'm putting the © anyway becaues it makes me feel fancy and others have done it.
+\end{comment}
+
+% comment explaining all packages
+\begin{comment}
+Many of these are basic, and just give nice math functionality. These include:
+    amssymb, amsfonts, amsthm, amsmath, mathtools, 
+    physics (for \dd, to get straight d in mathmode),
+    mathrsfs (fancy cursive mathfont).
+        
+The others (nonstandard) are:
+    -Babel: used for lipsum because I was using LuaTeX, 
+            though if using pdfLaTeX, this can probably
+            be removed.
+    -yfonts: used for gothic name font. it looks neat!
+    -setspace: used for double spacing
+
+The next collection of packages are common formatting tools:
+    -hyperref: Makes references clickable, hidelinks means 
+               there is no redbox around links in the pdf.
+    -cleveref: when referencing something, this will 
+               automatically put Eq. or Fig. or Lemma. or
+               Def. in front of referenced number, depending
+               on environment used. 
+    -geometry: sets papersize, margin, and binding offset 
+               (which makes it look nice when printed, 
+               standard offset is 6mm). 
+    -enumitem: classic for making lists/bullets
+    -graphicx: importing photos
+    -caption : can be used to center caption alignment under
+               figures, which I like personally...
+    -tikz    : for all the masochists out there who love 
+               making a beautiful diagram from the ground up
+    
+Up next is all things headers and footers. Standard things here are fancyhdr and fancy pagestyle. The setlength and addtolength are just to stop LaTeX/Overleaf from crying. The rest is how I wanted my own header. The bar overhead, so that when printed, on the left-hand page it displays (from left to right) the number and the chapter, and on the right-hand page it displays the specific section and then number. 
+
+Finally, there are the theoremstyle/environment definitions. I also used 'numberwithin' so that, for example, the second theorem in chapter 3, section 4, would be numbered theorem 3.4.2
+
+Finally finally, I wanted a blank page between the title and abstract. So I defined a new command which would do just that, '\blank'. the cleardoublepage ensures the next page starts on an odd page (right side when printed)
+\end{comment}
+
+
+\usepackage{amssymb,amsfonts,amsthm,amsmath,mathtools}
+\usepackage{physics,mathrsfs}
+\usepackage{lipsum}
+\usepackage[base]{babel}
+\usepackage{booktabs}
+\usepackage{yfonts}
+\usepackage{setspace}
+\usepackage[numbers]{natbib}
+\usepackage[hidelinks]{hyperref}
+\usepackage[capitalize,nameinlink,noabbrev]{cleveref}
+\usepackage[letterpaper,margin=1in,bindingoffset=6mm]{geometry}
+\usepackage{caption}
+\usepackage{enumitem}
+\usepackage{graphicx,tikz}
+\usepackage{cancel}
+\usepackage{makecell}
+\usepackage{fancyhdr}
+\usepackage[export]{adjustbox}
+\usepackage[math]{alp}
+\usepackage{bbm}
+\usepackage{algorithm} 
+\usepackage{algorithmic}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage[nameinlink]{cleveref}
+
+
+\pagestyle{fancy}
+\setlength{\headheight}{13.59999pt}
+\addtolength{\topmargin}{-1.59999pt}
+\fancyhead[RE]{Chapter \thechapter}
+\fancyhead[LE,RO]{\thepage}
+\fancyhead[LO]{\rightmark}
+\cfoot{}
+
+\theoremstyle{plain}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+\newtheorem{remark}{Remark}
+\newtheorem{example}{Example}
+\numberwithin{definition}{section}
+\numberwithin{theorem}{section}
+\numberwithin{lemma}{section}
+\numberwithin{proposition}{section}
+\numberwithin{corollary}{section}
+\numberwithin{remark}{section}
+\numberwithin{example}{section}
+
+\newcommand{\blank}{
+\clearpage 
+\begingroup
+  \pagestyle{plain}
+  \cleardoublepage
+\endgroup
+}
+
+
+\graphicspath{{figures/}{figures/chapter1/}}
+
+
+%=====================================
+%==== Document =======================
+%=====================================
+
+%====== Enable fast section-only compile (point 6) ======
+% Adjust this includeonly line while editing one chapter.
+% For full recompile, comment or remove this line.
+\includeonly{chapters/chapter2/chapter2_background/main}
+
+\begin{document}
+
+\pagenumbering{roman}
+
+\input{macros/notation}
+\input{frontmatter/titlepage}
+
+% after title page, begin double spacing
+\begin{doublespace}
+
+
+\input{frontmatter/abstract}
+\input{frontmatter/acknowledgments}
+
+
+\tableofcontents
+\listoffigures
+% \cleardoublepage
+
+\setcounter{page}{0}
+\pagenumbering{arabic}
+
+%Chapters (use include/includeonly for fast focus builds)
+\include{chapters/chapter1/main}
+\include{chapters/chapter2/chapter2_background/main}
+
+\end{doublespace}
+
+
+\bibliographystyle{plainnat}
+\bibliography{bibliography}
+
+\end{document}

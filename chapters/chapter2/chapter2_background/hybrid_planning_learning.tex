@@ -1,0 +1,16 @@
+\section{Hybrid Planning and Learning}
+\label{sec:hybrid}
+
+Symbolic planning and reinforcement learning provide complementary approaches to sequential decision making. Symbolic planning enables structured reasoning over high-level representations but assumes accurate and complete models of the environment. Reinforcement learning enables agents to learn behaviors through interaction but operates over low-level state representations and often lacks explicit structure. Hybrid planning and learning systems aim to combine these paradigms by integrating symbolic reasoning with learned execution.
+
+In hybrid systems, decision making is performed over two distinct but related representations. The symbolic model is defined by a planning task $\PlanningTask = \langle \Fluents, \Operators, \SymState_0, \Goal \rangle$, while the execution model is defined by a Markov decision process $M = \langle \States, \Actions, \Transition, \Reward, \Discount \rangle$. The symbolic model operates over discrete, structured representations, whereas the execution model operates over environment states that may be continuous and stochastic.
+
+A key component of hybrid systems is an abstraction function $\Abstraction : \States \rightarrow \SymStates$ that maps environment states to symbolic states. This mapping enables symbolic reasoning over high-level representations derived from low-level observations.
+
+Operators in the symbolic model correspond to behaviors executed in the environment. Each operator $\Operator \in \Operators$ is associated with a policy $\Policy_{\Operator}(a \mid s)$ that defines how the operator is realized in the execution model. Thus, symbolic plans correspond to sequences of policies executed in the environment.
+
+A hybrid planning and learning system can be defined as $\Hybrid = \langle \PlanningTask, M, \Abstraction \rangle$, which integrates symbolic reasoning, environment dynamics, and abstraction between representations.
+
+A central challenge in hybrid systems is the mismatch between the symbolic model and the execution model. An operator $\Operator$ may be applicable in a symbolic state $\SymState$, i.e., $\SymState \models \Pre_{\Operator}$, but its execution through $\Policy_{\Operator}$ in a corresponding environment state $s$ may fail to achieve the intended effects. Such discrepancies arise due to incomplete or inaccurate symbolic models, stochastic dynamics, or limitations of learned policies.
+
+This mismatch highlights the need for mechanisms that incorporate feedback from execution to improve decision making, either by refining policies, updating symbolic models, or improving the abstraction between representations. Enabling such interactions is central to the design of hybrid planning and learning systems.
