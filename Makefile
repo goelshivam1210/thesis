@@ -1,5 +1,3 @@
-Makefile
-
 # LaTeX Thesis Build System
 # Usage:
 #   make          - Compile thesis

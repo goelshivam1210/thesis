@@ -1,18 +1,13 @@
 \chapter{Background}
 
-This chapter provides the background necessary for the remainder of the dissertation. It is divided into two parts. The first part introduces the broader perspective of this thesis, situating it within the context of intelligent agents operating in open-world environments. The second part presents the formal frameworks used throughout the dissertation.
+This chapter provides the background necessary for the remainder of the dissertation. It is organized in two parts. The first part surveys prior work on open-world autonomy, situating this thesis within the broader landscape of AI and robotics research. The second part introduces the formal frameworks that underpin the technical contributions of the dissertation.
 
-The dissertation is grounded in the classical agent, environment paradigm, where an agent perceives, reasons, and acts to achieve its goals. In real-world settings, however, agents must operate under incomplete knowledge and encounter novel situations that were not anticipated during design or training. This motivates the study of open-world agents, which must be capable of sensing, reasoning, and acting under such uncertainty.
+The dissertation is grounded in the classical agent--environment paradigm, in which an agent perceives its surroundings, reasons and plans over possible actions, and executes those actions to achieve its goals. This perceive--plan--execute loop, and its natural extension to include adaptation and recovery, provides a unifying lens through which to examine the challenges of open-world autonomy. In closed-world settings, each stage of this loop has been studied extensively and with considerable success. However, when agents are deployed in open-world environments, the assumptions underlying each stage are violated: new objects may appear, dynamics may change, and actions may fail in unforeseen ways. Critically, novelty at any stage of the loop can propagate failures across the others, making open-world autonomy a systemic challenge rather than an isolated one.
 
-Following this perspective, this chapter first discusses the requirements and challenges associated with open-world agency, including perception under novelty, decision-making with incomplete models, and execution with adaptation and recovery. These discussions provide a conceptual foundation for understanding the broader landscape of AI and robotics systems that address different aspects of open-world interaction.
+Section~\ref{sec:related_work} reviews prior work along each stage of the agent loop under open-world conditions, sensing, planning and learning, and execution and recovery, and identifies the gaps that motivate the contributions of this dissertation. Section~\ref{sec:preliminaries} then introduces the formal models used throughout: symbolic planning (Section~\ref{sec:symbolic_planning}), reinforcement learning (Section~\ref{sec:rl}), hybrid planning and learning systems (Section~\ref{sec:hybrid}), and a formalization of novelty relative to an agent's knowledge and models (Section~\ref{subsec:novelty}).
 
-The chapter then introduces the formal models used throughout the dissertation. Specifically, the dissertation builds on three paradigms for sequential decision-making: symbolic planning, reinforcement learning, and hybrid planning and learning. These paradigms provide distinct but complementary models for representing and solving decision-making problems.
-
-Section~\ref{sec:symbolic_planning} presents the formalism of symbolic planning, including representations of states, fluents, and operators. Section~\ref{sec:rl} presents reinforcement learning in the Markov Decision Process framework. Section~\ref{sec:hybrid} presents a formal model of hybrid planning and learning systems that integrates symbolic reasoning with execution in the environment.
-
-
-\section{Open-World Agents and Environments}
-\label{sec:open_world}
+\section{Related Work}
+\label{sec:related_work}
 
 \input{chapters/chapter2/background/related_work/main}
 

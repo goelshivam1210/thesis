@@ -1,0 +1,18 @@
+\subsection{Novelty in Open-World Environments}
+\label{subsec:novelty}
+
+Novelty is defined relative to an agent’s knowledge. An element of the environment is considered novel if it cannot be represented or inferred using the agent’s current models of the world.
+
+Let the agent’s knowledge be defined by a symbolic model $\PlanningTask = \langle \Fluents, \Operators, \SymState_0, \Goal \rangle$ and an execution model $M = \langle \States, \Actions, \Transition, \Reward, \Discount \rangle$. The symbolic model specifies structured knowledge over abstract states and operators, while the execution model specifies the dynamics of interaction with the environment.
+
+A novelty corresponds to the introduction of elements that are not contained in the agent’s current knowledge. These may include new fluents, operators, states, actions, or changes in transition dynamics. Formally, a novelty induces an extension of the agent’s model, such as $\Fluents'$, $\Operators'$, $\States'$, or $\Actions'$, where at least one of the following holds:
+\[
+\Fluents' \cap \Fluents = \emptyset, \quad
+\Operators' \cap \Operators = \emptyset, \quad
+\States' \not\subseteq \States, \quad
+\Actions' \not\subseteq \Actions.
+\]
+
+In hybrid planning and learning systems, novelty may manifest as a discrepancy between symbolic reasoning and execution. In particular, an operator $\Operator \in \Operators$ may be applicable in a symbolic state $\SymState$, i.e., $\SymState \models \Pre_{\Operator}$, but its execution in a corresponding environment state may fail to produce the intended effects. Such discrepancies arise when the agent’s models are incomplete with respect to the true environment.
+
+This formulation captures novelty as a deviation between the agent’s current knowledge and the environment, and provides a basis for reasoning about adaptation in open-world settings.
