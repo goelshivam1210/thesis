@@ -4,6 +4,36 @@ Some efforts have sought to address multiple stages of the open-world agent loop
 % Thesis Contributions: Three Tenets
 % =============================================================
 
-This dissertation identifies three tenets on which progress is needed to advance the development of autonomous agents and robots for open-world environments. First, the field requires standardized environments and benchmarks that allow systematic evaluation of agents under controlled novelty, enabling rigorous comparison of approaches and driving progress in open-world AI. Second, there is a need for architectures and methods that integrate planning and learning specifically for novelty handling, allowing agents to detect execution failures, invoke learning-based recovery, and reuse acquired knowledge across subsequent encounters with novelty. Third, robotic systems require skill learning approaches that produce generalizable interaction policies, enabling robots to perform diverse manipulation tasks across objects and platforms without retraining from scratch.
+The preceding discussion has examined open-world autonomy 
+through the lens of the perceive--plan--execute loop, 
+identifying challenges at each stage: sensing under novelty, 
+planning and learning with incomplete models, and execution 
+and recovery when prior knowledge becomes insufficient. 
+Drawing primarily from the challenges identified in planning 
+and learning (Section~\ref{sec:rw_planning_learning}) and 
+execution and recovery (Section~\ref{sec:rw_execution}), this 
+dissertation makes progress on three interconnected challenges. 
+First, the lack of standardized environments for systematically 
+evaluating agents under controlled novelty limits rigorous 
+comparison of approaches and slows progress in open-world AI. 
+Second, existing hybrid planning-learning systems do not 
+adequately address novelty handling: they lack mechanisms for 
+detecting execution failures caused by qualitative environmental 
+changes, learning recovery behaviors, and reusing acquired 
+knowledge across subsequent encounters with novelty. Third, 
+robotic skill learning methods remain limited in their ability 
+to produce interaction policies that generalize across objects 
+and platforms, particularly for contact-rich manipulation tasks.
 
-These three tenets correspond to the core contributions of this dissertation. Chapter~3 introduces benchmark environments for evaluating open-world agents under controlled novelty injection. Chapter~4 develops hybrid planning-learning architectures that enable agents to adapt and recover when previously learned models become insufficient. Chapter~5 presents object-centric, force-based reinforcement learning methods for robotic manipulation that generalize across objects and robot embodiments. Together, these contributions advance the goal of building autonomous agents and robots that can operate robustly in open-world environments where novelty is not the exception but the norm.
+These three challenges correspond to the core contributions of 
+this dissertation. Chapter~3 introduces benchmark environments 
+for evaluating open-world agents under controlled novelty 
+injection. Chapter~4 develops hybrid planning-learning 
+architectures that enable agents to adapt and recover when 
+previously learned models become insufficient. Chapter~5 
+presents object-centric, force-based reinforcement learning 
+methods for robotic manipulation that generalize across objects 
+and robot embodiments. Together, these contributions advance 
+the goal of building autonomous agents and robots that can 
+operate robustly in open-world environments where novelty is 
+not the exception but the norm.
