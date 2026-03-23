@@ -82,6 +82,7 @@ Finally finally, I wanted a blank page between the title and abstract. So I defi
 \usepackage[capitalize,nameinlink,noabbrev]{cleveref}
 \usepackage[letterpaper,margin=1in,bindingoffset=6mm]{geometry}
 \usepackage{caption}
+\usepackage{subcaption}
 \usepackage{enumitem}
 \usepackage{graphicx,tikz}
 \usepackage{cancel}
@@ -94,6 +95,14 @@ Finally finally, I wanted a blank page between the title and abstract. So I defi
 \usepackage{algorithmic}
 \usepackage{multirow}
 \usepackage{multicol}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{siunitx}
+\sisetup{
+    separate-uncertainty = true,
+    table-align-text-post = false
+}
 
 \pagestyle{fancy}
 \setlength{\headheight}{13.59999pt}
@@ -128,8 +137,7 @@ Finally finally, I wanted a blank page between the title and abstract. So I defi
 }
 
 
-\graphicspath{{figures/}{figures/chapter1/}}
-
+% Figures: use paths relative to this file, e.g. \includegraphics{figures/chapter3/name.png}.
 
 %=====================================
 %==== Document =======================
@@ -165,7 +173,7 @@ Finally finally, I wanted a blank page between the title and abstract. So I defi
 %Chapters (use include/includeonly for fast focus builds)
 \include{chapters/chapter1/main}
 \include{chapters/chapter2/background/main}
-
+\include{chapters/chapter3/main}
 \end{doublespace}
 
 
