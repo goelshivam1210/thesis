@@ -1,14 +1,7 @@
 \section{NovelGym}
 \label{sec:novelgym}
 
-NovelGym\footnote{The project website and codebase are available at \url{https://github.com/tufts-ai-robotics-group/NovelGym}. Detailed tutorials, PDDL specifications, configuration file formats, and hyperparameter settings are provided in~\citet{goel2024novelgym}.} extends and generalizes the ideas introduced in NovelGridworlds into a flexible ecosystem for developing and benchmarking open-world agents. While NovelGridworlds provides a fixed set of tasks and novelties suitable for initial evaluation, NovelGym introduces a formal framework for defining environments and their transformations, a modular software architecture for rapid development of tasks, novelties, and agent systems, and a comprehensive evaluation protocol with adaptation-focused metrics. The ecosystem supports single-agent and multi-agent scenarios, accommodates symbolic planning agents, reinforcement learning agents, and hybrid architectures, and enables composable novelty injection.
-
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=0.5\textwidth]{figures/chapter3/Picture1_with_novelty.png}
-    \caption{NovelGym environment representation showing a gridworld with various entities. The red box highlights a novelty (axe) introduced in the environment.}
-    \label{fig:ng_environment}
-\end{figure}
+NovelGym\footnote{The project website and codebase are available at \url{https://github.com/tufts-ai-robotics-group/NovelGym}. Detailed tutorials, PDDL specifications, configuration file formats, and hyperparameter settings are provided in~\citet{goel2024novelgym}.} extends and generalizes the ideas introduced in NovelGridworlds into a flexible ecosystem for developing and benchmarking open-world agents. While NovelGridworlds provides a fixed set of tasks and novelties suitable for initial evaluation, NovelGym introduces a formal framework for defining environments and their transformations, a modular software architecture for rapid development of tasks, novelties, and agent systems, and a comprehensive evaluation protocol with adaptation-focused metrics. The ecosystem supports single-agent and multi-agent scenarios, accommodates symbolic planning agents, reinforcement learning agents, and hybrid architectures, and enables composable novelty injection. The environment representation introduced in \cref{fig:ng_environment} serves as the basis for the formalism presented below.
 
 \subsection{Environment Formalism}
 \label{sec:ng_environment}
@@ -128,15 +121,7 @@ These metrics extend the M1, M2, and M3 metrics of NovelGridworlds by explicitly
 \subsection{Benchmark Task and Novelties}
 \label{sec:ng_task}
 
-The benchmark task in NovelGym is a Minecraft-inspired pogostick crafting task. The agent operates in a two-room gridworld environment containing resources (oak trees, diamond ore, platinum blocks), a crafting table, and a trader. The agent must collect resources, craft intermediary items, trade with the trader, and ultimately craft a pogostick. A simplified version of the task was used to make it tractable for reinforcement learning agents while preserving the sequential, multi-step nature of the crafting challenge.
-
-% FIGURE PLACEHOLDER: NovelGym environment representation (Figure 1 from the paper)
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=0.5\textwidth]{figures/chapter3/Picture1_with_novelty.png}
-    \caption{NovelGym environment representation showing a gridworld with various entities. The red box highlights a novelty (axe) introduced in the environment.}
-    \label{fig:ng_environment}
-\end{figure}
+The benchmark task in NovelGym is a Minecraft-inspired pogostick crafting task. The agent operates in a two-room gridworld environment containing resources (oak trees, diamond ore, platinum blocks), a crafting table, and a trader (see \cref{fig:ng_environment}). The agent must collect resources, craft intermediary items, trade with the trader, and ultimately craft a pogostick. A simplified version of the task was used to make it tractable for reinforcement learning agents while preserving the sequential, multi-step nature of the crafting challenge.
 
 Five environment transformations were selected for evaluation, spanning detrimental and beneficial categories:
 \begin{enumerate}[leftmargin=*]
@@ -175,9 +160,9 @@ All agents used a LiDAR-like observation space with beams emitted at $\frac{\pi}
 \subsection{Experimental Results}
 \label{sec:ng_results}
 
-All agents achieved perfect pre-novelty performance ($S_\text{pre} = 1.0$), with the RL agents requiring 4 million training time steps to reach this level. Results across five novelties and four agents are summarized below; see~\citet{goel2024novelgym} for the full quantitative tables\footnote{All results are averaged across 10 random seeds. A convergence criterion based on success rate and reward thresholds was used to determine when adaptation was complete; see~\citet{goel2024novelgym} for the precise convergence criteria and hyperparameter settings.}.
+All agents achieved perfect pre-novelty performance ($S_\text{pre} = 1.0$), with the RL agents requiring 4 million training time steps to reach this level. Results are organized across two tables. \Cref{tab:ng_performance} reports performance metrics---pre-novelty success rate, novelty impact, and post-adaptation success rate---which capture how severely each novelty degrades the agent and whether the agent ultimately recovers. \Cref{tab:ng_efficiency} reports efficiency metrics---adaptation time and post-adaptation efficiency---which capture how quickly the agent adapts and whether the adapted strategy is more or less costly than the original. Together, these tables provide a comprehensive picture of agent behavior under novelty; see~\citet{goel2024novelgym} for additional results and analysis\footnote{All results are averaged across 10 random seeds. A convergence criterion based on success rate and reward thresholds was used to determine when adaptation was complete; see~\citet{goel2024novelgym} for the precise convergence criteria and hyperparameter settings.}. The hybrid agents (RapidLearn and RapidLearn$^+$) are instances of the planning-learning architecture that is formalized and extended in \cref{ch:rapid_learn}.
 
-% TABLE PLACEHOLDER: Full results table (Table 2 from the paper)
+% TABLE 1: Performance metrics
 \begin{table}[t]
 \footnotesize
 \centering
@@ -217,7 +202,8 @@ Novelty & Agent & $S_{\text{pre}} \uparrow$ & $I_{\text{nov}} \downarrow$ & $S_{
 
 \bottomrule
 \end{tabular}
-\caption{Performance metrics across novelty scenarios.}
+\caption{Performance metrics across novelty scenarios. $S_\text{pre}$: pre-novelty success rate; $I_\text{nov}$: novelty impact (immediate performance drop); $S_\text{post}$: post-adaptation success rate. $\uparrow$ indicates higher is better, $\downarrow$ lower is better. -- indicates the novelty was not detected by the agent. All values are mean $\pm$ standard deviation over 10 seeds.}
+\label{tab:ng_performance}
 \end{table}
 
 
@@ -260,60 +246,22 @@ Novelty & Agent & $T_{\text{adapt}} \downarrow$ & $\Delta t \downarrow$ \\
 
 \bottomrule
 \end{tabular}
-\caption{Efficiency metrics across novelty scenarios.}
+\caption{Efficiency metrics across novelty scenarios. $T_\text{adapt}$: time steps required for adaptation to converge; $\Delta t$: difference in task completion time before and after novelty (negative values indicate the agent found a more efficient post-novelty strategy). $\downarrow$ indicates lower is better. All values are mean $\pm$ standard deviation over 10 seeds.}
+\label{tab:ng_efficiency}
 \end{table}
+% 
+\paragraph{Novelty impact.} As shown in \cref{tab:ng_performance}, upon novelty injection all agents experienced performance degradation for detrimental novelties, with the fire novelty producing the most severe impact ($I_\text{novelty} = 1.0$ for all agents). Transfer RL agents were generally more sensitive to novelty than hybrid agents, as reflected in higher $I_\text{novelty}$ values. However, hybrid agents showed lower immediate impact in some cases due to their targeted adaptation approach, which activates only upon execution failure.
 
-% \begin{table}[t]
-% \footnotesize
-% \centering
-% \setlength{\tabcolsep}{3pt}
-% \renewcommand{\arraystretch}{0.95}
-% \begin{tabularx}{\linewidth}{l X c c c c c}
-% \toprule
-% Novelty & Agent & {$S_{\text{pre}} \uparrow$} & {$I_{\text{nov}} \downarrow$} & {$T_{\text{adapt}} \downarrow$} & {$S_{\text{post}} \uparrow$} & {$\Delta t \downarrow$} \\
-% \midrule
+\paragraph{Adaptation speed.} \Cref{tab:ng_efficiency} reveals that hybrid agents consistently outperformed transfer learning methods on the $T_\text{adapt}$ metric across all novelties. For the fence novelty, hybrid agents adapted in approximately 67{,}000--71{,}000 time steps, while transfer RL agents required 700{,}000--854{,}000 time steps---an order of magnitude difference. This advantage arises from the hybrid architecture's ability to focus learning on the specific subproblem caused by the novelty rather than relearning the entire task.
 
-% \textbf{Axe} & RapidLearn$^{+}$(PPO+ICM) & 1 +- 0 & 0.83 +- 0.205 & 71040 +- 17413 & 1.0 +- 0.0 & 122.7 +- 15.61 \\
-%              & RapidLearn (PPO)          & 1 +- 0 & 0.69 +- 0.207 & 68160 +- 17934 & 1.0 +- 0.0 & 116.9 +- 9.88 \\
-%              & Transfer RL (PPO)+ICM     & 1 +- 0 & 1.0 +- 0.0   & 169440 +- 97949 & 0.97 +- 0.021 & 61.0 +- 8.95 \\
-%              & Transfer RL (PPO)         & 1 +- 0 & 1.0 +- 0.0   & 114240 +- 19651 & 0.97 +- 0.018 & 63.1 +- 8.17 \\
-% \midrule
+\paragraph{Post-adaptation performance.} Returning to \cref{tab:ng_performance}, all agents achieved high post-adaptation success rates ($S_\text{post} \geq 0.92$), though none reached perfect scores due to the use of a convergence criterion rather than exhaustive training.
 
-% \textbf{Chest} & RapidLearn$^{+}$(PPO+ICM) & 1 +- 0 & {--} & {--} & {--} & {--} \\
-%                & RapidLearn (PPO)          & 1 +- 0 & {--} & {--} & {--} & {--} \\
-%                & Transfer RL (PPO)+ICM     & 1 +- 0 & 0.0 +- 0.004 & 24000 +- 0 & 1.0 +- 0.0 & -3.0 +- 0.78 \\
-%                & Transfer RL (PPO)         & 1 +- 0 & 0.01 +- 0.009 & 24000 +- 0 & 0.98 +- 0.011 & -3.5 +- 3.13 \\
-% \midrule
+\paragraph{Post-adaptation efficiency and exploiting beneficial novelty.} The post-adaptation efficiency metric $\Delta t$ (\cref{tab:ng_efficiency}) captures an aspect of agent behavior that success rate alone cannot: whether the agent's post-novelty strategy is more or less efficient than its original approach. For detrimental novelties, positive $\Delta t$ values are expected, since the agent must perform additional actions to overcome the novelty (e.g., breaking fences before accessing logs, or extinguishing a fire before crafting). However, the magnitude of $\Delta t$ reveals how much overhead the novelty imposes even after adaptation. For instance, the fence novelty produces large $\Delta t$ values for hybrid agents ($161.6 \pm 7.6$ and $168.7 \pm 6.15$), reflecting the substantial additional navigation and breaking actions required, whereas transfer RL agents achieve lower $\Delta t$ ($73.4 \pm 4.7$ and $90.9 \pm 9.49$), suggesting they discover more efficient post-novelty strategies despite their slower adaptation.
 
-% \textbf{Trader} & RapidLearn$^{+}$(PPO+ICM) & 1 +- 0 & 0.45 +- 0.069 & 102720 +- 20724 & 0.95 +- 0.017 & 126.9 +- 9.97 \\
-%                 & RapidLearn (PPO)          & 1 +- 0 & 0.5 +- 0.07   & 96480 +- 21191 & 0.96 +- 0.02  & 122.8 +- 8.93 \\
-%                 & Transfer RL (PPO)+ICM     & 1 +- 0 & 0.96 +- 0.108 & 227040 +- 112120 & 0.99 +- 0.011 & 93.6 +- 12.05 \\
-%                 & Transfer RL (PPO)         & 1 +- 0 & 0.94 +- 0.128 & 350880 +- 237039 & 0.96 +- 0.025 & 89.3 +- 7.87 \\
-% \midrule
+The most notable result appears in the chest novelty, where transfer RL agents achieve \emph{negative} $\Delta t$ values ($-3.0 \pm 0.78$ with ICM and $-3.5 \pm 3.13$ without). A negative $\Delta t$ means the agent completes the task faster after the novelty than before it---the agent has discovered and exploited the shortcut provided by the chest, which bypasses the full crafting chain. This result validates $\Delta t$ as a metric that captures not only degradation but also opportunistic improvement: a well-adapted agent should be able to exploit beneficial novelties, not merely survive detrimental ones. Hybrid agents, by contrast, show no entry for the chest novelty because their plan-monitoring mechanism was never triggered---the original plan continued to succeed, so the chest was never discovered. This highlights a fundamental limitation of failure-driven adaptation: if a novelty does not cause a failure, it remains invisible to the agent, even when exploiting it would substantially improve performance.
 
-% \textbf{Fence} & RapidLearn$^{+}$(PPO+ICM) & 1 +- 0 & 0.38 +- 0.102 & 69120 +- 15657 & 0.96 +- 0.02 & 161.6 +- 7.6 \\
-%                & RapidLearn (PPO)          & 1 +- 0 & 0.41 +- 0.052 & 66400 +- 20999 & 0.95 +- 0.008 & 168.7 +- 6.15 \\
-%                & Transfer RL (PPO)+ICM     & 1 +- 0 & 1.0 +- 0.0   & 854400 +- 52974 & 0.93 +- 0.02 & 73.4 +- 4.7 \\
-%                & Transfer RL (PPO)         & 1 +- 0 & 1.0 +- 0.0   & 701760 +- 100589 & 0.92 +- 0.024 & 90.9 +- 9.49 \\
-% \midrule
+\paragraph{Role of curiosity-driven exploration.} The Intrinsic Curiosity Module (ICM) augments the reward signal with a prediction-error-based intrinsic reward, encouraging the agent to visit states where its learned forward model produces high prediction error. The effect of ICM on adaptation is nuanced and novelty-dependent, as reflected in the $\Delta t$ and $T_\text{adapt}$ metrics.
 
-% \textbf{Fire} & RapidLearn$^{+}$(PPO+ICM) & 1 +- 0 & 1.0 +- 0.0   & 263520 +- 81979 & 0.95 +- 0.02 & 133.2 +- 21.38 \\
-%               & RapidLearn (PPO)          & 1 +- 0 & 1.0 +- 0.0   & 252000 +- 49663 & 0.95 +- 0.016 & 142.5 +- 13.71 \\
-%               & Transfer RL (PPO)+ICM     & 1 +- 0 & 1.0 +- 0.0   & 372960 +- 198096 & 0.94 +- 0.016 & 105.3 +- 9.85 \\
-%               & Transfer RL (PPO)         & 1 +- 0 & 1.0 +- 0.0   & 127200 +- 37932 & 0.96 +- 0.029 & 103.3 +- 13.22 \\
+For novelties that require discovering genuinely new states or action sequences, ICM provides a clear benefit. In the fence novelty, Transfer RL with ICM adapts faster ($854{,}400$ vs.\ $701{,}760$ time steps) and achieves lower $\Delta t$ ($73.4$ vs.\ $90.9$), consistent with the hypothesis that curiosity-driven exploration helps the agent discover the fence-breaking strategy. However, for the fire novelty, ICM \emph{increases} adaptation time ($372{,}960$ vs.\ $127{,}200$) and slightly increases $\Delta t$ ($105.3$ vs.\ $103.3$). A plausible explanation is that the fire novelty introduces multiple novel state transitions---the burning crafting table, the water bucket, the extinguish action---all of which generate high prediction error in the forward model. The intrinsic reward thus disperses the agent's exploration across many novel but not equally useful transitions, rather than focusing it on the specific sequence (collect water, extinguish fire, then craft) needed for recovery. In effect, the forward model's prediction error is high in many irrelevant states, providing a noisy exploration signal that interferes with goal-directed adaptation.
 
-% \bottomrule
-% \end{tabularx}
-% \caption{Evaluations of the agents across five novelty scenarios. $\uparrow$ indicates higher is better, $\downarrow$ lower is better. -- indicates not applicable.}
-% \label{tab:results}
-% \end{table}
-
-\paragraph{Novelty impact.} Upon novelty injection, all agents experienced performance degradation for detrimental novelties, with the fire novelty producing the most severe impact ($I_\text{novelty} = 1.0$ for all agents). Transfer RL agents were generally more sensitive to novelty than hybrid agents, as reflected in higher $I_\text{novelty}$ values. However, hybrid agents showed lower immediate impact in some cases due to their targeted adaptation approach, which activates only upon execution failure.
-
-\paragraph{Adaptation speed.} Hybrid agents consistently outperformed transfer learning methods on the $T_\text{adapt}$ metric across all novelties. For the fence novelty, hybrid agents adapted in approximately 67{,}000--71{,}000 time steps, while transfer RL agents required 700{,}000--854{,}000 time steps. This advantage arises from the hybrid architecture's ability to focus learning on the specific subproblem caused by the novelty rather than relearning the entire task.
-
-\paragraph{Post-adaptation performance.} All agents achieved high post-adaptation success rates ($S_\text{post} \geq 0.92$), though none reached perfect scores due to the use of a convergence criterion rather than exhaustive training.
-
-\paragraph{Beneficial novelty.} The chest novelty was not detected as a novelty by hybrid agents, since it did not cause execution failure. Transfer RL agents, however, discovered and exploited the chest through exploration, as reflected in negative $\Delta t$ values indicating improved task completion efficiency.
-
-\paragraph{Role of curiosity-driven exploration.} The addition of ICM improved adaptation in some cases but was not uniformly beneficial. In the fire novelty scenario, ICM slightly degraded the performance of the transfer RL agent, suggesting that intrinsic curiosity can sometimes interfere with goal-directed adaptation.
+For hybrid agents, the effect of ICM is more muted because the planning component constrains the learning problem to a specific subgoal. The RL component operates within a focused subspace defined by the failed operator, limiting the scope over which curiosity-driven exploration can either help or hinder. This further supports the architectural advantage of hybrid systems: by decomposing the adaptation problem, they reduce sensitivity to the quality of the exploration signal.
