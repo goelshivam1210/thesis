@@ -1,0 +1,42 @@
+\begin{table}[t]
+\footnotesize
+\centering
+\begin{tabular}{l l c c}
+\toprule
+Novelty & Agent & $T_{\text{adapt}} \downarrow$ & $\Delta t \downarrow$ \\
+\midrule
+
+\textbf{Axe} & RapidLearn$^{+}$(PPO+ICM) & 71040 $\pm$ 17413 & 122.7 $\pm$ 15.61 \\
+             & RapidLearn (PPO)          & 68160 $\pm$ 17934 & 116.9 $\pm$ 9.88 \\
+             & Transfer RL (PPO)+ICM     & 169440 $\pm$ 97949 & 61.0 $\pm$ 8.95 \\
+             & Transfer RL (PPO)         & 114240 $\pm$ 19651 & 63.1 $\pm$ 8.17 \\
+
+\midrule
+\textbf{Chest} & RapidLearn$^{+}$(PPO+ICM) & -- & -- \\
+               & RapidLearn (PPO)          & -- & -- \\
+               & Transfer RL (PPO)+ICM     & 24000 $\pm$ 0 & -3.0 $\pm$ 0.78 \\
+               & Transfer RL (PPO)         & 24000 $\pm$ 0 & -3.5 $\pm$ 3.13 \\
+
+\midrule
+\textbf{Trader} & RapidLearn$^{+}$(PPO+ICM) & 102720 $\pm$ 20724 & 126.9 $\pm$ 9.97 \\
+                & RapidLearn (PPO)          & 96480 $\pm$ 21191 & 122.8 $\pm$ 8.93 \\
+                & Transfer RL (PPO)+ICM     & 227040 $\pm$ 112120 & 93.6 $\pm$ 12.05 \\
+                & Transfer RL (PPO)         & 350880 $\pm$ 237039 & 89.3 $\pm$ 7.87 \\
+
+\midrule
+\textbf{Fence} & RapidLearn$^{+}$(PPO+ICM) & 69120 $\pm$ 15657 & 161.6 $\pm$ 7.6 \\
+               & RapidLearn (PPO)          & 66400 $\pm$ 20999 & 168.7 $\pm$ 6.15 \\
+               & Transfer RL (PPO)+ICM     & 854400 $\pm$ 52974 & 73.4 $\pm$ 4.7 \\
+               & Transfer RL (PPO)         & 701760 $\pm$ 100589 & 90.9 $\pm$ 9.49 \\
+
+\midrule
+\textbf{Fire} & RapidLearn$^{+}$(PPO+ICM) & 263520 $\pm$ 81979 & 133.2 $\pm$ 21.38 \\
+              & RapidLearn (PPO)          & 252000 $\pm$ 49663 & 142.5 $\pm$ 13.71 \\
+              & Transfer RL (PPO)+ICM     & 372960 $\pm$ 198096 & 105.3 $\pm$ 9.85 \\
+              & Transfer RL (PPO)         & 127200 $\pm$ 37932 & 103.3 $\pm$ 13.22 \\
+
+\bottomrule
+\end{tabular}
+\caption{Efficiency metrics across novelty scenarios. $T_\text{adapt}$: time steps required for adaptation to converge; $\Delta t$: difference in task completion time before and after novelty (negative values indicate the agent found a more efficient post-novelty strategy). $\downarrow$ indicates lower is better. All values are mean $\pm$ standard deviation over 10 seeds.}
+\label{tab:ng_efficiency}
+\end{table}

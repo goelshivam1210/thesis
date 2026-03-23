@@ -1,9 +1,5 @@
 Some efforts have sought to address multiple stages of the open-world agent loop in an integrated manner. World models \citep{ha2018world, hafner2023mastering} offer a potential unifying framework by learning environment dynamics that can serve both perception and planning, though they typically do not handle discrete, qualitative changes in the environment. End-to-end foundation models for robotics \citep{pmlr-v229-zitkovich23a, team2024octo} implicitly combine perception, reasoning, and action selection in a single model, but their behavior under genuine novelty is not well understood. Task and motion planning systems \citep{garrett2021integrated, kaelbling2011hierarchical} integrate symbolic and geometric reasoning but inherit the brittle model assumptions of classical planning. Despite growing interest in open-world autonomy, the field remains largely fragmented: methods that address perception under novelty, planning under incomplete models, and recovery from execution failures are typically developed in isolation from one another.
 
-% =============================================================
-% Thesis Contributions: Three Tenets
-% =============================================================
-
 The preceding discussion has examined open-world autonomy 
 through the lens of the perceive--plan--execute loop, 
 identifying challenges at each stage: sensing under novelty, 

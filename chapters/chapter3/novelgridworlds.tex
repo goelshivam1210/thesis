@@ -90,21 +90,14 @@ NovelGridworlds introduces three evaluation metrics designed to capture differen
 
 Two types of agents were evaluated: a symbolic planning agent implemented using the DIARC cognitive architecture~\citep{schermerhorn2006diarc, scheutz2019diarc} with the MetricFF planner~\citep{hoffmann2003metricff}, and a reinforcement learning agent trained using Proximal Policy Optimization (PPO)~\citep{schulman2017proximal}. The RL agent used a LiDAR-like observation space consisting of eight beams at $45^\circ$ increments, each returning the Euclidean distance to the nearest object, augmented by inventory and selected-item vectors.
 
-% TABLE PLACEHOLDER: Planning agent results (Table 4 from the paper)
-% \begin{table}[t]
-%     \centering
-%     \caption{Performance of the planning agent across all four tasks under three novelty scenarios. M1 is the cost ratio (lower indicates less degradation) and M2 is the number of steps. Values are mean $\pm$ standard deviation over 5 episodes.}
-%     \label{tab:ngw_planning_results}
-% \end{table}
- \input{tables/chapter3/ng_results}
+\input{tables/chapter3/ng_results}
 
 
 
-\paragraph{Planning agent.} The planning agent was evaluated across all four tasks under three novelties (fence, arrow/spring, and axe). The agent achieved a 100\% detection rate (M3) in all scenarios. Under the fence novelty, the cost ratio M1 consistently exceeded 1 across all tasks (for example, $1.80 \pm 0.15$ in Bow-v0 and $1.34 \pm 0.06$ in Pogostick-v1), reflecting the additional cost of breaking fences to access resources. Under irrelevant novelties (arrow/spring), the agent's performance remained close to the pre-novelty baseline, as expected. The axe novelty, although beneficial, produced negligible improvement because the agent did not always discover or exploit the new object.
+\paragraph{Planning agent.} The planning agent was evaluated across all four tasks under three novelties (fence, arrow/spring, and axe); results are reported in \cref{tab:ngw_results}. The agent achieved a 100\% detection rate (M3) in all scenarios. Under the fence novelty, the cost ratio M1 consistently exceeded 1 across all tasks (for example, $1.80 \pm 0.15$ in Bow-v0 and $1.34 \pm 0.06$ in Pogostick-v1), reflecting the additional cost of breaking fences to access resources. Under irrelevant novelties (arrow/spring), the agent's performance remained close to the pre-novelty baseline, as expected. The axe novelty, although beneficial, produced negligible improvement because the agent did not always discover or exploit the new object.
 
 \paragraph{Reinforcement learning agent.} The RL agent was evaluated on the Bow-v0 task under three novelties: action remapping, fire wall, and break increase. The agent achieved a 92\% success rate on the base task after 1.8 million training time steps. Under the beneficial break-increase novelty, cumulative reward improved but the success rate dropped to 29.2\%, suggesting the agent learned to hoard resources rather than complete the task. The fire-wall novelty caused a complete failure, with 0\% success rate, as the agent could not learn to avoid the lethal walls. Action remapping showed an average 12\% decline in success rate, though performance varied substantially across trials depending on how severely the action mapping was shuffled.
 
-% FIGURE PLACEHOLDER: RL agent learning curves (Figure 4 from the paper)
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.8\textwidth]{figures/chapter3/results_latest.png}

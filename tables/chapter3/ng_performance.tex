@@ -1,0 +1,42 @@
+\begin{table}[t]
+\footnotesize
+\centering
+\begin{tabular}{l l c c c}
+\toprule
+Novelty & Agent & $S_{\text{pre}} \uparrow$ & $I_{\text{nov}} \downarrow$ & $S_{\text{post}} \uparrow$ \\
+\midrule
+
+\textbf{Axe} & RapidLearn$^{+}$(PPO+ICM) & 1 $\pm$ 0 & 0.83 $\pm$ 0.205 & 1.0 $\pm$ 0.0 \\
+             & RapidLearn (PPO)          & 1 $\pm$ 0 & 0.69 $\pm$ 0.207 & 1.0 $\pm$ 0.0 \\
+             & Transfer RL (PPO)+ICM     & 1 $\pm$ 0 & 1.0 $\pm$ 0.0   & 0.97 $\pm$ 0.021 \\
+             & Transfer RL (PPO)         & 1 $\pm$ 0 & 1.0 $\pm$ 0.0   & 0.97 $\pm$ 0.018 \\
+
+\midrule
+\textbf{Chest} & RapidLearn$^{+}$(PPO+ICM) & 1 $\pm$ 0 & -- & -- \\
+               & RapidLearn (PPO)          & 1 $\pm$ 0 & -- & -- \\
+               & Transfer RL (PPO)+ICM     & 1 $\pm$ 0 & 0.0 $\pm$ 0.004 & 1.0 $\pm$ 0.0 \\
+               & Transfer RL (PPO)         & 1 $\pm$ 0 & 0.01 $\pm$ 0.009 & 0.98 $\pm$ 0.011 \\
+
+\midrule
+\textbf{Trader} & RapidLearn$^{+}$(PPO+ICM) & 1 $\pm$ 0 & 0.45 $\pm$ 0.069 & 0.95 $\pm$ 0.017 \\
+                & RapidLearn (PPO)          & 1 $\pm$ 0 & 0.5 $\pm$ 0.07   & 0.96 $\pm$ 0.02 \\
+                & Transfer RL (PPO)+ICM     & 1 $\pm$ 0 & 0.96 $\pm$ 0.108 & 0.99 $\pm$ 0.011 \\
+                & Transfer RL (PPO)         & 1 $\pm$ 0 & 0.94 $\pm$ 0.128 & 0.96 $\pm$ 0.025 \\
+
+\midrule
+\textbf{Fence} & RapidLearn$^{+}$(PPO+ICM) & 1 $\pm$ 0 & 0.38 $\pm$ 0.102 & 0.96 $\pm$ 0.02 \\
+               & RapidLearn (PPO)          & 1 $\pm$ 0 & 0.41 $\pm$ 0.052 & 0.95 $\pm$ 0.008 \\
+               & Transfer RL (PPO)+ICM     & 1 $\pm$ 0 & 1.0 $\pm$ 0.0   & 0.93 $\pm$ 0.02 \\
+               & Transfer RL (PPO)         & 1 $\pm$ 0 & 1.0 $\pm$ 0.0   & 0.92 $\pm$ 0.024 \\
+
+\midrule
+\textbf{Fire} & RapidLearn$^{+}$(PPO+ICM) & 1 $\pm$ 0 & 1.0 $\pm$ 0.0   & 0.95 $\pm$ 0.02 \\
+              & RapidLearn (PPO)          & 1 $\pm$ 0 & 1.0 $\pm$ 0.0   & 0.95 $\pm$ 0.016 \\
+              & Transfer RL (PPO)+ICM     & 1 $\pm$ 0 & 1.0 $\pm$ 0.0   & 0.94 $\pm$ 0.016 \\
+              & Transfer RL (PPO)         & 1 $\pm$ 0 & 1.0 $\pm$ 0.0   & 0.96 $\pm$ 0.029 \\
+
+\bottomrule
+\end{tabular}
+\caption{Performance metrics across novelty scenarios. $S_\text{pre}$: pre-novelty success rate; $I_\text{nov}$: novelty impact (immediate performance drop); $S_\text{post}$: post-adaptation success rate. $\uparrow$ indicates higher is better, $\downarrow$ lower is better. -- indicates the novelty was not detected by the agent. All values are mean $\pm$ standard deviation over 10 seeds.}
+\label{tab:ng_performance}
+\end{table}

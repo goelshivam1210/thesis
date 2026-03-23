@@ -1,10 +1,11 @@
 \chapter{Background}
+\label{ch:background}
 
 This chapter provides the background necessary for the remainder of the dissertation. It is organized in two parts. The first part surveys prior work on open-world autonomy, situating this thesis within the broader landscape of AI and robotics research. The second part introduces the formal frameworks that underpin the technical contributions of the dissertation.
 
 The dissertation is grounded in the classical agent--environment paradigm, in which an agent perceives its surroundings, reasons and plans over possible actions, and executes those actions to achieve its goals. This perceive--plan--execute loop, and its natural extension to include adaptation and recovery, provides a unifying lens through which to examine the challenges of open-world autonomy. In closed-world settings, each stage of this loop has been studied extensively and with considerable success. However, when agents are deployed in open-world environments, the assumptions underlying each stage are violated: new objects may appear, dynamics may change, and actions may fail in unforeseen ways. Critically, novelty at any stage of the loop can propagate failures across the others, making open-world autonomy a systemic challenge rather than an isolated one.
 
-Section~\ref{sec:related_work} reviews prior work along each stage of the agent loop under open-world conditions -- sensing, planning and learning, and execution and recovery---and identifies the gaps that motivate the contributions of this dissertation. Section~\ref{sec:preliminaries} then introduces the formal models used throughout: symbolic planning (Section~\ref{sec:symbolic_planning}), reinforcement learning (Section~\ref{sec:rl}), hybrid planning and learning systems (Section~\ref{sec:hybrid}), and a formalization of novelty relative to an agent's knowledge and models (Section~\ref{subsec:novelty}).
+Section~\ref{sec:related_work} reviews prior work along each stage of the agent loop under open-world conditions -- sensing, planning and learning, and execution and recovery---and identifies the gaps that motivate the contributions of this dissertation. Section~\ref{sec:preliminaries} then introduces the formal models used throughout: symbolic planning (Section~\ref{sec:symbolic_planning}), reinforcement learning (Section~\ref{sec:rl}), hybrid planning and learning systems (Section~\ref{sec:hybrid}), and a formalization of novelty relative to an agent's knowledge and models (Section~\ref{sec:novelty}).
 
 \section{Related Work}
 \label{sec:related_work}
