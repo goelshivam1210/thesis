@@ -72,8 +72,44 @@ Novelty & Agent & $T_\text{adapt}$ (timesteps) & Post-novelty SR \\
 \label{tab:rapid_learn_results}
 \end{table}
 
+\begin{figure}[t]
+    \centering
+    \begin{subfigure}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/chapter4/ATB_S_TS.png}
+        \caption{ATB hard (axe-to-break)}
+        \label{fig:atb_curve}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/chapter4/FCT_S_TS.png}
+        \caption{FCT hard (fire-crafting-table)}
+        \label{fig:fct_curve}
+    \end{subfigure}
+    \\[6pt]
+    \begin{subfigure}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/chapter4/RT_S_TS.png}
+        \caption{RT hard (rubber-tree)}
+        \label{fig:rt_curve}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/chapter4/AFCT_S_TS.png}
+        \caption{ATB+FCT easy (combined)}
+        \label{fig:afct_curve}
+    \end{subfigure}
+    \\[8pt]
+    \includegraphics[width=0.65\textwidth]{figures/chapter4/rapid_graph_label.pdf}
+    \caption{Learning curves (success rate vs.\ training time steps) for four of the five novelty scenarios. All RAPid-Learn variants (KGE-UCB, KGE-UAB, EG) converge one to two orders of magnitude faster than the transfer learning baselines (Actor-Critic Transfer and Policy Reuse). Shaded regions denote one standard deviation over 10 independent trials. Transfer learning baselines did not converge on the RT hard scenario within the evaluation budget and are therefore omitted from that panel.}
+    \label{fig:rapid_learn_curves}
+\end{figure}
 
-\paragraph{Sample efficiency.} \Cref{tab:rapid_learn_results} shows that RAPid-Learn consistently adapts one to two orders of magnitude faster than the transfer learning baselines across all novelty scenarios. In the axe-to-break hard novelty, RAPid-KGE-UCB adapts in approximately $2.35 \times 10^3$ time steps compared to $9.80 \times 10^4$ for actor-critic transfer and $5.57 \times 10^5$ for policy reuse---improvements of roughly $40\times$ and $230\times$, respectively. The advantage is most pronounced in the rubber-tree hard novelty, where both baselines fail to converge entirely, while all RAPid-Learn variants converge within $3.7 \times 10^4$ time steps. The sample efficiency advantage arises from two sources: the symbolic planner constrains the learning problem to a specific subgoal (the failed operator's effects), and knowledge-guided exploration focuses the agent on actions and states likely related to the novelty.
+
+
+\paragraph{Sample efficiency.} \Cref{tab:rapid_learn_results,fig:rapid_learn_curves} show that RAPid-Learn consistently adapts one to two orders of magnitude faster than the transfer learning baselines across all novelty scenarios. In the axe-to-break hard novelty, RAPid-KGE-UCB adapts in approximately $2.35 \times 10^3$ time steps compared to $9.80 \times 10^4$ for actor-critic transfer and $5.57 \times 10^5$ for policy reuse---improvements of roughly $40\times$ and $230\times$, respectively. The advantage is most pronounced in the rubber-tree hard novelty, where both baselines fail to converge entirely, while all RAPid-Learn variants converge within $3.7 \times 10^4$ time steps. The sample efficiency advantage arises from two sources: the symbolic planner constrains the learning problem to a specific subgoal (the failed operator's effects), and knowledge-guided exploration focuses the agent on actions and states likely related to the novelty.
 
 \paragraph{Effectiveness of knowledge-guided exploration.} The relative performance of the three RAPid-Learn variants reveals the contribution of knowledge-guided exploration. In complex novelties such as rubber-tree hard, where the agent must discover a spatial relation not in its symbolic knowledge, KGE-UCB and KGE-UAB provide measurable improvements in convergence speed over standard $\epsilon$-greedy exploration. In simpler novelties such as scrape-plank, where the solution involves a single novel action, the advantage of knowledge-guided exploration is less pronounced, and $\epsilon$-greedy exploration can occasionally converge faster. This pattern is consistent with the expectation that knowledge-guided exploration is most valuable when the exploration space is large and the solution requires interacting with novel entities.
 
@@ -108,9 +144,16 @@ Base+AM+EL              & \textbf{0.39} & \textbf{88.7} & \textbf{1.6} & 68.1 & 
 \label{tab:polycraft_overall}
 \end{table}
 
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\textwidth]{figures/chapter4/failed_effects_policy.pdf}
+    \caption{Breakdown of novelty accommodation performance across novelty categories in the Polycraft systemic evaluation. Each bar shows the goal achievement rate for the four agent configurations under each novelty type. The executor learner (Base+EL) provides the most consistent improvement on attribute, action, and concealed novelties, where symbolic recovery strategies are insufficient and learning-based executor discovery is essential.}
+    \label{fig:failed_effects_policy}
+\end{figure}
+
 \paragraph{Novelty detection.} \Cref{tab:polycraft_overall} shows that configurations including the agent model achieve better novelty detection performance, with the combined configuration reaching 88.7\% correctly detected trials and a false negative rate of 0.39 episodes. The agent model is particularly effective for action and goal novelties, where actors exhibit changed behavior that symbolic inference alone cannot detect. The vision model (evaluated separately) achieved 84.9\% true positive rate with 85.1\% precision on concealed visual novelties, demonstrating the potential of subsymbolic novelty detection, though its higher false positive rate (34.1\% at the 95\% TPR threshold) limited its integration into the task-oriented agent.
 
-\paragraph{Novelty accommodation.} The Base+Executor Learner configuration achieves the highest novelty accommodation performance, with 66.6\% goal achievement rate and 74.2\% novelty reaction performance, outperforming all other configurations. The executor learner proves most valuable in attribute novelties (e.g., learning to break birch trees that fail to produce rubber) and concealed novelties where symbolic exploration strategies are insufficient. A notable example is the ``different items in chests'' novelty, where the base agent fails because it assumes all chests contain identical items, while the executor learner discovers a policy to open all chests and collect diverse ingredients.
+\paragraph{Novelty accommodation.} \Cref{fig:failed_effects_policy} breaks down performance by novelty category. The Base+Executor Learner configuration achieves the highest novelty accommodation performance, with 66.6\% goal achievement rate and 74.2\% novelty reaction performance, outperforming all other configurations. The executor learner proves most valuable in attribute novelties (e.g., learning to break birch trees that fail to produce rubber) and concealed novelties where symbolic exploration strategies are insufficient. A notable example is the ``different items in chests'' novelty, where the base agent fails because it assumes all chests contain identical items, while the executor learner discovers a policy to open all chests and collect diverse ingredients.
 
 \paragraph{Interaction effects.} The combined Base+Agent Model+Executor Learner configuration achieves the best detection performance but lower accommodation scores than the Base+Executor Learner alone. This arises from an unforeseen interaction: the executor learner's exploration changes the environment state, which triggers false novelty detections from the agent model, leading to unnecessary exploration that hinders task performance. This finding highlights the challenge of integrating multiple adaptive components and suggests that coordination mechanisms between detection and accommodation modules are an important direction for future work.
 

@@ -10,7 +10,7 @@ The RAPid-Learn framework operates as follows. The agent begins with an integrat
 
 During executor discovery, the agent checks whether it has previously learned an executor for the failed operator. If so, it executes the learned executor directly. If not, it instantiates a reinforcement learning problem focused on achieving the effects of the failed operator and learns a new executor through interaction with the environment. Once a successful executor is learned, it is stored for future use, and the agent resumes execution of the original plan.
 
-This process is summarized in \cref{alg:rapid_learn}. The framework handles multiple novelties naturally: if several operators fail (either simultaneously or sequentially), the agent learns a separate executor for each, building up a library of recovery behaviors over time.
+This process is summarized in \cref{alg:rapid_learn} and illustrated concretely in \cref{fig:running_example_overview}. The framework handles multiple novelties naturally: if several operators fail (either simultaneously or sequentially), the agent learns a separate executor for each, building up a library of recovery behaviors over time.
 
 \begin{algorithm}[t]
 \caption{RAPid-Learn}
@@ -33,6 +33,13 @@ This process is summarized in \cref{alg:rapid_learn}. The framework handles mult
 \ENDFOR
 \end{algorithmic}
 \end{algorithm}
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\textwidth]{figures/chapter4/running_example_overview.png}
+    \caption{Running example overview of RAPid-Learn under the axe-to-break novelty. The agent detects an execution failure when the \texttt{break} operator does not produce the expected effects. The executor discovery phase instantiates a focused reinforcement learning problem, using knowledge-guided exploration to learn a new executor that first collects the axe and then breaks the tree. Once the executor converges, it is stored and the agent resumes executing the original plan to reach its goal.}
+    \label{fig:running_example_overview}
+\end{figure}
 
 
 \subsection{Executor Discovery}

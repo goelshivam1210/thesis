@@ -42,12 +42,12 @@ Note the relationship between this typology and the benchmark classification fro
 
 The architecture, depicted in \cref{fig:architecture}, consists of four main components that interact through the agent's knowledge repository $\mathcal{K} = (\KB, \Theta)$, where $\KB$ stores symbolic knowledge (facts, rules, operators in first-order logic) and $\Theta$ stores subsymbolic knowledge (neural network parameters). The components are:
 
-% \begin{figure}[t]
-%     \centering
-%     \includegraphics[width=\textwidth]{figures/chapter4/architecture.pdf}
-%     \caption{High-level architecture of the neurosymbolic cognitive architecture for novelty handling. Symbolic inference (left) detects novelty through state prediction and plan monitoring. Neural inference (right) detects novelty through visual anomaly detection and behavioral modeling. The novelty exploration component (bottom) employs cascading recovery strategies, with the executor learner (RAPid-Learn) as the final fallback when symbolic strategies are exhausted.}
-%     \label{fig:architecture}
-% \end{figure}
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\textwidth]{figures/chapter4/diarcgram.pdf}
+    \caption{High-level architecture of the neurosymbolic cognitive architecture for novelty handling. The four main components communicate through the shared knowledge repository $\mathcal{K} = (\KB, \Theta)$. Symbolic inference (task planner, goal manager) generates and executes plans, detecting novelties through expectation violations. Neural inference (vision model, agent model) detects visual and behavioral anomalies and asserts novelty descriptions into $\KB$. When execution fails, the novelty exploration component applies a cascading sequence of recovery strategies---culminating in the RAPid-Learn executor learner---interacting with the environment through the domain interface, which mediates symbolic state observations, images, and LiDAR sensor data.}
+    \label{fig:architecture}
+\end{figure}
 
 \paragraph{Symbolic inference.} The knowledge base $\KB$ stores facts about the environment using a first-order language, including entity properties, spatial relations, and the planning domain (operators with preconditions and effects, specified in PDDL). The \emph{task planner} retrieves the domain definition and current state from $\KB$ and searches for a plan. The \emph{goal manager} orchestrates plan execution: it verifies operator preconditions against the observed state, dispatches executors through the domain interface, monitors whether effects match expectations, and detects novelties when predictions diverge from observations. The general principle for symbolic novelty detection is predicting the next state and comparing the prediction with the observed state---any discrepancy constitutes a potential novelty.
 
