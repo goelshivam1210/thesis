@@ -1,0 +1,159 @@
+\begin{figure}[t]
+    \centering
+    \begin{tikzpicture}[
+        >=Stealth,
+        node distance=1.2cm and 1.6cm,
+        opnode/.style={
+            rectangle, rounded corners=3pt, draw=blue!60!black, fill=blue!8,
+            minimum width=2.2cm, minimum height=0.85cm, 
+            font=\small, align=center, thick
+        },
+        opfail/.style={
+            rectangle, rounded corners=3pt, draw=red!70!black, fill=red!10,
+            minimum width=2.2cm, minimum height=0.85cm, 
+            font=\small, align=center, thick
+        },
+        exnode/.style={
+            rectangle, rounded corners=3pt, draw=teal!70!black, fill=teal!8,
+            minimum width=2.2cm, minimum height=1.15cm, 
+            font=\small, align=center, thick
+        },
+        exdisc/.style={
+            rectangle, rounded corners=3pt, draw=orange!80!black, fill=orange!10,
+            minimum width=2.2cm, minimum height=1.15cm, 
+            font=\small, align=center, thick, densely dashed
+        },
+        goalnode/.style={
+            rectangle, rounded corners=3pt, draw=green!60!black, fill=green!8,
+            minimum width=1.5cm, minimum height=0.85cm, 
+            font=\small, align=center, thick
+        },
+        planflow/.style={->, thick, blue!50!black},
+        exflow/.style={->, thick, teal!50!black},
+        mapline/.style={->, densely dashed, gray!70!black, thin},
+        failmap/.style={densely dashed, red!60!black, thick, {Circle[length=2pt]}-},
+        discmap/.style={->, densely dashed, orange!70!black, semithick},
+        levellabel/.style={font=\footnotesize\itshape, gray!60!black},
+        panellabel/.style={font=\small\bfseries, anchor=west},
+        alphabox/.style={font=\footnotesize, gray!60!black},
+        legendbox/.style={minimum width=0.45cm, minimum height=0.3cm, rounded corners=2pt, thick, inner sep=0pt},
+        legendlabel/.style={font=\scriptsize, anchor=west, inner sep=0pt},
+    ]
+    
+    % ===== Panel (a): Working IPT =====
+    \node[panellabel] at (-5.5, 0.3) {(a) Integrated planning task $\IPT$ \textnormal{--- plannable and solvable}};
+    
+    % Symbolic level
+    \node[levellabel] at (-5.5, -0.35) {Symbolic};
+    \draw[gray!40, thin, densely dashed] (-5.5, -0.55) -- (5.5, -0.55);
+    
+    % Operators
+    \node[opnode] (o1a) at (-3.4, -1.2) {$\Operator_1$};
+    \node[opnode] (o2a) at (-0.8, -1.2) {$\Operator_2$};
+    \node[opnode] (o3a) at (1.8, -1.2) {$\Operator_3$};
+    \node[goalnode] (ga) at (4.0, -1.2) {$\Goal$};
+    
+    \draw[planflow] (o1a) -- (o2a);
+    \draw[planflow] (o2a) -- (o3a);
+    \draw[planflow] (o3a) -- (ga);
+    
+    % Mapping label
+    \node[font=\footnotesize, gray!60!black] at (0.5, -1.95) {$e : \Operators \rightarrow \Executors$};
+    
+    % Mapping arrows
+    \draw[mapline] (o1a.south) -- ++(0, -1.3);
+    \draw[mapline] (o2a.south) -- ++(0, -1.3);
+    \draw[mapline] (o3a.south) -- ++(0, -1.3);
+    
+    % Subsymbolic level
+    \node[levellabel] at (-5.5, -2.65) {Subsymbolic};
+    \draw[gray!40, thin, densely dashed] (-5.5, -2.85) -- (5.5, -2.85);
+    
+    % Executors with internals
+    \node[exnode] (x1a) at (-3.4, -3.65) {$\Executor_1 \!=\! e(\Operator_1)$\\[-2pt]{\scriptsize$\langle I_{\Executor_1},\, \Policy_{\Executor_1},\, \beta_{\Executor_1}\rangle$}};
+    \node[exnode] (x2a) at (-0.8, -3.65) {$\Executor_2 \!=\! e(\Operator_2)$\\[-2pt]{\scriptsize$\langle I_{\Executor_2},\, \Policy_{\Executor_2},\, \beta_{\Executor_2}\rangle$}};
+    \node[exnode] (x3a) at (1.8, -3.65) {$\Executor_3 \!=\! e(\Operator_3)$\\[-2pt]{\scriptsize$\langle I_{\Executor_3},\, \Policy_{\Executor_3},\, \beta_{\Executor_3}\rangle$}};
+    \node[goalnode] (ga2) at (4.0, -3.65) {$\Goal$};
+    
+    \draw[exflow] (x1a) -- (x2a);
+    \draw[exflow] (x2a) -- (x3a);
+    \draw[exflow] (x3a) -- (ga2);
+    
+    % Abstraction function (right side, upward arrow)
+    \draw[<-, densely dashed, gray!60!black, semithick] (5.1, -1.5) -- (5.1, -3.35);
+    \node[alphabox, rotate=90] at (5.4, -2.4) {$\Abstraction : \States \rightarrow \SymStates$};
+    
+    % ===== Separator =====
+    \draw[gray!30, thick] (-5.5, -4.7) -- (5.5, -4.7);
+    
+    % ===== Panel (b): Stretch-IPT =====
+    \node[panellabel] at (-5.5, -5.2) {(b) Stretch-IPT $\tilde{\IPT}$ \textnormal{--- solvable but not plannable}};
+    
+    % Symbolic level
+    \node[levellabel] at (-5.5, -5.85) {Symbolic};
+    \draw[gray!40, thin, densely dashed] (-5.5, -6.05) -- (5.5, -6.05);
+    
+    % Operators (o2 fails)
+    \node[opnode] (o1b) at (-3.4, -6.7) {$\Operator_1$};
+    \node[opfail] (o2b) at (-0.8, -6.7) {$\Operator_2$ {\footnotesize(fails)}};
+    \node[opnode] (o3b) at (1.8, -6.7) {$\Operator_3$};
+    \node[goalnode] (gb) at (4.0, -6.7) {$\Goal$};
+    
+    \draw[planflow] (o1b) -- (o2b);
+    \draw[planflow] (o2b) -- (o3b);
+    \draw[planflow] (o3b) -- (gb);
+    
+    % Mapping arrows (o1, o3 work; o2 broken)
+    \draw[mapline] (o1b.south) -- ++(0, -1.45);
+    \draw[failmap] (o2b.south) -- ++(0, -1.0);
+    \draw[mapline] (o3b.south) -- ++(0, -1.45);
+    
+    % Broken X marker
+    \node[font=\large, red!70!black] at (-0.8, -7.95) {\textsf{\textbf{\texttimes}}};
+    
+    % Discovery mapping (curved arrow)
+    \draw[discmap, bend right=25] (-0.8, -8.15) to (-0.8, -8.7);
+    \node[font=\scriptsize, orange!70!black, anchor=west] at (-0.3, -8.3) {RL discovery};
+    
+    % Subsymbolic level
+    \node[levellabel] at (-5.5, -8.25) {Subsymbolic};
+    \draw[gray!40, thin, densely dashed] (-5.5, -8.45) -- (5.5, -8.45);
+    
+    % Executors (x2 replaced by x2')
+    \node[exnode] (x1b) at (-3.4, -9.25) {$\Executor_1 \!=\! e(\Operator_1)$\\[-2pt]{\scriptsize$\langle I_{\Executor_1},\, \Policy_{\Executor_1},\, \beta_{\Executor_1}\rangle$}};
+    \node[exdisc] (x2b) at (-0.8, -9.25) {$\Executor'_2$\\[-2pt]{\scriptsize$\langle I_{\Executor'_2},\, \Policy_{\Executor'_2},\, \beta_{\Executor'_2}\rangle$}};
+    \node[exnode] (x3b) at (1.8, -9.25) {$\Executor_3 \!=\! e(\Operator_3)$\\[-2pt]{\scriptsize$\langle I_{\Executor_3},\, \Policy_{\Executor_3},\, \beta_{\Executor_3}\rangle$}};
+    \node[goalnode] (gb2) at (4.0, -9.25) {$\Goal$};
+    
+    \draw[exflow] (x1b) -- (x2b);
+    \draw[exflow, orange!60!black] (x2b) -- (x3b);
+    \draw[exflow] (x3b) -- (gb2);
+    
+    % Abstraction function (right side)
+    \draw[<-, densely dashed, gray!60!black, semithick] (5.1, -7.0) -- (5.1, -8.95);
+    \node[alphabox, rotate=90] at (5.4, -7.95) {$\Abstraction : \States \rightarrow \SymStates$};
+    
+    % ===== Legend (two rows) =====
+    \draw[gray!30, thin] (-5.5, -10.15) -- (5.5, -10.15);
+    
+    % Row 1
+    \node[legendbox, draw=blue!60!black, fill=blue!8] (L1) at (-3.8, -10.55) {};
+    \node[legendlabel] at ([xshift=4pt]L1.east) {Symbolic operator};
+    
+    \node[legendbox, draw=teal!70!black, fill=teal!8] (L2) at (-0.6, -10.55) {};
+    \node[legendlabel] at ([xshift=4pt]L2.east) {Executor (working)};
+    
+    \node[legendbox, draw=green!60!black, fill=green!8] (L3) at (2.8, -10.55) {};
+    \node[legendlabel] at ([xshift=4pt]L3.east) {Goal};
+    
+    % Row 2
+    \node[legendbox, draw=red!70!black, fill=red!10] (L4) at (-3.8, -11.05) {};
+    \node[legendlabel] at ([xshift=4pt]L4.east) {Failed operator};
+    
+    \node[legendbox, draw=orange!80!black, fill=orange!10, densely dashed] (L5) at (-0.6, -11.05) {};
+    \node[legendlabel] at ([xshift=4pt]L5.east) {Discovered executor (via RL)};
+    
+    \end{tikzpicture}
+    \caption{Conceptual overview of the integrated planning task (IPT) formalism. Each symbolic operator $\Operator_i$ is mapped to a subsymbolic executor $\Executor_i = \langle I_{\Executor_i}, \Policy_{\Executor_i}, \beta_{\Executor_i} \rangle$ via the executor function~$e$. The abstraction function $\Abstraction : \States \rightarrow \SymStates$ maps environment states back to symbolic states for the planner. \textbf{(a)}~In a working IPT, all executors realize their associated operators and the agent reaches the goal~$\Goal$. \textbf{(b)}~When novelty causes an operator to fail, the IPT becomes a Stretch-IPT: the task remains solvable but the current executor mapping is broken. RAPid-Learn solves the executor discovery problem by constructing a new executor~$\Executor'_2$ through reinforcement learning, restoring solvability.}
+    \label{fig:ipt_overview}
+\end{figure}

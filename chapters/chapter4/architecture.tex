@@ -1,0 +1,79 @@
+\section{A Neurosymbolic Architecture for Open-World Novelty Handling}
+\label{sec:architecture}
+
+RAPid-Learn addresses the specific problem of recovering from execution impasses caused by novelty. However, a complete open-world agent must handle the full lifecycle of novelty: detecting that something has changed, characterizing the nature of the change, exploring the environment to gather information, and accommodating the novelty to continue task performance. This section presents a neurosymbolic cognitive architecture~\citep{goel2024neurosymbolic} that integrates RAPid-Learn within a broader framework for novelty handling. The architecture combines symbolic inference, neural inference, and reinforcement learning, with each component contributing to different aspects of novelty detection and accommodation.
+
+\subsection{Novelty Typology for Goal-Oriented Agents}
+\label{sec:novelty_typology}
+
+The formalization of novelty in \cref{sec:novelty} defined novelty as a deviation between the agent's model and the true environment. For a goal-oriented agent equipped with a symbolic planner, the functional impact of a novelty depends on how it affects the agent's ability to generate and execute plans. We refine the general notion of novelty into four types based on their impact on task performance~\citep{goel2024neurosymbolic}.
+
+\begin{definition}[Prohibitive novelty]
+\label{def:prohibitive}
+A novelty $\nu$ is \emph{prohibitive} for agent $\mathcal{A}$ and task $T$ if for all plans $\Plan$ derivable from the agent's current knowledge, $\Plan$ does not solve $T$, but there exists a plan $\Plan_\nu$ that solves $T$ using knowledge of $\nu$.
+\end{definition}
+
+Prohibitive novelties prevent the agent from even generating a valid plan. For example, if the crafting table is removed from the environment, the agent cannot plan to craft any items; discovering an alternative source (e.g., a chest or a supplier) requires new knowledge.
+
+\begin{definition}[Obstructive novelty]
+\label{def:obstructive}
+A novelty $\nu$ is \emph{obstructive} for agent $\mathcal{A}$ and task $T$ if it causes the execution of an executor $\Executor \in \Executors$ to fail.
+\end{definition}
+
+Obstructive novelties are the primary focus of RAPid-Learn: the agent has a plan, but execution fails at a specific operator. The axe novelty from the running example is obstructive---the \texttt{break} operator's executor fails because trees are now unbreakable without an axe.
+
+\begin{definition}[Beneficial novelty]
+\label{def:beneficial}
+A novelty $\nu$ is \emph{beneficial} for agent $\mathcal{A}$ and task $T$ if incorporating $\nu$ into the agent's knowledge enables a plan $\Plan_\nu$ that solves $T$ with lower cost than any plan derivable from the agent's current knowledge.
+\end{definition}
+
+\begin{definition}[Nuisance novelty]
+\label{def:nuisance}
+A novelty $\nu$ is a \emph{nuisance} for agent $\mathcal{A}$ and task $T$ if plans incorporating $\nu$ do not improve upon existing plans---that is, the novelty does not contribute to task performance and may only increase cost.
+\end{definition}
+
+These types are agent-relative: the same environmental change may be prohibitive for one agent and merely a nuisance for another, depending on each agent's knowledge and capabilities. The architecture uses this typology to select appropriate recovery strategies: prohibitive novelties trigger plan-level exploration, obstructive novelties invoke the failure recovery pipeline (culminating in the RAPid-Learn executor learner if symbolic strategies fail), beneficial novelties are exploited when discovered, and nuisance novelties are identified and ignored.
+
+Note the relationship between this typology and the benchmark classification from \cref{sec:ngw_novelty_taxonomy}: beneficial and detrimental novelties in the benchmark correspond roughly to beneficial and obstructive/prohibitive novelties here, while irrelevant novelties correspond to nuisance novelties. The architecture's typology is more granular because it distinguishes between planning-level failures (prohibitive) and execution-level failures (obstructive), which require different recovery strategies.
+
+
+\subsection{Architecture Overview}
+\label{sec:arch_overview}
+
+The architecture, depicted in \cref{fig:architecture}, consists of four main components that interact through the agent's knowledge repository $\mathcal{K} = (\KB, \Theta)$, where $\KB$ stores symbolic knowledge (facts, rules, operators in first-order logic) and $\Theta$ stores subsymbolic knowledge (neural network parameters). The components are:
+
+% \begin{figure}[t]
+%     \centering
+%     \includegraphics[width=\textwidth]{figures/chapter4/architecture.pdf}
+%     \caption{High-level architecture of the neurosymbolic cognitive architecture for novelty handling. Symbolic inference (left) detects novelty through state prediction and plan monitoring. Neural inference (right) detects novelty through visual anomaly detection and behavioral modeling. The novelty exploration component (bottom) employs cascading recovery strategies, with the executor learner (RAPid-Learn) as the final fallback when symbolic strategies are exhausted.}
+%     \label{fig:architecture}
+% \end{figure}
+
+\paragraph{Symbolic inference.} The knowledge base $\KB$ stores facts about the environment using a first-order language, including entity properties, spatial relations, and the planning domain (operators with preconditions and effects, specified in PDDL). The \emph{task planner} retrieves the domain definition and current state from $\KB$ and searches for a plan. The \emph{goal manager} orchestrates plan execution: it verifies operator preconditions against the observed state, dispatches executors through the domain interface, monitors whether effects match expectations, and detects novelties when predictions diverge from observations. The general principle for symbolic novelty detection is predicting the next state and comparing the prediction with the observed state---any discrepancy constitutes a potential novelty.
+
+\paragraph{Neural inference.} Two neural components supplement symbolic novelty detection. A \emph{vision model}, based on a deep autoencoder~\citep{abati2019autoregression}, detects visual novelties by monitoring reconstruction error on image observations---novel visual elements produce higher reconstruction error than familiar ones. An \emph{agent model}, trained via behavioral cloning on trajectories of known actor types, monitors other actors' behavior and detects when their actions are unlikely under the learned behavioral model. Both components produce symbolic novelty descriptions that are asserted into $\KB$ for further reasoning.
+
+\paragraph{Novelty exploration.} When novelty is detected, the \emph{novelty exploration} component employs a cascading sequence of recovery strategies, progressing from lightweight symbolic approaches to more expensive learning-based methods. The strategies are organized around the type of failure encountered, as described in the next subsection.
+
+\paragraph{Domain interface.} The domain interface mediates all interactions between the agent and the environment, translating between the agent's internal representations and the environment's state and action formats. It provides both symbolic state descriptions (for the planner and goal manager) and subsymbolic observations such as images (for the vision model) and LiDAR-like sensor data (for executors).
+
+
+\subsection{Failure Recovery Strategies}
+\label{sec:failure_recovery}
+
+When the goal manager detects that novelty has caused a planning or execution failure, the novelty exploration component is invoked. Recovery strategies are selected based on the nature of the failure. For the scope of this chapter, we focus on recovery from operator failures, which are the most common consequence of open-world novelty and the primary target of RAPid-Learn.
+
+When an operator's executor is executed but its effects are not observed in the resulting state, the architecture distinguishes between two cases:
+
+\paragraph{Partial effect failure.} If a subset of the operator's expected effects are observed, the operator's description in $\KB$ is updated to reflect the observed effects, and the agent replans. This handles cases where an operator's behavior has changed but not disappeared entirely.
+
+\paragraph{Total effect failure.} If none of the operator's expected effects are observed, a cascading sequence of strategies is applied:
+\begin{enumerate}[leftmargin=*]
+    \item \emph{Update and replan}: The operator's effects are removed from $\KB$ and the agent attempts to find an alternative plan that avoids the failed operator.
+    \item \emph{Repeated execution}: The operator is retried to account for stochastic or transient failures.
+    \item \emph{Precondition discovery}: The agent hypothesizes that the operator requires an additional, previously unknown precondition. New preconditions are constructed from predicates encountered in the domain and tested by satisfying them before reattempting the operator. For instance, if \texttt{break(tree)} fails, the agent may hypothesize that \texttt{holding(axe)} is a missing precondition.
+    \item \emph{Operator variations}: The agent tests known operators with similar parameters or on related objects, leveraging the type hierarchy in $\KB$ to discover operators with unexpected effects that may resolve the impasse.
+    \item \emph{Executor learner (RAPid-Learn)}: If all symbolic strategies fail, the agent invokes the RAPid-Learn framework (\cref{sec:rapid_learn_method}) to learn a new executor through reinforcement learning with knowledge-guided exploration.
+\end{enumerate}
+
+The cascading design reflects a deliberate trade-off between computational cost and generality. Symbolic strategies (steps 1--4) are fast but limited to novelties that can be resolved within the agent's existing representational vocabulary. The executor learner (step 5) is more expensive but can discover recovery behaviors that involve novel predicates, spatial relations, or action sequences not present in the agent's original domain model---precisely the cases where symbolic reasoning is insufficient. As demonstrated in \cref{ch:benchmarks}, this architecture-level integration of planning and learning achieves substantially faster adaptation than pure learning approaches while maintaining the robustness to handle novelties that pure planning cannot resolve.

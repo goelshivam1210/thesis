@@ -7,11 +7,14 @@ Let the agent’s knowledge be defined by a symbolic model $\PlanningTask = \lan
 
 A novelty corresponds to the introduction of elements that are not contained in the agent’s current knowledge. These may include new fluents, operators, states, actions, or changes in transition dynamics. Formally, a novelty induces an extension of the agent’s model, such as $\Fluents'$, $\Operators'$, $\States'$, or $\Actions'$, where at least one of the following holds:
 \[
-\Fluents' \cap \Fluents = \emptyset, \quad
-\Operators' \cap \Operators = \emptyset, \quad
+\Fluents' \setminus \Fluents \neq \emptyset, \quad
+\Operators' \setminus \Operators \neq \emptyset, \quad
 \States' \not\subseteq \States, \quad
-\Actions' \not\subseteq \Actions.
+\Actions' \not\subseteq \Actions, \quad
+\Transition' \neq \Transition.
 \]
+
+The first four conditions capture the introduction of entirely new elements (fluents, operators, states, or actions) that the agent's model does not contain. The fifth condition captures changes in the environment's dynamics for existing state-action pairs---situations where the agent's learned transition model no longer predicts the environment's behavior correctly. This distinction is important because many real-world novelties do not introduce new elements but instead alter how existing elements behave.
 
 In hybrid planning and learning systems, novelty may manifest as a discrepancy between symbolic reasoning and execution. In particular, an operator $\Operator \in \Operators$ may be applicable in a symbolic state $\SymState$, i.e., $\SymState \models \Pre_{\Operator}$, but its execution in a corresponding environment state may fail to produce the intended effects. Such discrepancies arise when the agent’s models are incomplete with respect to the true environment.
 

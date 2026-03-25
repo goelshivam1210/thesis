@@ -1,0 +1,100 @@
+\section{Problem Formulation}
+\label{sec:ipt}
+
+This section formalizes the integration of symbolic planning and reinforcement learning in open-world settings. The central challenge is bridging two complementary representations: a symbolic level, where the agent reasons over operators, preconditions, and goals, and a subsymbolic level, where it interacts with the environment through states and actions. We introduce the concept of an \emph{executor} to connect these levels, define an \emph{integrated planning task} (IPT) that unifies symbolic planning with subsymbolic execution, and formalize the problem of discovering missing executors when novelty causes execution failure.
+
+The formalism builds on the symbolic planning task $\PlanningTask = \langle \Fluents, \Operators, \SymState_0, \Goal \rangle$ and the Markov decision process $M = \langle \States, \Actions, \Transition, \Reward, \Discount \rangle$ introduced in \cref{sec:symbolic_planning,sec:rl}, as well as the hybrid system $\Hybrid = \langle \PlanningTask, M, \Abstraction \rangle$ from \cref{sec:hybrid}. We extend this hybrid system by explicitly specifying how symbolic operators are grounded in execution and how execution failures are handled.
+
+
+\subsection{Executors}
+\label{sec:executors}
+
+In a hybrid planning and learning system, the symbolic planner generates a plan as a sequence of operators, but the agent ultimately interacts with the environment through low-level actions. An \emph{executor} is the mechanism that realizes a symbolic operator in the environment. Inspired by the options framework in hierarchical reinforcement learning~\citep{sutton1999options}, an executor defines when it can be initiated, how it behaves, and when it terminates.
+
+\begin{definition}[Executor]
+\label{def:executor}
+An executor $\Executor = \langle I_{\Executor}, \Policy_{\Executor}, \beta_{\Executor} \rangle$ consists of:
+\begin{itemize}[leftmargin=*]
+    \item An \emph{initiation set} $I_{\Executor} \subseteq \States$, the set of environment states in which the executor can be initiated.
+    \item A \emph{policy} $\Policy_{\Executor}(a \mid s)$, which defines a probability distribution over actions $a \in \Actions$ given the current state $s \in \States$.
+    \item A \emph{termination condition} $\beta_{\Executor} : \States \times \States \rightarrow \{0, 1\}$, where $\beta_{\Executor}(s_0, s) = 1$ if the executor terminates in state $s$ given that it was initiated in state $s_0$, and $0$ otherwise.
+\end{itemize}
+\end{definition}
+
+Let $\Executors = \{\Executor_1, \Executor_2, \ldots\}$ denote the set of all available executors. Each executor encapsulates a complete behavior. Its initiation set determines when it is applicable, its policy governs low-level action selection, and its termination condition determines when control returns to the symbolic planner. Executors may be hand-coded, learned through reinforcement learning, or implemented by internal planners (e.g., a navigation policy that computes paths using $A^*$, or motion planning algorithms).
+
+\subsection{Integrated Planning Task}
+\label{sec:ipt_def}
+
+To connect symbolic planning with subsymbolic execution, we define an integrated planning task that specifies explicit mappings between symbolic operators and their execution in the environment.
+
+\begin{definition}[Integrated Planning Task]
+\label{def:ipt}
+An Integrated Planning Task (IPT) is a tuple $\IPT = \langle \PlanningTask, M, \Abstraction, e \rangle$, where:
+\begin{itemize}[leftmargin=*]
+    \item $\PlanningTask = \langle \Fluents, \Operators, \SymState_0, \Goal \rangle$ is a symbolic planning task,
+    \item $M = \langle \States, \Actions, \Transition, \Reward, \Discount \rangle$ is a Markov decision process modeling the environment,
+    \item $\Abstraction : \States \rightarrow \SymStates$ is an abstraction function mapping environment states to symbolic states, and
+    \item $e : \Operators \rightarrow \Executors$ is an \emph{executor mapping} that assigns each symbolic operator to an executor.
+\end{itemize}
+\end{definition}
+
+
+The abstraction function $\Abstraction$ provides the interface from subsymbolic states to symbolic representations used by the planner. Conversely, the executor mapping $e$ grounds symbolic operators in the environment by specifying how each operator is executed.
+
+The IPT extends the hybrid system $\Hybrid = \langle \PlanningTask, M, \Abstraction \rangle$ by explicitly modeling execution as a first-class component through the executor mapping $e$, thereby grounding symbolic operators in the environment.
+
+\paragraph{Consistency between operators and executors.}
+For an IPT to function correctly, each executor must be consistent with the symbolic specification of its corresponding operator. Let $\Operator \in \Operators$ have preconditions $\Pre_{\Operator}$ and effects $\Eff_{\Operator}$. The executor $e(\Operator)$ must satisfy:
+
+\begin{enumerate}[leftmargin=*]
+    \item \emph{Initiation consistency}:
+    \[
+    I_{e(\Operator)} \supseteq \{ s \in \States : \Abstraction(s) \models \Pre_{\Operator} \}.
+    \]
+
+    \item \emph{Termination consistency}: The executor terminates either when the operator's effects are achieved or when sufficient progress has been made to continue planning:
+    \[
+    \beta_{e(\Operator_i)}(s_0, s) = 
+    \begin{cases}
+        1 & \text{if } \Abstraction(s) \models \Eff_{\Operator_i}, \\
+        1 & \text{if } \Abstraction(s) \models \Eff_{\hat{\Operator}} \ \forall \hat{\Operator} \in \hat{\Operators} \ \text{and } \exists \hat{\Plan} \text{ from } \Abstraction(s) \text{ to } \Goal, \\
+        0 & \text{otherwise},
+    \end{cases}
+    \]
+    where $\hat{\Operators}$ denotes subsequent operators in the plan whose preconditions depend on $\Eff_{\Operator_i}$.
+\end{enumerate}
+
+The first case corresponds to exact satisfaction of the operator’s effects. The second allows progress beyond the current operator if downstream effects are satisfied and a valid plan to the goal still exists.
+
+\paragraph{Solutions to an IPT.}
+A \emph{planning solution} to an IPT is a plan $\Plan = [\Operator_1, \ldots, \Operator_n]$ that solves $\PlanningTask$. A \emph{solution} is the corresponding sequence of executors $[e(\Operator_1), \ldots, e(\Operator_n)]$ such that executing them in the environment from any state $s$ with $\Abstraction(s) \models \SymState_0$ yields a state $s'$ with $\Abstraction(s') \models \Goal$. An IPT is \emph{plannable} if a planning solution exists and \emph{solvable} if a solution exists.
+
+\subsection{The Executor Discovery Problem}
+\label{sec:executor_discovery}
+
+In closed-world settings, every operator has a valid executor, and a plannable IPT is also solvable. In open-world environments, novelty can break this correspondence: an executor may fail because the environment dynamics no longer match the operator’s modeled effects.
+
+
+\begin{definition}[Stretch-IPT]
+\label{def:stretch_ipt}
+A Stretch-IPT $\tilde{\IPT}$ is an IPT for which a solution exists in the environment, but no planning solution exists under the agent’s current symbolic model.
+\end{definition}
+
+A Stretch-IPT arises when novelty renders the agent’s domain model incomplete. The planner may still generate a plan using existing operators, but execution fails because one or more executors do not produce states satisfying the corresponding operator effects. The key observation is that the task remains solvable; the failure arises from missing or invalid executors.
+
+Using the novelty formalism from \cref{sec:novelty}, a novelty introduces elements not captured by the current model. When an operator $\Operator_i$ fails during execution—i.e., $e(\Operator_i)$ does not produce a state satisfying $\Eff_{\Operator_i}$—the agent faces a Stretch-IPT.
+
+\begin{definition}[Executor Discovery Problem]
+\label{def:edp}
+Given a Stretch-IPT $\tilde{\IPT} = \langle \PlanningTask', M', \Abstraction, e' \rangle$ with updated planning task $\PlanningTask' = \langle \Fluents \cup \Fluents', \Operators \cup \Operators', \SymState_0', \Goal \rangle$ and failed operators $\{\Operator_1, \ldots, \Operator_m\}$, construct new executors $\{\Executor'_1, \ldots, \Executor'_m\}$ such that
+\[
+e'(\Operator_i) = \Executor'_i
+\]
+for each failed operator $\Operator_i$, making $\tilde{\IPT}$ solvable.
+\end{definition}
+
+\input{figures/chapter4/ipt_stretch_ipt}
+
+
+The executor discovery problem captures the essence of adaptation under novelty: the agent must acquire new low-level behaviors that realize high-level operator specifications in a changed environment. This cannot be achieved through symbolic reasoning alone, as the model is incomplete, nor through unguided learning, as exhaustive exploration is inefficient. Instead, the agent must leverage its symbolic structure to guide the learning of new executors. The next section presents RAPid-Learn, which addresses this problem by instantiating focused reinforcement learning problems for failed operators, guided by existing domain knowledge.

@@ -1,0 +1,117 @@
+\section{Experimental Evaluation}
+\label{sec:rl_evaluation}
+
+This section presents experimental evaluations at two levels. First, \cref{sec:rl_eval_rapid} evaluates the RAPid-Learn framework in isolation, comparing its novelty accommodation and sample efficiency against transfer learning baselines on the NovelGridworlds domain. Second, \cref{sec:rl_eval_architecture} evaluates the full neurosymbolic architecture on a large-scale systemic evaluation in the Polycraft environment, assessing the integrated capabilities of the architecture across hundreds of novelty scenarios.
+
+
+\subsection{RAPid-Learn Evaluation}
+\label{sec:rl_eval_rapid}
+
+\subsubsection{Experimental Setup}
+
+RAPid-Learn was evaluated on a $12 \times 12$ NovelGridworlds domain~\citep{goel2021novelgridworlds} with the pogostick crafting task described in \cref{sec:novelgridworlds}. The agent's sub-symbolic observation space consists of LiDAR-like sensors emitting beams at $\frac{\pi}{4}$ increments for each entity type (observation size $8 \times |\Entities|$), augmented with inventory and selected-item vectors. The action space includes navigation actions (\texttt{turn-left}, \texttt{turn-right}, \texttt{move-forward}), interaction actions (\texttt{break}, \texttt{extract-rubber}), crafting actions, and hierarchical operators (\texttt{approach-entity}) implemented by the internal planner.
+
+Five novelty scenarios were designed, spanning different types of environmental changes:
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Axe-to-break (ATB) hard}: A novel axe entity appears in the environment; trees can only be broken while holding the axe. The agent must find the axe, collect it, and use it.
+    \item \textbf{Fire-crafting-table (FCT) hard}: The crafting table is set on fire. Water and a spray action are introduced; the agent must collect water from the environment and extinguish the fire.
+    \item \textbf{Rubber-tree (RT) hard}: A novel rubber-tree entity appears; rubber can only be extracted by placing a tree-tap in front of the rubber-tree. The agent must learn spatial relations (\emph{in front of}) not represented in its symbolic knowledge.
+    \item \textbf{Scrape-plank (SP)}: The \texttt{break} action no longer produces tree-logs. A novel \texttt{scrape-plank} action is introduced that produces planks directly from trees.
+    \item \textbf{ATB + FCT (easy)}: Two novelties are introduced simultaneously---axe-to-break and fire-crafting-table in their easy variants (items are pre-placed in inventory). This tests recovery from multiple independent operator failures.
+\end{enumerate}
+
+Three variants of RAPid-Learn were compared: \emph{RAPid-KGE-UCB} (with upper confidence bound action biasing), \emph{RAPid-KGE-UAB} (with uniform action biasing), and \emph{RAPid-EG} (with standard $\epsilon$-greedy exploration). Two transfer learning baselines were used: \emph{Actor-Critic Transfer}~\citep{clegg2017haptics}, which transfers both the policy and value function through PPO~\citep{schulman2017proximal}, and \emph{Policy Reuse}~\citep{glatt2017policy}, which transfers the learned policy. Both baselines were pre-trained on the base task with dense reward shaping until convergence ($>96\%$ success rate). The reinforcement learning component in all RAPid-Learn variants used the policy gradient algorithm~\citep{williams1992reinforce}. All results are reported as mean $\pm$ standard deviation over 10 independent trials.
+
+
+\subsubsection{Results}
+
+\begin{table}[t]
+\footnotesize
+\centering
+\begin{tabular}{l l c c}
+\toprule
+Novelty & Agent & $T_\text{adapt}$ (timesteps) & Post-novelty SR \\
+\midrule
+\textbf{RT hard}
+  & RAPid-KGE-UCB     & $(2.85 \pm 2.15) \times 10^4$ & $0.95 \pm 0.01$ \\
+  & RAPid-KGE-UAB     & $(3.28 \pm 1.51) \times 10^4$ & $0.93 \pm 0.03$ \\
+  & RAPid-EG          & $(3.73 \pm 2.08) \times 10^4$ & $0.91 \pm 0.04$ \\
+  & Actor-Critic Tr.  & did not converge              & N/A \\
+  & Policy Reuse      & did not converge              & N/A \\
+\midrule
+\textbf{ATB+FCT easy}
+  & RAPid-KGE-UCB     & $(4.02 \pm 1.82) \times 10^3$ & $0.97 \pm 0.01$ \\
+  & RAPid-KGE-UAB     & $(4.56 \pm 3.43) \times 10^3$ & $0.97 \pm 0.02$ \\
+  & RAPid-EG          & $(6.93 \pm 4.41) \times 10^3$ & $0.98 \pm 0.01$ \\
+  & Actor-Critic Tr.  & $(17.6 \pm 5.13) \times 10^4$ & $0.93 \pm 0.02$ \\
+  & Policy Reuse      & $(8.08 \pm 2.38) \times 10^5$ & $0.92 \pm 0.04$ \\
+\midrule
+\textbf{ATB hard}
+  & RAPid-KGE-UCB     & $(2.35 \pm 1.27) \times 10^3$ & $0.95 \pm 0.01$ \\
+  & RAPid-KGE-UAB     & $(13.0 \pm 4.89) \times 10^2$ & $0.85 \pm 0.07$ \\
+  & RAPid-EG          & $(14.9 \pm 8.65) \times 10^2$ & $0.84 \pm 0.03$ \\
+  & Actor-Critic Tr.  & $(9.80 \pm 4.75) \times 10^4$ & $0.90 \pm 0.05$ \\
+  & Policy Reuse      & $(5.57 \pm 2.59) \times 10^5$ & $0.92 \pm 0.04$ \\
+\midrule
+\textbf{FCT hard}
+  & RAPid-KGE-UCB     & $(8.61 \pm 4.73) \times 10^3$ & $0.98 \pm 0.00$ \\
+  & RAPid-KGE-UAB     & $(4.40 \pm 1.96) \times 10^3$ & $0.99 \pm 0.00$ \\
+  & RAPid-EG          & $(5.12 \pm 2.84) \times 10^3$ & $0.98 \pm 0.00$ \\
+  & Actor-Critic Tr.  & $(16.7 \pm 3.99) \times 10^4$ & $0.90 \pm 0.04$ \\
+  & Policy Reuse      & $(7.90 \pm 2.70) \times 10^5$ & $0.94 \pm 0.03$ \\
+\midrule
+\textbf{SP}
+  & RAPid-KGE-UCB     & $(6.82 \pm 3.83) \times 10^3$ & $0.86 \pm 0.03$ \\
+  & RAPid-KGE-UAB     & $(2.01 \pm 1.01) \times 10^3$ & $0.87 \pm 0.03$ \\
+  & RAPid-EG          & $(17.2 \pm 7.38) \times 10^2$ & $0.96 \pm 0.01$ \\
+  & Actor-Critic Tr.  & $(6.86 \pm 3.89) \times 10^4$ & $0.93 \pm 0.03$ \\
+  & Policy Reuse      & $(19.3 \pm 9.76) \times 10^4$ & $0.94 \pm 0.03$ \\
+\bottomrule
+\end{tabular}
+\caption{RAPid-Learn results across five novelty scenarios. $T_\text{adapt}$: time steps to adaptation convergence. Post-novelty SR: success rate on 100 evaluation episodes. Best performing agent highlighted per scenario. In all scenarios, RAPid-Learn adapts one to two orders of magnitude faster than transfer learning baselines.}
+\label{tab:rapid_learn_results}
+\end{table}
+
+
+\paragraph{Sample efficiency.} \Cref{tab:rapid_learn_results} shows that RAPid-Learn consistently adapts one to two orders of magnitude faster than the transfer learning baselines across all novelty scenarios. In the axe-to-break hard novelty, RAPid-KGE-UCB adapts in approximately $2.35 \times 10^3$ time steps compared to $9.80 \times 10^4$ for actor-critic transfer and $5.57 \times 10^5$ for policy reuse---improvements of roughly $40\times$ and $230\times$, respectively. The advantage is most pronounced in the rubber-tree hard novelty, where both baselines fail to converge entirely, while all RAPid-Learn variants converge within $3.7 \times 10^4$ time steps. The sample efficiency advantage arises from two sources: the symbolic planner constrains the learning problem to a specific subgoal (the failed operator's effects), and knowledge-guided exploration focuses the agent on actions and states likely related to the novelty.
+
+\paragraph{Effectiveness of knowledge-guided exploration.} The relative performance of the three RAPid-Learn variants reveals the contribution of knowledge-guided exploration. In complex novelties such as rubber-tree hard, where the agent must discover a spatial relation not in its symbolic knowledge, KGE-UCB and KGE-UAB provide measurable improvements in convergence speed over standard $\epsilon$-greedy exploration. In simpler novelties such as scrape-plank, where the solution involves a single novel action, the advantage of knowledge-guided exploration is less pronounced, and $\epsilon$-greedy exploration can occasionally converge faster. This pattern is consistent with the expectation that knowledge-guided exploration is most valuable when the exploration space is large and the solution requires interacting with novel entities.
+
+\paragraph{Multiple operator failures.} The ATB+FCT easy scenario demonstrates that RAPid-Learn handles multiple simultaneous novelties effectively. The agent learns two independent executors---one for each failed operator---and achieves a 97\% post-novelty success rate in approximately $4 \times 10^3$ time steps. The rubber-tree hard scenario further demonstrates recovery from cascading failures: after learning to extract rubber from the rubber-tree, the agent discovers that it can no longer break the now-unbreakable rubber-tree, triggering a second executor discovery process. Despite this implicit multiple-failure structure, RAPid-Learn converges successfully while the baselines fail entirely.
+
+\paragraph{Statistical significance.} Unpaired $t$-tests between the best-performing RAPid-Learn variant and each baseline confirm that the differences in post-novelty success rate are statistically significant ($p < 0.01$) in all scenarios except scrape-plank versus policy reuse ($p = 0.06$), where the baselines achieve comparable final performance albeit at substantially higher sample cost.
+
+\paragraph{Ablation: hierarchical actions.} An ablation study removing hierarchical actions (the \texttt{approach} operator) from the learner's action space shows that their inclusion substantially improves sample efficiency, particularly for complex novelties. Without hierarchical actions, RAPid-EG fails to converge on the fire-crafting-table hard novelty, while RAPid-KGE-UCB still converges but requires more episodes. This confirms that composing learned behaviors with existing executors is a key advantage of the hybrid architecture.
+
+
+\subsection{Integrated Architecture Evaluation}
+\label{sec:rl_eval_architecture}
+
+To evaluate the full neurosymbolic architecture, a large-scale systemic evaluation was conducted in the Polycraft World domain~\citep{goss2023polycraft}, a partially observable, multi-agent environment based on Minecraft. The evaluation spanned 288 novelties across 10 categories (object, attribute, representation, actor, action, relation, interaction, environment, goal, event), with 864 novelty tournaments. Of these, 216 novelties were known during architecture development; the remaining 72 were \emph{concealed novelties} designed by a separate evaluation team and never shared with the architecture developers.
+
+Four agent configurations were evaluated: a \emph{Base} agent using only symbolic inference and symbolic novelty exploration; \emph{Base+Agent Model}, augmenting the base with neural behavioral modeling of other actors; \emph{Base+Executor Learner}, augmenting the base with the RAPid-Learn executor learner; and a combined \emph{Base+Agent Model+Executor Learner} configuration.
+
+\begin{table}[t]
+\footnotesize
+\centering
+\begin{tabular}{l c c c c c}
+\toprule
+Agent & $\text{FN}_\text{CDT}$ $\downarrow$ & CDT\% $\uparrow$ & FP\% $\downarrow$ & NRP\% $\uparrow$ & GA\% $\uparrow$ \\
+\midrule
+Base                    & 0.69 & 83.3 & 3.2 & 73.5 & 64.4 \\
+Base+Agent Model        & 0.58 & 86.1 & 6.1 & 72.4 & 64.0 \\
+Base+Executor Learner   & 0.76 & 84.7 & 2.3 & \textbf{74.2} & \textbf{66.6} \\
+Base+AM+EL              & \textbf{0.39} & \textbf{88.7} & \textbf{1.6} & 68.1 & 61.9 \\
+\bottomrule
+\end{tabular}
+\caption{Overall systemic evaluation results in Polycraft across 288 novelties. $\text{FN}_\text{CDT}$: average false negative episodes before detection; CDT\%: correctly detected trials; FP\%: false positive rate; NRP\%: novelty reaction performance; GA\%: goal achieved rate. The executor learner improves accommodation (NRP\%, GA\%), while the agent model improves detection (CDT\%, $\text{FN}_\text{CDT}$).}
+\label{tab:polycraft_overall}
+\end{table}
+
+\paragraph{Novelty detection.} \Cref{tab:polycraft_overall} shows that configurations including the agent model achieve better novelty detection performance, with the combined configuration reaching 88.7\% correctly detected trials and a false negative rate of 0.39 episodes. The agent model is particularly effective for action and goal novelties, where actors exhibit changed behavior that symbolic inference alone cannot detect. The vision model (evaluated separately) achieved 84.9\% true positive rate with 85.1\% precision on concealed visual novelties, demonstrating the potential of subsymbolic novelty detection, though its higher false positive rate (34.1\% at the 95\% TPR threshold) limited its integration into the task-oriented agent.
+
+\paragraph{Novelty accommodation.} The Base+Executor Learner configuration achieves the highest novelty accommodation performance, with 66.6\% goal achievement rate and 74.2\% novelty reaction performance, outperforming all other configurations. The executor learner proves most valuable in attribute novelties (e.g., learning to break birch trees that fail to produce rubber) and concealed novelties where symbolic exploration strategies are insufficient. A notable example is the ``different items in chests'' novelty, where the base agent fails because it assumes all chests contain identical items, while the executor learner discovers a policy to open all chests and collect diverse ingredients.
+
+\paragraph{Interaction effects.} The combined Base+Agent Model+Executor Learner configuration achieves the best detection performance but lower accommodation scores than the Base+Executor Learner alone. This arises from an unforeseen interaction: the executor learner's exploration changes the environment state, which triggers false novelty detections from the agent model, leading to unnecessary exploration that hinders task performance. This finding highlights the challenge of integrating multiple adaptive components and suggests that coordination mechanisms between detection and accommodation modules are an important direction for future work.
+
+\paragraph{Performance on concealed novelties.} The executor learner showed a measurable improvement on concealed novelties (68.2\% NRP and 61.3\% GA for the Base+Executor Learner, compared to 64.8\% NRP and 57.1\% GA for the Base agent), confirming that the learning-based accommodation generalizes to novelty scenarios not anticipated during development. This is a strong validation of the architecture's open-world capabilities: the reinforcement learning component discovers recovery behaviors for novelties that neither the system designers nor the symbolic exploration strategies could have foreseen.
