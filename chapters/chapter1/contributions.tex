@@ -1,15 +1,30 @@
 \section{Thesis Contributions}
 \label{sec:contributions}
 
-This dissertation develops methods for enabling autonomous agents and robots to operate effectively in open-world environments through learning, adaptation, and generalization. The contributions address how such systems can be evaluated under novelty, how they can adapt when execution failures occur, and how robots can acquire interaction policies that generalize across objects, tasks, and robotic embodiment.
+This dissertation develops methods and frameworks for enabling autonomous agents and robots to operate effectively in open-world environments, where previously learned knowledge may become incomplete or invalid. The contributions address three complementary aspects of this problem: (1) how to systematically study agent behavior under novelty, (2) how to enable efficient adaptation when execution failures occur, and (3) how to design interaction representations that support generalization across diverse objects, tasks, and embodiment.
+
+A unifying theme across these contributions is the role of structured abstractions in shaping how agents remain effective under mismatch between their internal models and the environment. In particular, this work shows how abstractions enable both efficient adaptation in the presence of failure and generalization of learned behaviors across variations in the world.
 
 The main contributions of this dissertation are summarized as follows:
 
 \begin{itemize}
 
-\item It introduces benchmark environments and evaluation methodologies that systematically introduce novelty into agent environments, enabling rigorous study of autonomous systems operating under open-world conditions. These environments provide mechanisms for controlled novelty introduction and support evaluation of how agents detect, respond to, and adapt to unexpected changes in their environment.
+\item \textbf{Evaluation frameworks for open-world novelty.}  
+This work introduces benchmark environments, formalism, and evaluation methodologies that enable the systematic study of agent behavior under novelty. The proposed environments support controlled injection of diverse classes of novelty, including changes to objects, environment dynamics, and task structure. 
 
-\item It develops adaptive planning–learning systems and architectural frameworks that enable agents to recover from execution failures in changing environments. By integrating planning mechanisms with learning-based adaptation, these systems allow agents to detect when previously learned models become insufficient and modify their behavior to continue task execution despite unexpected changes.
+In addition to enabling reproducible experimentation, these benchmarks provide metrics that characterize the dynamics of agent behavior under novelty, including how quickly deviations from expected outcomes are detected, how performance degrades following a change, and how effectively the agent recovers. These contributions establish a principled foundation for analyzing adaptation and generalization in open-world settings.
 
-\item It introduces object-centric reinforcement learning approaches for robotic interaction that learn manipulation policies in force space. These methods enable robots to acquire interaction strategies that generalize across objects, tasks, and robot embodiments, supporting manipulation behaviors involving sustained contact and diverse physical interaction dynamics.
+\item \textbf{Action abstractions for efficient adaptation under novelty.}  
+This work develops hybrid planning--learning methods that enable agents to recover from execution failures caused by novelty. The key idea is to leverage structured action abstractions that associate high-level operators with executable behaviors, allowing failures to be localized to specific components of a plan.
+
+When execution fails, these abstractions enable the agent to convert a global failure into a targeted learning problem, focusing exploration on acquiring only the missing behavior required to restore successful execution. This results in significantly improved sample efficiency compared to unstructured reinforcement learning approaches, while preserving previously valid knowledge. These results demonstrate how structured representations over actions can support efficient adaptation in the presence of unexpected changes.
+
+\item \textbf{Interaction abstractions for generalizable skill learning in robotics.}  
+This work introduces object-centric, force-based representations for robotic manipulation that capture interaction at the level of object dynamics rather than robot-specific control. By decoupling learned policies from particular robot embodiments and control strategies, these abstractions enable skills to generalize across objects with similar physical semantics, across variations in object parameters, and across different robotic platforms.
+
+Through experiments on articulated and heavy object manipulation tasks, this work shows that representing interaction in force space reduces unnecessary exploration and enables efficient learning of behaviors that transfer across environments. These results demonstrate how appropriate abstractions over interaction can support generalization without requiring task- or embodiment-specific retraining.
+
 \end{itemize}
+
+\paragraph{Summary.}
+Taken together, these contributions establish a unified perspective on open-world autonomy: while novelty introduces mismatch between an agent and its environment, structured abstractions determine whether this mismatch can be managed effectively. By enabling systematic study of novelty, supporting efficient adaptation when failures occur, and promoting generalization across variations, the proposed methods provide a step toward agents that can operate robustly in real-world environments.
