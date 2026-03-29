@@ -1,0 +1,98 @@
+\begin{figure}[t]
+    \centering
+    \begin{tikzpicture}[
+        >=Stealth,
+        % --- Node styles (Ch.4 palette) ---
+        symstate/.style={
+            circle, draw=blue!60!black, fill=blue!8,
+            minimum size=0.95cm, font=\small, thick
+        },
+        envstate/.style={
+            circle, draw=teal!70!black, fill=teal!8,
+            minimum size=0.95cm, font=\small, thick
+        },
+        opnode/.style={
+            rectangle, rounded corners=3pt, draw=blue!60!black, fill=blue!8,
+            minimum width=1.3cm, minimum height=0.65cm,
+            font=\small, align=center, thick
+        },
+        exnode/.style={
+            rectangle, rounded corners=3pt, draw=teal!70!black, fill=teal!8,
+            minimum width=1.3cm, minimum height=0.65cm,
+            font=\small, align=center, thick
+        },
+        goalnode/.style={
+            rectangle, rounded corners=3pt, draw=green!60!black, fill=green!8,
+            minimum width=1.1cm, minimum height=0.65cm,
+            font=\small, align=center, thick
+        },
+        % --- Arrow styles ---
+        planflow/.style={->, thick, blue!50!black},
+        exflow/.style={->, thick, teal!50!black},
+        mapline/.style={<->, densely dashed, gray!60!black, thin},
+        corr/.style={<->, densely dashed, orange!70!black, semithick},
+        % --- Labels ---
+        levellabel/.style={font=\footnotesize\itshape, gray!60!black},
+        alphabox/.style={font=\footnotesize, gray!60!black},
+        % --- Legend ---
+        legendbox/.style={minimum width=0.45cm, minimum height=0.3cm, rounded corners=2pt, thick, inner sep=0pt},
+        legendlabel/.style={font=\scriptsize, anchor=west, inner sep=0pt},
+    ]
+
+    % ===== SYMBOLIC LEVEL (top) =====
+    \node[levellabel, anchor=west] at (-5.0, 0.2) {Symbolic};
+    \draw[gray!40, thin, densely dashed] (-5.0, 0.0) -- (5.6, 0.0);
+
+    % Symbolic states
+    \node[symstate] (s0) at (-3.2, -0.9) {$\SymState_0$};
+    \node[symstate] (s1) at (-0.2, -0.9) {$\SymState_1$};
+    \node[symstate] (s2) at (2.8, -0.9) {$\SymState_2$};
+
+    % Operators (positioned on the arrows)
+    \draw[planflow] (s0) -- (s1) node[midway, above=3pt, opnode] (o1) {$\Operator_1$};
+    \draw[planflow] (s1) -- (s2) node[midway, above=3pt, opnode] (o2) {$\Operator_2$};
+
+    % Plan brace
+    \draw[decorate, decoration={brace, amplitude=4pt, raise=2pt}, blue!40]
+        (o1.north west) -- (o2.north east)
+        node[midway, above=7pt, font=\small, blue!60!black] {Plan $\Plan = [\Operator_1, \Operator_2]$};
+
+    % ===== ABSTRACTION MAPPING (middle) =====
+    \node[alphabox] at (5.2, -2.0) {$\Abstraction$};
+    \draw[<-, densely dashed, gray!60!black, semithick] (4.9, -1.2) -- (4.9, -2.65);
+
+    % ===== SUBSYMBOLIC LEVEL (bottom) =====
+    \node[levellabel, anchor=west] at (-5.0, -2.35) {Subsymbolic};
+    \draw[gray!40, thin, densely dashed] (-5.0, -2.55) -- (5.6, -2.55);
+
+    % Environment states
+    \node[envstate] (e0) at (-3.2, -3.45) {$e_0$};
+    \node[envstate] (e1) at (-0.2, -3.45) {$e_1$};
+    \node[envstate] (e2) at (2.8, -3.45) {$e_2$};
+
+    % Executors (positioned on the arrows)
+    \draw[exflow] (e0) -- (e1) node[midway, below=3pt, exnode] (x1) {$\Executor_{\Operator_1}$};
+    \draw[exflow] (e1) -- (e2) node[midway, below=3pt, exnode] (x2) {$\Executor_{\Operator_2}$};
+
+    % ===== CORRESPONDENCE ARROWS =====
+    \draw[corr] (o1.south west) -- (x1.north west)
+        node[midway, left=2pt, font=\scriptsize, orange!70!black] {};
+    \draw[corr] (o2.south east) -- (x2.north east)
+        node[midway, right=2pt, font=\scriptsize, orange!70!black] {};
+
+    % ===== LEGEND (centered, evenly spaced) =====
+    \draw[gray!30, thin] (-5.0, -4.75) -- (5.6, -4.75);
+
+    \node[legendbox, draw=blue!60!black, fill=blue!8]    (L1) at (-3.8, -5.1) {};
+    \node[legendlabel] at (-3.5, -5.1) {Symbolic};
+
+    \node[legendbox, draw=teal!70!black, fill=teal!8]     (L2) at (-1.0, -5.1) {};
+    \node[legendlabel] at (-0.7, -5.1) {Subsymbolic};
+
+    \draw[corr] (1.6, -5.1) -- (2.1, -5.1);
+    \node[legendlabel] at (2.2, -5.1) {Operator--executor pair};
+
+    \end{tikzpicture}
+    \caption[Agent--environment interaction in the hybrid framework]{The two-level structure of the hybrid planning and learning framework. \textbf{Top (symbolic):} The agent generates a plan $\Plan$ as a sequence of operators $\Operator_i$ transitioning between symbolic states $\SymState$. \textbf{Bottom (subsymbolic):} The environment consists of concrete states $e$, and transitions are realized by executors $\Executor_{\Operator_i}$---policies that implement the corresponding operators. The abstraction function $\Abstraction : \States \to \SymStates$ maps environment states to symbolic descriptions. Each operator--executor pair (dashed orange) links a symbolic action to its realization in the environment. Novelty manifests when the executor for an operator no longer achieves the intended symbolic transition.}
+    \label{fig:agent_environment}
+\end{figure}

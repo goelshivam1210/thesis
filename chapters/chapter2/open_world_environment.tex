@@ -1,0 +1,58 @@
+\section{Open-World Environments}
+\label{sec:open_world_environments}
+
+Autonomous agents operate within environments that they must perceive, reason about, and act upon in order to achieve their goals. In this section, we formalize the structure of such environments and the agents that inhabit them, and distinguish between the closed-world settings that underlie most current AI research and the open-world settings that motivate this dissertation.
+
+\subsection{The Environment}
+\label{sec:environment}
+
+We consider a task environment $\Env = \langle \EnvStates, \EnvDynamics \rangle$ consisting of a set of environment states $\EnvStates$ and a set of dynamics $\EnvDynamics$ that govern how states evolve over time. The environment may contain any number of objects and other agents as part of its state, and its dynamics may be deterministic or stochastic. Environment states are assumed to be objective in the sense that they exist independently of any particular agent's knowledge or observation of them.
+
+At any given time $t$, the environment is in some state $e_t \in \EnvStates$. The dynamics $\EnvDynamics$ define how this state changes, both due to the natural evolution of the environment and as a consequence of actions taken by agents within it. In general, an agent does not have direct access to the full environment state $e_t$; instead, it observes the environment through its sensors and acts upon it through its effectors, as described below.
+
+\subsection{The Agent}
+\label{sec:agent}
+
+An agent $\Agent = \langle \Sensors, \Effectors, \KnowledgeRepo, \vdash \rangle$ is defined by four components: a set of sensors $\Sensors$ that allow it to perceive the environment, a set of effectors $\Effectors$ that allow it to act upon it, a knowledge repository $\KnowledgeRepo$ that stores what the agent knows about the world, and an inference mechanism $\vdash$ that enables the agent to reason over its knowledge.
+
+The knowledge repository $\KnowledgeRepo = (\KB, \SubsymbolicKB)$ is composed of two complementary parts. The knowledge base $\KB$ stores explicit symbolic knowledge---facts, rules, and relational descriptions expressed in a formal language $\Language$. The subsymbolic component $\SubsymbolicKB$ stores knowledge in distributed representations, such as the weights of neural networks that encode policies, value functions, or perceptual models. The inference mechanism $\vdash$ operates over both components: for $\KB$, it may take the form of logical deduction or planning; for $\SubsymbolicKB$, it corresponds to forward inference through learned models.
+
+At time $t$, the agent's sensors generate internal representations of the partially observed environment state. Based on these observations and its knowledge $\KnowledgeRepo$, the agent selects actions through its inference mechanism and executes them via its effectors, producing changes in the environment state. This perceive--reason--act cycle defines the agent's ongoing interaction with the world.
+
+\subsection{Closed-World and Open-World Assumptions}
+\label{sec:closed_open}
+
+The distinction between closed-world and open-world settings concerns the relationship between the agent's knowledge and the environment.
+
+Under closed-world assumptions, the agent's models are treated as complete and correct descriptions of the environment. Specifically, the set of objects, predicates, dynamics, and action effects that the agent represents are assumed to be sufficient for any situation it may encounter. This assumption has been productive: it underlies classical planning \citep{fikes1971strips, mcdermott1998pddl}, standard reinforcement learning formulations \citep{sutton2018reinforcement}, and most supervised learning approaches to perception. Under these assumptions, the primary challenge is computational---finding good plans, learning effective policies, or achieving accurate classification.
+
+In open-world environments, this assumption is violated. The environment may contain objects, dynamics, or relationships that the agent's models do not represent. New objects may appear that do not correspond to any known category. Actions may produce effects that differ from what the agent's models predict. Task structure may change in ways that invalidate previously successful strategies. Critically, these changes need not be adversarial or extreme: even routine variation in everyday environments can fall outside the scope of models designed under closed-world assumptions.
+
+This gap between the agent's knowledge and the true state of the world is not merely a quantitative shortcoming that can be addressed by training on more data or expanding the state space. It is a qualitative property of the agent--environment relationship: the world contains structure that the agent's representational framework does not---and in many cases, cannot---anticipate in advance. This observation motivates the formal treatment of novelty developed in the next section.
+
+\subsection{A Running Example: The Crafting Agent}
+\label{sec:running_example}
+
+To make the framework concrete, we introduce a running example that will be used throughout this chapter and the remainder of the dissertation. Consider an agent operating in a gridworld environment inspired by the crafting mechanics of Minecraft. The environment contains objects such as trees, crafting tables, ores, and storage containers. The agent can perform actions such as navigating to objects, breaking trees to obtain logs, crafting logs into planks and sticks, and assembling complex items using crafting recipes. The agent's task is to craft a target item---say, a pogostick---which requires collecting and combining resources in a specific sequence.
+
+In this setting, the agent maintains symbolic knowledge of the objects in the environment, their properties, the available crafting recipes, and the operators it can use (e.g., \texttt{break\_tree}, \texttt{craft\_planks}, \texttt{craft\_pogostick}). Each operator is associated with an executor---a policy that carries out the corresponding action in the environment. The agent generates a plan (a sequence of operators) and executes it step by step. Under closed-world conditions, where the environment matches the agent's models, this process succeeds reliably.
+
+Now suppose the environment changes while the agent is performing its task. A new entity---a supplier---appears and may affect the agent's ability to obtain resources. Or the properties of a known object change: trees become unbreakable unless the agent first acquires a new tool, an axe. Or a crafting recipe is altered so that a previously unnecessary ingredient is now required. Each of these changes represents a novelty for the agent: an aspect of the environment that its current models do not represent. How the agent responds---whether it can detect the change, diagnose its impact, and adapt its behavior---depends on the structure of its representations and reasoning capabilities. The formal treatment of novelty in \cref{sec:novelty} and the agent framework in \cref{sec:agent_framework} provide the machinery for analyzing these situations precisely.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.6\textwidth]{figures/chapter2/Picture1_with_novelty.png}
+\caption[The crafting gridworld environment]{The crafting gridworld environment used as a running example throughout this dissertation. The agent (center) operates among objects such as trees, crafting tables, and ores. A novel actor---the supplier, highlighted in blue---has been introduced and may affect the agent's ability to complete its task. Adapted from \citet{goel2024neurosymbolic}.}
+\label{fig:gridworld}
+\end{figure}
+
+\subsection{Environment States and Agent Representations}
+\label{sec:state_representations}
+
+The distinction between what exists in the environment and what the agent can represent is central to the framework. An environment state $e \in \EnvStates$ specifies the complete configuration of the world at a given time, including all objects, their properties, spatial arrangements, and dynamic relationships. The agent, however, does not operate over environment states directly. Instead, it constructs representations of the world using its available representational resources.
+
+At the symbolic level, the agent uses a formal language $\Language$ consisting of predicate symbols and function symbols to describe the environment. A symbolic state $\SymState \in \SymStates$ is defined as an assignment of values to a set of fluents $\Fluents$---state variables whose values may change over time. Boolean fluents correspond to grounded predicates that are either true or false, and numeric fluents take values in $\Real$. In propositional domains, a symbolic state can equivalently be represented as the set of grounded predicates that hold, with all others assumed false.
+
+At the subsymbolic level, the agent may represent the environment through continuous state vectors $s \in \States$, which may include raw sensory observations (e.g., images), learned feature representations, or structured numerical descriptions of the environment.
+
+An important consequence of this framework is that the mapping between environment states and agent representations is not one-to-one. Multiple environment states may be indistinguishable under the agent's current representational capacity. Conversely, a single environment state may be represented differently at different levels of abstraction. This many-to-one relationship between environment states and agent representations is not merely a practical limitation---it is an inherent feature of any agent with finite representational resources operating in a complex environment, and it is precisely where novelty arises.

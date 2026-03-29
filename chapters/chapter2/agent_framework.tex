@@ -1,0 +1,61 @@
+\section{A Framework for Open-World Agents}
+\label{sec:agent_framework}
+
+Having defined the environment and the nature of novelty, we now turn to the structure of the agent itself. The agents studied in this dissertation operate by combining symbolic reasoning at the level of plans with subsymbolic execution at the level of environment interaction. This section formalizes the components of this framework: symbolic planning, reinforcement learning, and their integration into a hybrid architecture. Rather than presenting these as independent formalisms, we develop them as complementary components of a single agent that must reason, act, and adapt under novelty.
+
+\subsection{Symbolic Planning}
+\label{sec:symbolic_planning}
+
+The agent's high-level decision-making is organized through symbolic planning, which enables structured reasoning over abstract representations of states and actions.
+
+The agent's symbolic model is defined by a set of operators $\Operators$. Each operator $\Operator \in \Operators$ is specified as $\Operator = \langle \Pre_\Operator, \Eff_\Operator \rangle$, where $\Pre_\Operator$ is a logical formula over fluents specifying when the operator is applicable, and $\Eff_\Operator$ specifies how the state changes after execution. An operator $\Operator$ is applicable in a symbolic state $\SymState$ if $\SymState \models \Pre_\Operator$. Effects modify Boolean fluents through add and delete operations and update numeric fluents through assignments or arithmetic expressions. Operators are typically defined as parameterized schemas and instantiated over objects to produce grounded operators.
+
+A planning task is defined as $\PlanningTask = \langle \Fluents, \Operators, \SymState_0, \Goal \rangle$, where $\SymState_0 \in \SymStates$ is the initial state and $\Goal$ is a logical condition over fluents. A plan is a finite sequence of operators $\Plan = [\Operator_1, \dots, \Operator_n]$. A plan is valid if sequentially applying each operator from $\SymState_0$ results in a state satisfying $\Goal$. Classical planning assumes deterministic transitions and complete, correct domain models. Planning domains and problems are commonly specified using the Planning Domain Definition Language (PDDL) \citep{mcdermott1998pddl}, and solved using domain-independent heuristic search algorithms such as Fast Downward \citep{helmert2006fast}.
+
+In the context of this dissertation, symbolic planning provides the agent with the ability to decompose long-horizon tasks into sequences of abstract actions. This decomposition is valuable precisely because it creates structure that can be exploited when novelty occurs: if an operator fails, the agent can identify \emph{which} step of the plan was affected and reason about what must change.
+
+\subsection{Reinforcement Learning}
+\label{sec:rl}
+
+While symbolic planning reasons over abstract state descriptions, the agent must ultimately execute actions in the environment, where states may be continuous, observations partial, and dynamics stochastic. Reinforcement learning provides the framework for learning effective behaviors through direct interaction.
+
+The agent's interaction with the environment at the execution level is modeled as a Markov Decision Process (MDP), defined as $M = \langle \States, \Actions, \Transition, \Reward, \Discount \rangle$, where $\States$ is the set of states, $\Actions$ is the set of actions, $\Transition(s' \mid s, a)$ defines the transition dynamics, $\Reward(s, a)$ is the reward function, and $\Discount \in [0, 1)$ is the discount factor. At each time step $t$, the agent observes state $s_t \in \States$, selects action $a_t \in \Actions$, receives reward $r_{t+1} = \Reward(s_t, a_t)$, and transitions to $s_{t+1}$ according to $\Transition(\cdot \mid s_t, a_t)$.
+
+A policy $\Policy(a \mid s)$ specifies the agent's behavior by defining a distribution over actions given a state. The objective is to find a policy maximizing expected cumulative discounted reward. The return from time step $t$ is $G_t = \sum_{k=0}^{\infty} \Discount^k r_{t+k+1}$, the state-value function is $\Value^\Policy(s) = \Expect_\Policy[G_t \mid s_t = s]$, and the action-value function is $\QValue^\Policy(s,a) = \Expect_\Policy[G_t \mid s_t = s, a_t = a]$. These satisfy the Bellman expectation equations:
+\begin{align}
+\Value^\Policy(s) &= \Expect_\Policy\left[r_{t+1} + \Discount \Value^\Policy(s_{t+1}) \mid s_t = s\right], \\
+\QValue^\Policy(s,a) &= \Expect_\Policy\left[r_{t+1} + \Discount \Expect_{a' \sim \Policy(\cdot \mid s_{t+1})} \QValue^\Policy(s_{t+1}, a') \mid s_t = s, a_t = a\right].
+\end{align}
+
+In discrete settings, value functions can be represented in tabular form. In continuous settings where $\States \subseteq \Real^n$ and $\Actions \subseteq \Real^m$, policies and value functions are approximated using parameterized function approximators: $\Policy_\theta(a \mid s)$ and $\Value_\phi(s)$ or $\QValue_\phi(s, a)$. Modern deep RL algorithms, including DQN \citep{mnih2015human}, PPO \citep{schulman2017proximal}, and SAC \citep{haarnoja2018soft}, optimize these parameters through gradient-based methods.
+
+In the context of this dissertation, reinforcement learning serves as the mechanism through which agents acquire new behaviors---particularly when symbolic models are incomplete and the agent must learn to act in situations that its planning knowledge does not cover.
+
+\subsection{Hybrid Planning and Learning}
+\label{sec:hybrid}
+
+Neither symbolic planning nor reinforcement learning alone is sufficient for open-world settings. Symbolic planning enables structured long-horizon reasoning but assumes complete and correct domain models---exactly the assumption that novelty violates. Reinforcement learning can acquire new behaviors through interaction but lacks the structured decomposition that enables efficient reuse and targeted adaptation. Hybrid systems combine these paradigms by integrating symbolic reasoning with learned execution.
+
+In a hybrid system, decision-making operates over two levels of representation. At the symbolic level, the agent uses its planning task $\PlanningTask = \langle \Fluents, \Operators, \SymState_0, \Goal \rangle$ to generate plans. At the execution level, actions unfold within an MDP $M = \langle \States, \Actions, \Transition, \Reward, \Discount \rangle$. An abstraction function $\Abstraction : \States \rightarrow \SymStates$ maps environment states to symbolic state descriptions, connecting the two levels of representation.
+
+The critical link between planning and execution is the \emph{executor}. Each operator $\Operator \in \Operators$ is associated with an executor $\Executor_\Operator \in \Executors$ that realizes the operator's intended effects in the environment. An executor is defined as a triplet $\Executor_\Operator = \langle \gamma_\Operator, \Policy_\Operator, \beta_\Operator \rangle$, where $\gamma_\Operator$ specifies the initiation conditions (which environment states are acceptable starting states for this executor), $\Policy_\Operator : \States \rightarrow \Actions$ is a policy that selects low-level actions, and $\beta_\Operator$ specifies the termination conditions (which environment states indicate successful completion). This formulation draws on the options framework \citep{sutton1999between}, with the additional constraint that each executor is associated with a specific symbolic operator whose preconditions and effects provide its semantic meaning.
+
+A symbolic plan $\Plan = [\Operator_1, \dots, \Operator_n]$ thus induces a sequence of executors $[\Executor_{\Operator_1}, \dots, \Executor_{\Operator_n}]$ that are carried out in the environment. The hybrid system is defined as $\Hybrid = \langle \PlanningTask, M, \Abstraction, \Executors \rangle$, formalizing the separation between symbolic decision-making over abstract representations and subsymbolic execution in the environment. \Cref{fig:agent_environment} illustrates this two-level architecture.
+
+% Agent-environment interaction figure
+\input{figures/chapter2/agent_environment}
+
+Returning to the crafting example from \cref{sec:running_example}, the agent's plan to craft a pogostick might be $\Plan = [\texttt{break\_tree}, \texttt{craft\_planks}, \texttt{craft\_sticks}, \texttt{craft\_pogostick}]$. Each operator in this plan is associated with an executor: the \texttt{break\_tree} executor navigates to a tree and performs the breaking action, while the \texttt{craft\_planks} executor navigates to a crafting table and executes the crafting recipe. The symbolic planner reasons about the sequence; the executors handle the details of carrying it out.
+
+\subsection{Novelty in Hybrid Systems}
+\label{sec:novelty_hybrid}
+
+The hybrid framework makes explicit where novelty can manifest and how it propagates through the agent's decision-making.
+
+At the symbolic level, novelty may render the planning model incomplete: new fluents, new operators, or changed preconditions and effects may mean that no valid plan exists within the agent's current model. This corresponds to prohibitive novelty (\cref{def:prohibitive}).
+
+At the execution level, novelty may cause an executor to fail: the environment dynamics have changed such that the policy $\Policy_\Operator$ associated with operator $\Operator$ no longer achieves the intended effects, even though the symbolic preconditions $\Pre_\Operator$ are satisfied. This corresponds to obstructive novelty (\cref{def:obstructive}), and it manifests as a discrepancy between what the symbolic model predicts and what actually occurs when actions are executed.
+
+This two-level structure has an important consequence: in a hybrid system, the point of failure is often identifiable. When an executor fails, the agent knows \emph{which} operator was being executed and can examine the discrepancy between expected and observed symbolic states. This localization of failure---enabled by the structured decomposition of behavior into operators and executors---is what makes targeted adaptation possible. Without this structure, a failure in the environment would be a global signal (reward decreased) with no indication of what specifically went wrong.
+
+This observation motivates the central claim of the dissertation: that structured abstractions over actions and interactions determine whether novelty-induced mismatch can be resolved efficiently and whether learned behaviors can generalize across variations. The next section develops this argument formally.

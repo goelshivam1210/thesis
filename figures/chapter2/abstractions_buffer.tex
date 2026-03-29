@@ -1,0 +1,101 @@
+\begin{figure}[t]
+    \centering
+    \begin{tikzpicture}[
+        >=Stealth,
+        % --- Node styles (matching Ch.4 palette) ---
+        srcred/.style={
+            rectangle, rounded corners=3pt, draw=red!60!black, fill=red!8,
+            minimum width=3.0cm, minimum height=0.7cm,
+            font=\small, align=center, thick
+        },
+        srcblue/.style={
+            rectangle, rounded corners=3pt, draw=blue!60!black, fill=blue!8,
+            minimum width=3.0cm, minimum height=0.7cm,
+            font=\small, align=center, thick
+        },
+        absbox/.style={
+            rectangle, rounded corners=3pt, draw=purple!60!black, fill=purple!8,
+            minimum width=3.4cm, minimum height=1.0cm,
+            font=\small, align=center, thick
+        },
+        capbox/.style={
+            rectangle, rounded corners=3pt, draw=green!60!black, fill=green!8,
+            minimum width=3.4cm, minimum height=1.0cm,
+            font=\small, align=center, thick
+        },
+        % --- Arrow style ---
+        flowarrow/.style={->, thick, >=Stealth},
+        % --- Labels ---
+        collabel/.style={font=\small\bfseries, gray!60!black},
+        chaplabel/.style={font=\scriptsize\itshape, gray!45},
+        % --- Legend ---
+        legendbox/.style={minimum width=0.45cm, minimum height=0.3cm, rounded corners=2pt, thick, inner sep=0pt},
+        legendlabel/.style={font=\scriptsize, anchor=west, inner sep=0pt},
+    ]
+
+    % ===== Column headers =====
+    \node[collabel] at (-4.8, 0.8) {Source};
+    \node[collabel] at (0.0, 0.8) {Abstraction};
+    \node[collabel] at (4.8, 0.8) {Capability};
+    \draw[gray!30, thin] (-6.8, 0.5) -- (6.8, 0.5);
+
+    % =========================================================
+    %  ROW 1: Novelty → Action Abstractions → Adaptation
+    % =========================================================
+
+    \node[srcred] (n1) at (-4.8, -0.2) {Changed dynamics};
+    \node[srcred] (n2) at (-4.8, -1.2) {Execution failures};
+
+    \node[absbox] (aa) at (0.0, -0.7) {\textbf{Action abstractions}\\[-2pt]{\scriptsize Operators $\leftrightarrow$ executors}};
+
+    \node[capbox] (ad) at (4.8, -0.7) {\textbf{Efficient adaptation}\\[-2pt]{\scriptsize Failure localization}\\[-2pt]{\scriptsize Targeted learning}};
+
+    \draw[flowarrow, red!50!black]   (n1.east) -- (aa.west |- n1);
+    \draw[flowarrow, red!50!black]   (n2.east) -- (aa.west |- n2);
+    \draw[flowarrow, purple!50!black] (aa.east) -- (ad.west);
+
+    \node[chaplabel] at (4.8, -1.6) {Chapter~4};
+
+    % =========================================================
+    %  Separator
+    % =========================================================
+    \draw[gray!25, thin, densely dashed] (-6.8, -2.2) -- (6.8, -2.2);
+
+    % =========================================================
+    %  ROW 2: Variation → Interaction Abstractions → Generalization
+    % =========================================================
+
+    \node[srcblue] (v1) at (-4.8, -2.9) {Different objects};
+    \node[srcblue] (v2) at (-4.8, -3.9) {Different embodiments};
+
+    \node[absbox] (ia) at (0.0, -3.4) {\textbf{Interaction abstractions}\\[-2pt]{\scriptsize Force-space representations}};
+
+    \node[capbox] (ge) at (4.8, -3.4) {\textbf{Generalization}\\[-2pt]{\scriptsize Cross-object transfer}\\[-2pt]{\scriptsize Cross-embodiment transfer}};
+
+    \draw[flowarrow, blue!50!black]   (v1.east) -- (ia.west |- v1);
+    \draw[flowarrow, blue!50!black]   (v2.east) -- (ia.west |- v2);
+    \draw[flowarrow, purple!50!black] (ia.east) -- (ge.west);
+
+    \node[chaplabel] at (4.8, -4.3) {Chapter~5};
+
+    % =========================================================
+    %  Legend (centered, single row)
+    % =========================================================
+    \draw[gray!30, thin] (-6.8, -4.9) -- (6.8, -4.9);
+
+    \node[legendbox, draw=red!60!black, fill=red!8]      (L1) at (-4.0, -5.3) {};
+    \node[legendlabel] at (-3.7, -5.3) {Novelty};
+
+    \node[legendbox, draw=blue!60!black, fill=blue!8]     (L2) at (-1.8, -5.3) {};
+    \node[legendlabel] at (-1.5, -5.3) {Variation};
+
+    \node[legendbox, draw=purple!60!black, fill=purple!8]  (L3) at (0.6, -5.3) {};
+    \node[legendlabel] at (0.9, -5.3) {Abstraction};
+
+    \node[legendbox, draw=green!60!black, fill=green!8]    (L4) at (3.2, -5.3) {};
+    \node[legendlabel] at (3.5, -5.3) {Capability};
+
+    \end{tikzpicture}
+    \caption[Structured abstractions mediating agent responses to novelty and variation]{The role of structured abstractions in mediating the agent's response to novelty and variation. \textbf{Top:} When novelty causes changed dynamics or execution failures, action abstractions (the operator--executor decomposition) enable failure localization and targeted learning, supporting efficient adaptation (Chapter~4). \textbf{Bottom:} When variation arises from different objects or embodiments, interaction abstractions (force-space representations) capture task-relevant physical invariants, supporting generalization without retraining (Chapter~5). In both cases, the abstraction structures the agent's response rather than requiring the agent to relearn from scratch.}
+    \label{fig:abstractions_buffer}
+\end{figure}

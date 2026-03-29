@@ -1,0 +1,85 @@
+\section{Novelty as Mismatch}
+\label{sec:novelty}
+Novelty is not a property of the environment alone, but a relation between the environment and the agent's knowledge of it. In this section, we formalize this concept and develop a taxonomy of novelty types based on their impact on an agent's task performance.
+
+\subsection{An Agent-Relative Definition of Novelty}
+\label{sec:novelty_definition}
+
+We depart from treatments that define novelty as an intrinsic property of objects or events \citep{boult2021towards}, and instead adopt an agent-relative view: an element of the environment is novel for an agent if and only if the agent cannot represent or derive it from its current knowledge \citep{goel2024neurosymbolic,muhammad2021novelty}.
+
+\begin{definition}[Novelty]
+\label{def:novelty}
+Let $\Agent$ be an agent with knowledge repository $\KnowledgeRepo = (\KB, \SubsymbolicKB)$ and inference mechanism $\vdash$. A representation $\nu$ of an aspect of an environment state $e \in \EnvStates$ is a \emph{novelty} for $\Agent$ if $\KnowledgeRepo \nvdash \nu$, where $\nu$ may be a symbolic expression in $\Language$ or a subsymbolic representation.
+\end{definition}
+
+This definition captures the intuition that novelty is epistemic: what is novel for one agent may be entirely familiar to another. A mass spectrometer is novel to a patient who has never encountered one, but not to the clinician who uses it daily. In the context of task-performing agents, novelty arises whenever the environment presents aspects that fall outside the agent's current representational and inferential capacity.
+
+\Cref{def:novelty} encompasses several distinct ways in which mismatch can manifest. Novelty may involve entirely new elements---objects, predicates, actions, or states that the agent's models do not contain---or it may involve changes in how existing elements behave. Formally, a novelty can induce extensions or modifications of the agent's models such that at least one of the following holds:
+\begin{align}
+\label{eq:novelty_conditions}
+\Fluents' \setminus \Fluents \neq \emptyset, \quad
+\Operators' \setminus \Operators \neq \emptyset, \quad
+\States' \not\subseteq \States, \quad
+\Actions' \not\subseteq \Actions, \quad
+\Transition' \neq \Transition.
+\end{align}
+The first four conditions capture the introduction of entirely new elements that the agent's models do not contain. The fifth condition captures changes in the environment's dynamics for existing state-action pairs---situations where the agent's learned transition model no longer predicts the environment's behavior correctly. This distinction matters because many real-world novelties do not introduce new elements but instead alter how existing elements behave.
+
+\subsection{A Taxonomy of Novelty by Task Impact}
+\label{sec:novelty_taxonomy}
+
+Not all novelties affect an agent's task performance equally. Some prevent the agent from achieving its goal entirely, others introduce minor disruptions, and still others present new opportunities. To reason about novelty handling systematically, we classify novelties by how they impact the agent's ability to solve a given planning task $\PlanningTask$.
+
+The following definitions formalize four categories of novelty based on their relationship to the agent's task performance \citep{goel2024neurosymbolic}. In each case, the novelty type is defined relative to a specific agent $\Agent$ and task $\PlanningTask$, reinforcing the agent-relative nature of the concept.
+
+\begin{definition}[Prohibitive Novelty]
+\label{def:prohibitive}
+A novelty $\nu$ is \emph{prohibitive} for agent $\Agent$ and task $\PlanningTask$ if, for all plans $\Plan$ that $\Agent$ can generate from its current knowledge, $\Plan$ does not solve $\PlanningTask$, but there exists a plan $\Plan_\nu$ that solves $\PlanningTask$ and can be derived from $\KB \cup \{\nu\}$.
+\end{definition}
+
+Prohibitive novelties represent aspects of the environment that the agent \emph{must} represent and reason with in order to generate a successful plan. Without accommodating the novelty, no plan exists within the agent's current knowledge that achieves the goal. For example, if a crafting recipe changes so that a new ingredient is required, the agent cannot construct the target item until it discovers and incorporates knowledge of the new recipe.
+
+\begin{definition}[Obstructive Novelty]
+\label{def:obstructive}
+A novelty $\nu$ is \emph{obstructive} for agent $\Agent$ and task $\PlanningTask$ if it causes the execution of some executor $\Executor \in \Executors$ to fail, where $\Executor$ is associated with an operator in a plan for $\PlanningTask$.
+\end{definition}
+
+Obstructive novelties manifest at the execution level: the agent's symbolic plan may be valid according to its models, but the corresponding actions fail when carried out in the environment. The impact depends on whether alternative plans exist that avoid the affected operator. For instance, if an object becomes too heavy to pick up using the agent's default grasp, the corresponding executor fails, even though the symbolic preconditions for the pick-up operator are satisfied.
+
+\begin{definition}[Beneficial Novelty]
+\label{def:beneficial}
+A novelty $\nu$ is \emph{beneficial} for agent $\Agent$ and task $\PlanningTask$ if there exists a plan $\Plan_\nu$ derivable from $\KB \cup \{\nu\}$ that solves $\PlanningTask$ more efficiently than any plan derivable from $\KB$ alone.
+\end{definition}
+
+Beneficial novelties offer the agent new capabilities or shortcuts that improve task performance. A new tool that accelerates resource collection, or a new trade route that reduces the number of steps to acquire an ingredient, would constitute beneficial novelties. Importantly, the agent need not accommodate beneficial novelties to succeed at its task---but failing to recognize them means missing opportunities for improved performance.
+
+\begin{definition}[Nuisance Novelty]
+\label{def:nuisance}
+A novelty $\nu$ is a \emph{nuisance} for agent $\Agent$ and task $\PlanningTask$ if incorporating $\nu$ into the agent's knowledge does not enable any plan that is shorter or less costly than the best plan derivable from $\KB$ alone.
+\end{definition}
+
+Nuisance novelties are aspects of the environment that are genuinely unknown to the agent but have no bearing on task performance. They may cause minor diversions or require brief investigation, but accommodating them yields no task benefit. A new decorative object in the environment, or a change to the visual appearance of an irrelevant entity, would typically constitute nuisance novelties.
+
+These four categories are exhaustive with respect to task impact: any novelty that the agent encounters either prevents task completion (prohibitive), disrupts execution (obstructive), enables better performance (beneficial), or has no task-relevant effect (nuisance). The categories are not mutually exclusive in all cases---a novelty that is obstructive for one plan may be beneficial when an alternative plan is considered---but they provide a principled vocabulary for reasoning about what an agent must do in response to a given novelty.
+
+\subsection{Novelty by Domain Element}
+\label{sec:novelty_domain_element}
+
+Orthogonal to the task-impact taxonomy, novelties can also be classified by the type of domain element they affect. This classification, developed in the context of open-world evaluation environments \citep{goel2024neurosymbolic, balloch2022novgrid}, identifies three primary categories:
+
+\paragraph{Object novelty.} The introduction of a previously unknown object or entity into the environment. This includes new objects with unfamiliar properties, new types of agents or actors, and objects that do not correspond to any category in the agent's knowledge base.
+
+\paragraph{Attribute novelty.} A change in the properties or attributes of a known object or entity. The object itself is recognized, but it behaves differently than expected---for example, a door that was previously unlocked is now locked, or an item that was previously lightweight is now heavy.
+
+\paragraph{Action novelty.} A change in the effects or availability of actions. An action that previously succeeded may now fail under the same preconditions, a new action may become available, or the outcomes of an existing action may change.
+
+These two classification schemes---by task impact and by domain element---are complementary. A given novelty has both a domain-element type (what changed) and a task-impact type (how it affects the agent's goals). \Cref{fig:novelty_taxonomy} illustrates this two-dimensional classification with concrete examples from the crafting scenario introduced in \cref{sec:running_example}.
+
+% Novelty taxonomy figure
+\input{figures/chapter2/novelty_taxonomy}
+
+Returning to the running example, the axe novelty illustrates how a single environmental change can be classified along both dimensions. The change is an action novelty (the \texttt{break\_tree} action no longer works without an axe) and is prohibitive (the agent cannot obtain logs, and therefore cannot craft the pogostick, without discovering and using the new tool). If the agent's architecture decomposes behavior into operators and executors, it can detect that the \texttt{break\_tree} executor failed, identify the mismatch between expected and observed effects, and focus its adaptation on acquiring a new executor for this specific operator. If, on the other hand, the agent uses a monolithic policy, the same failure manifests only as a decrease in reward, with no indication of what went wrong or what must change.
+
+This contrast---between structured and unstructured responses to the same novelty---is the central theme of the dissertation and motivates the formal treatment of abstractions in \cref{sec:abstractions}.
+
+The combination of the two taxonomic dimensions provides a structured vocabulary for describing novelties that is used throughout the remainder of this dissertation: the evaluation frameworks in \cref{ch:benchmarks} operationalize these categories through controlled novelty injection, and the adaptation methods in \cref{ch:rapid_learn} are designed to address specific combinations of novelty types.

@@ -1,0 +1,18 @@
+\chapter{Foundations of Open-World Agent--Environment Interaction}
+\label{ch:foundations}
+
+This chapter develops the formal and conceptual foundations that underpin the remainder of the dissertation. Rather than treating the problem of open-world autonomy as a collection of isolated technical challenges, we develop a unified framework that connects the structure of environments, the nature of novelty, and the design of agents that must operate under incomplete and evolving knowledge.
+
+We begin by defining the open-world setting: environments in which an agent's knowledge is necessarily incomplete with respect to the true state of the world, and where this incompleteness can change over time in ways that were not anticipated during system design (\cref{sec:open_world_environments}). We then formalize the central concept of the dissertation---novelty as a mismatch between an agent's internal models and the environment---and introduce a taxonomy that classifies novelties by their impact on task performance (\cref{sec:novelty}). With the setting and the problem defined, we turn to the agent itself: how it represents, reasons about, and acts upon the world, integrating symbolic planning and subsymbolic execution into a unified decision-making framework (\cref{sec:agent_framework}). Finally, we examine the role of structured abstractions in mediating the agent--environment interaction, arguing that the choice of abstraction determines whether novelty-induced mismatch can be managed through efficient adaptation and generalizable behavior (\cref{sec:abstractions}).
+
+Together, these foundations establish the formal vocabulary and conceptual claims that the subsequent chapters build upon: benchmark environments for evaluating agents under controlled novelty (\cref{ch:benchmarks}), action abstractions that enable efficient adaptation under failure (\cref{ch:rapid_learn}), and interaction abstractions that support generalization across objects and embodiments (\cref{ch:generalization}).
+
+\input{chapters/chapter2/open_world_environment}
+
+\input{chapters/chapter2/novelty}
+
+\input{chapters/chapter2/agent_framework}
+
+\input{chapters/chapter2/abstractions}
+
+\input{chapters/chapter2/summary}
