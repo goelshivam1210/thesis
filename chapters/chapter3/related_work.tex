@@ -1,0 +1,12 @@
+\section{Related Work}
+\label{sec:benchmarks_related_work}
+
+Evaluation in artificial intelligence has traditionally been conducted under closed-world assumptions, where environments are fixed and fully specified. Reinforcement learning benchmarks such as \citep{brockman2016openai, bellemare2013arcade} provide standardized tasks with known dynamics, enabling comparison of learning algorithms under controlled conditions. Similarly, classical planning benchmarks expressed in PDDL \citep{mcdermott1998pddl} assume that the domain model is complete and correct, and evaluate planners based on plan quality and computational efficiency.
+
+A separate line of work has focused on generalization across environments. Techniques such as domain randomization and procedurally generated environments expose agents to a distribution of tasks during training, with the goal of improving robustness to variation. While these approaches address generalization, they do not explicitly evaluate how agents respond to changes that violate their learned or specified models. The variability is incorporated into the training distribution rather than introduced as a post-training mismatch.
+
+Research on out-of-distribution (OOD) detection and novelty detection addresses a related problem: identifying when an input differs from the training distribution. These methods have been studied extensively in perception and classification settings, where novelty is defined in terms of input statistics. However, they do not address the structural aspects of novelty considered in this dissertation, where mismatch arises from changes in dynamics, action effects, or task structure, and must be resolved through adaptation rather than detection alone.
+
+More recent work has begun to consider agents operating in environments that change over time. However, these efforts typically focus on specific forms of non-stationarity or task variation, and lack a unified framework for systematically generating and categorizing mismatch, evaluating adaptation dynamics, and supporting agents with heterogeneous representations.
+
+In summary, existing evaluation frameworks either assume fixed environments, incorporate variability into the training distribution, or focus on detection without adaptation. None provide a systematic mechanism for inducing structured mismatch and measuring how agents detect, localize, and recover from it. This gap motivates the benchmark environments introduced in this chapter.
