@@ -85,72 +85,16 @@ Policies were trained in MuJoCo~\citep{todorov2012mujoco} with mass randomized o
 
 \paragraph{Parameter generalization.} \Cref{tab:pho_ood} reports tracking performance (centroid-to-path RMSE) under controlled OOD shifts. The fully in-distribution baseline achieves $2.9 \pm 0.4$~cm. Across all OOD conditions---mass, friction, path radius, and box dimensions---RMSE remains within a narrow range of $2.7$--$3.3$~cm, demonstrating stable generalization. Box dimension and path radius variations were introduced only at evaluation time and not included during training.
 
-\begin{table}[t]
-\footnotesize
-\centering
-\begin{tabular}{l c c}
-\toprule
-Parameter & OOD Low RMSE (cm) & OOD High RMSE (cm) \\
-\midrule
-Mass      & $3.1 \pm 0.4$ & $3.3 \pm 0.5$ \\
-Friction  & $3.3 \pm 0.8$ & $2.8 \pm 0.3$ \\
-Path radius & $2.7 \pm 0.3$ & $3.1 \pm 0.4$ \\
-Box dimensions & $3.1 \pm 0.6$ & $2.8 \pm 0.2$ \\
-\bottomrule
-\end{tabular}
-\caption{Parameter generalization for pushing heavy objects. Centroid-to-path RMSE (cm) under single-parameter out-of-distribution shifts. The in-distribution baseline achieves $2.9 \pm 0.4$~cm. Performance remains stable across all OOD conditions.}
-\label{tab:pho_ood}
-\end{table}
+\input{tables/chapter5/pho_ood}
 
 \paragraph{Path generalization.} \Cref{tab:pho_paths} evaluates generalization to novel path geometries with physical parameters kept in-distribution. Performance degrades gradually as curvature increases: 60° and 120° arcs remain close to baseline ($2.2$--$2.8$~cm), while S-shaped and sinusoidal paths---which introduce curvature sign reversals absent from training---show higher RMSE ($9$--$10$~cm). Even in the most challenging cases, the deviation remains well below one-fifth of the object width, indicating bounded transport despite the distribution shift.
 
-\begin{table}[t]
-\footnotesize
-\centering
-\begin{tabular}{l c}
-\toprule
-Path geometry & RMSE (cm) \\
-\midrule
-Arc 60°   & $2.2 \pm 0.3$ \\
-Arc 120°  & $2.8 \pm 0.3$ \\
-Arc 180°  & $5.2 \pm 2.2$ \\
-S-Path    & $9.0 \pm 6.2$ \\
-Sine-Wave & $10.1 \pm 6.6$ \\
-\bottomrule
-\end{tabular}
-\caption{Path generalization for pushing heavy objects. RMSE (cm) under novel path geometries with in-distribution physical parameters. Performance degrades gracefully with increasing curvature complexity.}
-\label{tab:pho_paths}
-\end{table}
+\input{tables/chapter5/pho_paths}
 
 \paragraph{Interaction descriptor ablation.} \Cref{tab:pho_ablation} presents an ablation study evaluating the role of the normalized contact-resistance descriptor $z$. Removing the descriptor ($z = 0$) increases tracking error by 45\%, while setting $z = 1$ produces an order-of-magnitude increase in RMSE with high variance. Replacing the descriptor with its in-distribution mean ($\mathbb{E}[z] = 0.245$) yields nearly identical performance to the full system, suggesting that the policy uses $z$ as a coarse regime indicator rather than a precise estimate.
 
-\begin{table}[t]
-\footnotesize
-\centering
-\begin{tabular}{l c c}
-\toprule
-Descriptor setting & $z$ value & RMSE (cm) \\
-\midrule
-Estimated (full system) & $0.10$--$0.44$ & $2.87 \pm 0.35$ \\
-Mean value              & $0.245$         & $2.79 \pm 0.40$ \\
-Fixed at minimum        & $0$             & $4.16 \pm 0.77$ \\
-Fixed at maximum        & $1$             & $34.15 \pm 33.50$ \\
-\bottomrule
-\end{tabular}
-\caption{Ablation study for the interaction descriptor $z$. The descriptor provides meaningful conditioning for the learned policy; removing it significantly degrades performance.}
-\label{tab:pho_ablation}
-\end{table}
+\input{tables/chapter5/pho_ablation}
 
-
-\subsubsection{Real-World Experiments}
-
-The learned policy was deployed zero-shot on a Boston Dynamics Spot mobile manipulator without retraining. Only impedance gains ($K_\text{eff} = 300$, $\zeta = 45$) were tuned to ensure stable, non-oscillatory contact. Experiments were conducted with two unknown payload conditions ($8.8$~kg and $12.5$~kg), with 10 trials per condition for both the proposed policy and a kinematic trajectory-following baseline, for a total of 40 real-world trials.
-
-\paragraph{Reactive force estimation.} Prior to each trial, the robot performs the impedance-based probing routine to estimate $z$. The estimated reactive forces are $26.18 \pm 2.07$~N for the $8.8$~kg object and $41.74 \pm 2.20$~N for the $12.5$~kg object, consistent with expected increases in contact resistance and showing low variance within each condition.
-
-\paragraph{Execution performance.} The proposed policy successfully transported the object to the target endpoint in 17 out of 20 attempts across both payload conditions. The trajectory-following baseline did not reach the goal region in any trial (0/20). This consistent separation across repeated trials indicates that the performance difference is not attributable to stochastic variation in execution.
-
-\paragraph{Qualitative observations.} The baseline controller frequently deviated from the intended trajectory and struggled to maintain sustained contact, particularly under the heavier payload. The force-based policy maintained consistent pushing behavior across both masses and completed the curved transport task in the majority of trials. The dominant failure mode was contact loss caused by slip at the gripper--object interface, which was partially mitigated by a brief zero-stiffness impedance recovery step.
 
 \begin{figure}[t]
     \centering
@@ -180,3 +124,12 @@ The learned policy was deployed zero-shot on a Boston Dynamics Spot mobile manip
     \caption{Chronophotographic composites of real-world box transport on the Boston Dynamics Spot. Top row: proposed force-based policy under $8.8$~kg (a) and $12.5$~kg (c) payloads, showing consistent trajectory tracking. Bottom row: kinematic baseline under the same conditions (b, d), showing frequent deviation and failure to reach the goal.}
     \label{fig:pho_realworld}
 \end{figure}
+\subsubsection{Real-World Experiments}
+
+The learned policy was deployed zero-shot on a Boston Dynamics Spot mobile manipulator without retraining. Only impedance gains ($K_\text{eff} = 300$, $\zeta = 45$) were tuned to ensure stable, non-oscillatory contact. Experiments were conducted with two unknown payload conditions ($8.8$~kg and $12.5$~kg), with 10 trials per condition for both the proposed policy and a kinematic trajectory-following baseline, for a total of 40 real-world trials.
+
+\paragraph{Reactive force estimation.} Prior to each trial, the robot performs the impedance-based probing routine to estimate $z$. The estimated reactive forces are $26.18 \pm 2.07$~N for the $8.8$~kg object and $41.74 \pm 2.20$~N for the $12.5$~kg object, consistent with expected increases in contact resistance and showing low variance within each condition.
+
+\paragraph{Execution performance.} The proposed policy successfully transported the object to the target endpoint in 17 out of 20 attempts across both payload conditions. The trajectory-following baseline did not reach the goal region in any trial (0/20). This consistent separation across repeated trials indicates that the performance difference is not attributable to stochastic variation in execution.
+
+\paragraph{Qualitative observations.} The baseline controller frequently deviated from the intended trajectory and struggled to maintain sustained contact, particularly under the heavier payload. The force-based policy maintained consistent pushing behavior across both masses and completed the curved transport task in the majority of trials. The dominant failure mode was contact loss caused by slip at the gripper--object interface, which was partially mitigated by a brief zero-stiffness impedance recovery step.

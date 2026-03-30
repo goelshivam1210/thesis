@@ -1,0 +1,20 @@
+\begin{table}[t]
+\centering
+\caption[Coverage of open-world approaches across novelty types]{Coverage of major approach families across the novelty taxonomy of \cref{sec:novelty_taxonomy}. \textbf{D} = can detect this novelty type; \textbf{A} = can adapt to or accommodate it; \textbf{--} = not addressed. The final two rows correspond to the contributions of this dissertation.}
+\label{tab:landscape}
+\small
+\begin{tabularx}{\textwidth}{l *{4}{>{\centering\arraybackslash}X}}
+\toprule
+\textbf{Approach} & \textbf{Prohibitive} & \textbf{Obstructive} & \textbf{Beneficial} & \textbf{Nuisance} \\
+\midrule
+Open-set perception & D & D & D & D \\
+Classical planning & D & -- & -- & -- \\
+Standard RL & -- & A & A & -- \\
+LLM-as-planner & D & -- & -- & -- \\
+VLA / generalist policy & -- & A & -- & -- \\
+\midrule
+Action abstractions (\cref{ch:rapid_learn}) & D, A & D, A & -- & D \\
+Interaction abstractions (\cref{ch:generalization}) & -- & A & -- & -- \\
+\bottomrule
+\end{tabularx}
+\end{table}

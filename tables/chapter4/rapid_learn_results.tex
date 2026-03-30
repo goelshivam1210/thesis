@@ -1,0 +1,46 @@
+\begin{table}[htbp]
+\footnotesize
+\centering
+\begin{tabular}{l l c c}
+\toprule
+Novelty & Agent & $T_\text{adapt}$ (timesteps) & Post-novelty SR \\
+\midrule
+\textbf{RT hard}
+  & RAPid-KGE-UCB     & $(2.85 \pm 2.15) \times 10^4$ & $0.95 \pm 0.01$ \\
+  & RAPid-KGE-UAB     & $(3.28 \pm 1.51) \times 10^4$ & $0.93 \pm 0.03$ \\
+  & RAPid-EG          & $(3.73 \pm 2.08) \times 10^4$ & $0.91 \pm 0.04$ \\
+  & Actor-Critic Tr.  & did not converge              & N/A \\
+  & Policy Reuse      & did not converge              & N/A \\
+\midrule
+\textbf{ATB+FCT easy}
+  & RAPid-KGE-UCB     & $(4.02 \pm 1.82) \times 10^3$ & $0.97 \pm 0.01$ \\
+  & RAPid-KGE-UAB     & $(4.56 \pm 3.43) \times 10^3$ & $0.97 \pm 0.02$ \\
+  & RAPid-EG          & $(6.93 \pm 4.41) \times 10^3$ & $0.98 \pm 0.01$ \\
+  & Actor-Critic Tr.  & $(17.6 \pm 5.13) \times 10^4$ & $0.93 \pm 0.02$ \\
+  & Policy Reuse      & $(8.08 \pm 2.38) \times 10^5$ & $0.92 \pm 0.04$ \\
+\midrule
+\textbf{ATB hard}
+  & RAPid-KGE-UCB     & $(2.35 \pm 1.27) \times 10^3$ & $0.95 \pm 0.01$ \\
+  & RAPid-KGE-UAB     & $(13.0 \pm 4.89) \times 10^2$ & $0.85 \pm 0.07$ \\
+  & RAPid-EG          & $(14.9 \pm 8.65) \times 10^2$ & $0.84 \pm 0.03$ \\
+  & Actor-Critic Tr.  & $(9.80 \pm 4.75) \times 10^4$ & $0.90 \pm 0.05$ \\
+  & Policy Reuse      & $(5.57 \pm 2.59) \times 10^5$ & $0.92 \pm 0.04$ \\
+\midrule
+\textbf{FCT hard}
+  & RAPid-KGE-UCB     & $(8.61 \pm 4.73) \times 10^3$ & $0.98 \pm 0.00$ \\
+  & RAPid-KGE-UAB     & $(4.40 \pm 1.96) \times 10^3$ & $0.99 \pm 0.00$ \\
+  & RAPid-EG          & $(5.12 \pm 2.84) \times 10^3$ & $0.98 \pm 0.00$ \\
+  & Actor-Critic Tr.  & $(16.7 \pm 3.99) \times 10^4$ & $0.90 \pm 0.04$ \\
+  & Policy Reuse      & $(7.90 \pm 2.70) \times 10^5$ & $0.94 \pm 0.03$ \\
+\midrule
+\textbf{SP}
+  & RAPid-KGE-UCB     & $(6.82 \pm 3.83) \times 10^3$ & $0.86 \pm 0.03$ \\
+  & RAPid-KGE-UAB     & $(2.01 \pm 1.01) \times 10^3$ & $0.87 \pm 0.03$ \\
+  & RAPid-EG          & $(17.2 \pm 7.38) \times 10^2$ & $0.96 \pm 0.01$ \\
+  & Actor-Critic Tr.  & $(6.86 \pm 3.89) \times 10^4$ & $0.93 \pm 0.03$ \\
+  & Policy Reuse      & $(19.3 \pm 9.76) \times 10^4$ & $0.94 \pm 0.03$ \\
+\bottomrule
+\end{tabular}
+\caption{RAPid-Learn results across five novelty scenarios. $T_\text{adapt}$: time steps to adaptation convergence. Post-novelty SR: success rate on 100 evaluation episodes. Best performing agent highlighted per scenario. In all scenarios, RAPid-Learn adapts one to two orders of magnitude faster than transfer learning baselines.}
+\label{tab:rapid_learn_results}
+\end{table}

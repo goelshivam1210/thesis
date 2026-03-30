@@ -7,7 +7,7 @@ This section extends the hybrid planning--learning framework developed in \cref{
 \subsection{Executors}
 \label{sec:executors}
 
-\Cref{sec:hybrid} introduced executors as the mechanism connecting symbolic operators to environment interaction, defining each executor as a triplet $\Executor_\Operator = \langle \gamma_\Operator, \Policy_\Operator, \beta_\Operator \rangle$ of initiation conditions, policy, and termination conditions. We now provide a formal definition that makes the executor's components precise and establishes the notation used throughout this chapter.
+\Cref{sec:hybrid} introduced executors as the mechanism connecting symbolic operators to environment interaction, defining each executor as a triplet $\Executor_\Operator = \langle \gamma_\Operator, \Policy_\Operator, \beta_\Operator \rangle$ of initiation conditions, policy, and termination conditions. We now provide a formal definition that makes the executor's components precise and establishes the notation used throughout this chapter. In particular, we use $I_\Executor$ to denote the initiation set, replacing the $\gamma_\Operator$ notation from \cref{sec:hybrid} to emphasize that the initiation condition is a set of states rather than a general condition.
 
 \begin{definition}[Executor]
 \label{def:executor}
@@ -24,7 +24,7 @@ Let $\Executors = \{\Executor_1, \Executor_2, \ldots\}$ denote the set of all av
 \subsection{Integrated Planning Task}
 \label{sec:ipt_def}
 
-To connect symbolic planning with subsymbolic execution, we define an integrated planning task that specifies explicit mappings between symbolic operators and their execution in the environment.
+To connect symbolic planning with subsymbolic execution, we define an integrated planning task that specifies explicit mappings between symbolic operators and their execution in the environment~\cite{sarathy2021spotter}.
 
 \begin{definition}[Integrated Planning Task]
 \label{def:ipt}
@@ -69,8 +69,7 @@ A \emph{planning solution} to an IPT is a plan $\Plan = [\Operator_1, \ldots, \O
 \subsection{The Executor Discovery Problem}
 \label{sec:executor_discovery}
 
-In closed-world settings, every operator has a valid executor, and a plannable IPT is also solvable. In open-world environments, novelty can break this correspondence: an executor may fail because the environment dynamics no longer match the operator’s modeled effects.
-
+In closed-world settings, every operator has a valid executor, and a plannable IPT is also solvable. In open-world environments, novelty can break this correspondence: an executor may fail because the environment dynamics no longer match the operator’s modeled effects. We call the resulting situation a \emph{Stretch-IPT}, reflecting the idea that the agent is being stretched beyond the capabilities of its current executor repertoire---the task remains solvable in the environment, but the agent's existing knowledge cannot reach the solution.
 
 \begin{definition}[Stretch-IPT]
 \label{def:stretch_ipt}

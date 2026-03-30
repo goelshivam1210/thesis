@@ -1,0 +1,31 @@
+\begin{table}[t]
+\footnotesize
+\centering
+\begin{tabular}{l l c c c}
+\toprule
+Object & Algorithm & Training (timesteps) & Training (wall time) & Success Rate \\
+\midrule
+\textbf{Cabinet} & FLEX & $0.4 \pm 0.26$~M & $0.36 \pm 0.2$~h & $0.91 \pm 0.08$ \\
+                  & End-to-end RL & $\geq$10~M & $\geq$24~h & $\leq 0.01$ \\
+                  & CIPS & 3~M & $1.46 \pm 0.02$~h & $0.34 \pm 0.31$ \\
+                  & GAMMA & N/A & N/A & $0.49 \pm 0.29$ \\
+\midrule
+\textbf{Trashcan} & FLEX & $0.4 \pm 0.26$~M & $0.36 \pm 0.2$~h & $0.88 \pm 0.10$ \\
+                   & End-to-end RL & $\geq$10~M & $\geq$24~h & $\leq 0.01$ \\
+                   & CIPS & 3~M & $1.46 \pm 0.02$~h & $0.19 \pm 0.25$ \\
+                   & GAMMA & N/A & N/A & $0.22 \pm 0.18$ \\
+\midrule
+\textbf{Microwave} & FLEX & $0.9 \pm 0.3$~M & $0.63 \pm 0.22$~h & $0.67 \pm 0.14$ \\
+                    & End-to-end RL & $\geq$10~M & $\geq$24~h & $\leq 0.01$ \\
+                    & CIPS & 5~M & $2.84 \pm 0.2$~h & $0.33 \pm 0.26$ \\
+                    & GAMMA & N/A & N/A & $0.49 \pm 0.18$ \\
+\midrule
+\textbf{Dishwasher} & FLEX & $0.9 \pm 0.3$~M & $0.63 \pm 0.22$~h & $0.64 \pm 0.11$ \\
+                     & End-to-end RL & $\geq$10~M & $\geq$24~h & $\leq 0.01$ \\
+                     & CIPS & 5~M & $2.84 \pm 0.2$~h & $0.55 \pm 0.36$ \\
+                     & GAMMA & N/A & N/A & $0.47 \pm 0.38$ \\
+\bottomrule
+\end{tabular}
+\caption{FLEX results on novel object instances evaluated using the Panda robot. Training time in hours and time steps in millions. FLEX achieves the highest success rates across all object types while requiring substantially less training time than all RL baselines.}
+\label{tab:flex_results}
+\end{table}
