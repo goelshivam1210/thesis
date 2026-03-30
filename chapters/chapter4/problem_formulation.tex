@@ -1,15 +1,13 @@
 \section{Problem Formulation}
 \label{sec:ipt}
 
-This section formalizes the integration of symbolic planning and reinforcement learning in open-world settings. The central challenge is bridging two complementary representations: a symbolic level, where the agent reasons over operators, preconditions, and goals, and a subsymbolic level, where it interacts with the environment through states and actions. We introduce the concept of an \emph{executor} to connect these levels, define an \emph{integrated planning task} (IPT) that unifies symbolic planning with subsymbolic execution, and formalize the problem of discovering missing executors when novelty causes execution failure.
-
-The formalism builds on the symbolic planning task $\PlanningTask = \langle \Fluents, \Operators, \SymState_0, \Goal \rangle$ and the Markov decision process $M = \langle \States, \Actions, \Transition, \Reward, \Discount \rangle$ introduced in \cref{sec:symbolic_planning,sec:rl}, as well as the hybrid system $\Hybrid = \langle \PlanningTask, M, \Abstraction \rangle$ from \cref{sec:hybrid}. We extend this hybrid system by explicitly specifying how symbolic operators are grounded in execution and how execution failures are handled.
+This section extends the hybrid planning--learning framework developed in \cref{sec:hybrid} to formalize the problem of adaptation under novelty. The hybrid system $\Hybrid = \langle \PlanningTask, M, \Abstraction, \Executors \rangle$ introduced in \cref{sec:hybrid} connects symbolic planning over operators with subsymbolic execution through executors, but treats the operator--executor correspondence as given. In open-world settings, this correspondence can break: novelty may render an executor invalid, creating a gap between what the symbolic model prescribes and what the agent can actually execute. We formalize this gap through the concept of an \emph{integrated planning task} (IPT) and define the \emph{executor discovery problem} as the core challenge of adaptation.
 
 
 \subsection{Executors}
 \label{sec:executors}
 
-In a hybrid planning and learning system, the symbolic planner generates a plan as a sequence of operators, but the agent ultimately interacts with the environment through low-level actions. An \emph{executor} is the mechanism that realizes a symbolic operator in the environment. Inspired by the options framework in hierarchical reinforcement learning~\citep{sutton1999options}, an executor defines when it can be initiated, how it behaves, and when it terminates.
+\Cref{sec:hybrid} introduced executors as the mechanism connecting symbolic operators to environment interaction, defining each executor as a triplet $\Executor_\Operator = \langle \gamma_\Operator, \Policy_\Operator, \beta_\Operator \rangle$ of initiation conditions, policy, and termination conditions. We now provide a formal definition that makes the executor's components precise and establishes the notation used throughout this chapter.
 
 \begin{definition}[Executor]
 \label{def:executor}
@@ -21,7 +19,7 @@ An executor $\Executor = \langle I_{\Executor}, \Policy_{\Executor}, \beta_{\Exe
 \end{itemize}
 \end{definition}
 
-Let $\Executors = \{\Executor_1, \Executor_2, \ldots\}$ denote the set of all available executors. Each executor encapsulates a complete behavior. Its initiation set determines when it is applicable, its policy governs low-level action selection, and its termination condition determines when control returns to the symbolic planner. Executors may be hand-coded, learned through reinforcement learning, or implemented by internal planners (e.g., a navigation policy that computes paths using $A^*$, or motion planning algorithms).
+Let $\Executors = \{\Executor_1, \Executor_2, \ldots\}$ denote the set of all available executors. Executors may be hand-coded, learned through reinforcement learning, or implemented by internal planners (e.g., a navigation policy that computes paths using $A^*$).
 
 \subsection{Integrated Planning Task}
 \label{sec:ipt_def}
@@ -40,9 +38,7 @@ An Integrated Planning Task (IPT) is a tuple $\IPT = \langle \PlanningTask, M, \
 \end{definition}
 
 
-The abstraction function $\Abstraction$ provides the interface from subsymbolic states to symbolic representations used by the planner. Conversely, the executor mapping $e$ grounds symbolic operators in the environment by specifying how each operator is executed.
-
-The IPT extends the hybrid system $\Hybrid = \langle \PlanningTask, M, \Abstraction \rangle$ by explicitly modeling execution as a first-class component through the executor mapping $e$, thereby grounding symbolic operators in the environment.
+The IPT extends the hybrid system $\Hybrid = \langle \PlanningTask, M, \Abstraction, \Executors \rangle$ from \cref{sec:hybrid} by making the operator--executor correspondence an explicit, first-class component through the executor mapping $e$. In the hybrid system, each operator $\Operator$ is associated with an executor $\Executor_\Operator$; the IPT formalizes this association as a function and specifies the consistency requirements it must satisfy.
 
 \paragraph{Consistency between operators and executors.}
 For an IPT to function correctly, each executor must be consistent with the symbolic specification of its corresponding operator. Let $\Operator \in \Operators$ have preconditions $\Pre_{\Operator}$ and effects $\Eff_{\Operator}$. The executor $e(\Operator)$ must satisfy:

@@ -1,0 +1,151 @@
+\section{FLEX: Force-Based Learning for Articulated Object Manipulation}
+\label{sec:flex}
+
+This section presents FLEX (Force-based Learning for EXtended Manipulation)~\citep{fang2025flex}, a framework for learning object-centric manipulation policies in force space for articulated objects such as drawers, doors, microwaves, and dishwashers. The key idea is to decouple policy learning from robot-specific dynamics entirely: policies are trained in simulation by applying forces directly to objects, without modeling any robot. At deployment, the learned forces are transferred to physical robots through an operational space controller, enabling direct cross-platform transfer without retraining.
+
+\subsection{Articulated Object Parametrization}
+\label{sec:flex_objects}
+
+Articulated objects consist of multiple rigid bodies (links) connected by joints that permit relative motion. FLEX focuses on objects with a single degree of freedom, either rotational (revolute) or translational (prismatic), which covers a wide range of common household articulated objects.
+
+A \emph{prismatic joint} allows linear motion along a fixed axis. The position of a point $p$ along the joint is defined as $p = p_0 + k \cdot h_p$, where $p_0 \in \Real^3$ is the initial position, $h_p \in \Real^3$ is the unit vector along the joint axis, and $k \in \Real$ is the scalar displacement. A \emph{revolute joint} allows rotational motion around a fixed axis. The position of a point $p$ on a revolute joint satisfies $\| (p - p_r) - [(p-p_r) \cdot h_r] h_r \| = r$, where $p_r \in \Real^3$ is the joint origin, $h_r \in \Real^3$ is the rotation axis, and $r$ is the radius of the circular motion.
+
+\begin{figure}[t]
+    \centering
+    % PLACEHOLDER: Figure showing prismatic and revolute joint parametrizations
+    % Replace with actual figure from FLEX paper (Figure 2)
+    \figplaceholder{0.6\textwidth}{flex\_joints: prismatic and revolute joint parametrizations}
+    \caption{Illustration of the two joint configurations used in FLEX. (a) A prismatic joint allows linear motion along a fixed axis $h_p$. (b) A revolute joint allows rotational motion around an axis $h_r$ with radius $r$. The state representation for each joint type captures the joint axis direction and the current displacement or projected position, providing an object-centric description independent of robot kinematics.}
+    \label{fig:flex_joints}
+\end{figure}
+
+
+\subsection{MDP Formulation}
+\label{sec:flex_mdp}
+
+The manipulation of articulated objects is formulated as a reinforcement learning problem using two MDPs: one for prismatic joints, $M_p = \langle S_p, A, T_p, R, \gamma \rangle$, and one for revolute joints, $M_r = \langle S_r, A, T_r, R, \gamma \rangle$.
+
+The state spaces are defined in terms of the object's joint-specific information. For prismatic objects, the state $s^p_t = (h_p, \Delta p_t)$ consists of the unit vector $h_p$ representing the joint axis direction and the displacement $\Delta p_t = p_t - p_0$ between the current force application point and the initial position. For revolute objects, the state $s^r_t = (h_r, v_t)$ consists of the joint axis direction $h_r$ and the projection $v_t = (p_t - p_r) - [(p_t - p_r) \cdot h_r] h_r$ of the current force point onto the plane perpendicular to the joint axis.
+
+The action space is shared across both MDPs and consists of 3D force vectors: $A = \{ F \in \Real^3 \mid \| F \| \leq \eta \}$, where $\eta$ is the maximum allowable force. At each time step, the policy selects an action $a_t \in A$ representing the force applied at the point of contact. The reward function encourages efficient manipulation by maximizing object displacement with minimal applied force, plus a large positive reward upon reaching the goal state:
+\[
+R(s_t, a_t, s_{t+1}) = \begin{cases}
+\| \Delta x \| \cos(\theta_{a_t, \Delta x}) + \mathbb{I}(s_{t+1} = s_\text{goal}) R_\text{goal} & \text{if } \Delta q \geq 0, \\
+-\| \Delta x \| \cos(\theta_{a_t, \Delta x}) & \text{otherwise},
+\end{cases}
+\]
+where $\theta_{a_t, \Delta x}$ is the angle between the applied force and the object's movement direction, $\Delta q$ is the change in joint configuration, and $R_\text{goal}$ is the goal reward.
+
+The policies $\pi_p$ and $\pi_r$ are learned using Twin Delayed Deep Deterministic Policy Gradient (TD3)~\citep{fujimoto2018td3}, with the actor network predicting force direction $\pi_\text{dir}(s_t)$ and magnitude $\pi_\text{mag}(s_t) \in [0, 1]$ separately: $a_t = \pi_\text{dir}(s_t) \cdot \pi_\text{mag}(s_t) \cdot \eta$. During training, contact points are randomly sampled from accessible regions of the object (handles, front panels), ensuring that the learned policies are contact-agnostic.
+
+A critical feature of this formulation is that no robot is present in the training environment. The simulation consists only of the articulated object and the applied force. This eliminates robot-specific kinematics, collision dynamics, and control from the learning problem, producing policies that are inherently robot-agnostic.
+
+% NEW BIB ENTRY NEEDED:
+% fujimoto2018td3 — Fujimoto et al. "Addressing function approximation error in actor-critic methods" ICML 2018
+
+
+\subsection{Interactive Joint Parameter Estimation}
+\label{sec:flex_estimation}
+
+At deployment, the robot must identify the object's joint type and parameters to select and instantiate the appropriate policy. FLEX uses an interactive estimation procedure that operates through physical interaction rather than prior knowledge.
+
+The robot uses an RGB-D camera to generate a partial point cloud of the object. A pre-trained grasp model (AO-GRASP~\citep{morlans2023aograsp}) identifies suitable grasp points, and a motion planner guides the robot to establish contact. The robot then applies small forces in a sequence of predetermined directions (forward, backward, left, right), generating a short end-effector trajectory $\xi = \{ p^\text{eef}_i \in \Real^3 \}_{i=1}^{N}$.
+
+The joint type $J \in \{ \text{prismatic}, \text{revolute} \}$ is inferred by maximum likelihood estimation:
+\[
+\hat{J} = \arg\max_{J \in \{\text{prismatic}, \text{revolute}\}} p(\xi \mid J),
+\]
+where the likelihood $p(\xi \mid J)$ models the trajectory as linear motion (prismatic) or circular motion (revolute). Joint parameters (axis direction, origin, radius) are estimated by applying Principal Component Analysis to the trajectory and refining through least-squares optimization. The robot then selects the pre-trained policy $\pi_{\hat{J}}$ corresponding to the inferred joint type.
+
+% NEW BIB ENTRY NEEDED:
+% morlans2023aograsp — Morlans et al. "AO-Grasp: Articulated object grasp generation" arXiv 2023
+
+
+\subsection{Robot Execution}
+\label{sec:flex_execution}
+
+The final component translates the learned force-based policies to physical robot commands. After grasping the object, the robot constructs the policy state from the estimated joint parameters and the current end-effector position. The policy outputs a desired force, which is mapped to joint torques via an Operational Space Controller (OSC)~\citep{khatib1987osc}, ensuring smooth adaptation to variations in object weight and dynamics. This execution layer is the only robot-specific component: the same learned policies are deployed on Kinova, Panda, and UR5 robots by changing only the OSC parameters.
+
+\begin{figure}[t]
+    \centering
+    % PLACEHOLDER: FLEX architecture figure (Figure 3 from paper)
+    \figplaceholder{\textwidth}{flex\_architecture: force-based skill learning, joint estimation, robot execution}
+    \caption{Architecture of FLEX. Force-based skill learning (left) trains object-centric policies in simulation without any robot. Interactive joint parameter estimation (center) infers the object's joint type and configuration from physical interaction. Robot execution (right) maps the learned forces to joint torques through an operational space controller, enabling deployment on any robot platform.}
+    \label{fig:flex_architecture}
+\end{figure}
+
+% NEW BIB ENTRY NEEDED:
+% khatib1987osc — Khatib "A unified approach for motion and force control" IEEE J. Robotics and Automation 1987
+
+\subsection{Experimental Evaluation}
+\label{sec:flex_results}
+
+FLEX was evaluated on four articulated object types (cabinets, trashcans, microwaves, dishwashers) in the Robosuite simulation environment~\citep{zhu2020robosuite}, using objects from the PartNet-Mobility dataset~\citep{xiang2020sapien}. Policies were trained on one or two representative objects per joint type and evaluated on 13 previously unseen objects.
+
+\paragraph{Baselines.} Three baselines were compared: (1) an end-to-end RL baseline using TD3 with a hand-crafted dense reward, (2) CIPS~\citep{rosen2022role}, a hybrid RL and planning method that reduces the task horizon by planning up to the point of object contact, and (3) GAMMA~\citep{yu2024gamma}, a pre-trained visual perception model that infers joint configurations and grasp poses from partial point clouds. All RL baselines were trained on the same objects and ground-truth observations as FLEX.
+
+\paragraph{Training efficiency.} FLEX converges substantially faster than baselines. For prismatic objects, FLEX converges in approximately $0.4 \pm 0.26$~million time steps (0.36~hours wall time), compared to $\geq$10~million time steps ($\geq$24~hours) for end-to-end RL and 3~million time steps for CIPS. This advantage arises from two sources: eliminating robot dynamics from the simulation accelerates each time step, and the force-space action representation reduces unnecessary exploration.
+
+\paragraph{Generalization to unseen objects.} \Cref{tab:flex_results} reports success rates on 13 unseen objects evaluated using the Panda robot. FLEX achieves success rates of 91\% (cabinets), 88\% (trashcans), 67\% (microwaves), and 64\% (dishwashers), consistently outperforming all baselines. The end-to-end RL baseline achieves negligible success ($\leq$1\%) even after 10~million training steps, highlighting the difficulty of the task in robot-centric action spaces. CIPS and GAMMA achieve moderate performance but with substantially higher variance.
+
+\begin{table}[t]
+\footnotesize
+\centering
+\begin{tabular}{l l c c c}
+\toprule
+Object & Algorithm & Training (timesteps) & Training (wall time) & Success Rate \\
+\midrule
+\textbf{Cabinet} & FLEX & $0.4 \pm 0.26$~M & $0.36 \pm 0.2$~h & $0.91 \pm 0.08$ \\
+                  & End-to-end RL & $\geq$10~M & $\geq$24~h & $\leq 0.01$ \\
+                  & CIPS & 3~M & $1.46 \pm 0.02$~h & $0.34 \pm 0.31$ \\
+                  & GAMMA & N/A & N/A & $0.49 \pm 0.29$ \\
+\midrule
+\textbf{Trashcan} & FLEX & $0.4 \pm 0.26$~M & $0.36 \pm 0.2$~h & $0.88 \pm 0.10$ \\
+                   & End-to-end RL & $\geq$10~M & $\geq$24~h & $\leq 0.01$ \\
+                   & CIPS & 3~M & $1.46 \pm 0.02$~h & $0.19 \pm 0.25$ \\
+                   & GAMMA & N/A & N/A & $0.22 \pm 0.18$ \\
+\midrule
+\textbf{Microwave} & FLEX & $0.9 \pm 0.3$~M & $0.63 \pm 0.22$~h & $0.67 \pm 0.14$ \\
+                    & End-to-end RL & $\geq$10~M & $\geq$24~h & $\leq 0.01$ \\
+                    & CIPS & 5~M & $2.84 \pm 0.2$~h & $0.33 \pm 0.26$ \\
+                    & GAMMA & N/A & N/A & $0.49 \pm 0.18$ \\
+\midrule
+\textbf{Dishwasher} & FLEX & $0.9 \pm 0.3$~M & $0.63 \pm 0.22$~h & $0.64 \pm 0.11$ \\
+                     & End-to-end RL & $\geq$10~M & $\geq$24~h & $\leq 0.01$ \\
+                     & CIPS & 5~M & $2.84 \pm 0.2$~h & $0.55 \pm 0.36$ \\
+                     & GAMMA & N/A & N/A & $0.47 \pm 0.38$ \\
+\bottomrule
+\end{tabular}
+\caption{FLEX results on novel object instances evaluated using the Panda robot. Training time in hours and time steps in millions. FLEX achieves the highest success rates across all object types while requiring substantially less training time than all RL baselines.}
+\label{tab:flex_results}
+\end{table}
+
+\paragraph{Cross-robot transfer.} \Cref{tab:flex_transfer} reports success rates when transferring the same learned policies---without retraining---to three different robot platforms: Panda, UR5e, and Kinova Gen3. FLEX maintains consistent performance across all platforms with minimal degradation, demonstrating that the object-centric force-space representation enables direct cross-embodiment transfer. In contrast, all baselines are trained and evaluated on a single platform and would require full retraining for each new robot.
+
+\begin{table}[t]
+\footnotesize
+\centering
+\begin{tabular}{l c c c}
+\toprule
+Object & Panda & UR5e & Kinova Gen3 \\
+\midrule
+Cabinet    & $0.91 \pm 0.08$ & $0.82 \pm 0.13$ & $0.77 \pm 0.12$ \\
+Trashcan   & $0.88 \pm 0.10$ & $0.75 \pm 0.15$ & $0.79 \pm 0.10$ \\
+Microwave  & $0.67 \pm 0.14$ & $0.53 \pm 0.08$ & $0.55 \pm 0.12$ \\
+Dishwasher & $0.64 \pm 0.11$ & $0.62 \pm 0.11$ & $0.59 \pm 0.13$ \\
+\bottomrule
+\end{tabular}
+\caption{Cross-robot transfer results for FLEX. The same learned policies are deployed on three different robotic platforms without retraining. Performance remains consistent across platforms, demonstrating that the force-space representation enables direct embodiment transfer.}
+\label{tab:flex_transfer}
+\end{table}
+
+\paragraph{Real-world demonstration.} FLEX was validated on a real UR5 robot opening a physical drawer, demonstrating that the force-space policies trained entirely in simulation transfer to real-world articulated object manipulation.
+
+\begin{figure}[t]
+    \centering
+    % PLACEHOLDER: FLEX results figure showing robot manipulation across platforms
+    % Replace with Figure 1 from FLEX paper
+    \figplaceholder{\textwidth}{flex\_results: cross-robot transfer on UR5e, Kinova, Panda, real UR5}
+    \caption{FLEX learns force-based skills for manipulating articulated objects across various robots by decoupling policy learning from robot dynamics. The UR5e opens a cabinet, Kinova opens a microwave door, Panda opens a dishwasher rack, and a real UR5 opens a drawer---all using the same learned policies without retraining.}
+    \label{fig:flex_results}
+\end{figure}

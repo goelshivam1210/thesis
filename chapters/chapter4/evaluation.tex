@@ -1,7 +1,7 @@
 \section{Experimental Evaluation}
 \label{sec:rl_evaluation}
 
-This section presents experimental evaluations at two levels. First, \cref{sec:rl_eval_rapid} evaluates the RAPid-Learn framework in isolation, comparing its novelty accommodation and sample efficiency against transfer learning baselines on the NovelGridworlds domain. Second, \cref{sec:rl_eval_architecture} evaluates the full neurosymbolic architecture on a large-scale systemic evaluation in the Polycraft environment, assessing the integrated capabilities of the architecture across hundreds of novelty scenarios.
+This section presents experimental evaluations at two levels. First, \cref{sec:rl_eval_rapid} evaluates the RAPid-Learn framework in isolation, comparing its novelty accommodation and sample efficiency against transfer learning baselines on the NovelGridworlds domain introduced in \cref{sec:novelgridworlds}. The primary metrics are adaptation time ($T_\text{adapt}$) and post-novelty success rate ($S_\text{post}$), following the evaluation protocol established in \cref{sec:ng_evaluation}. Second, \cref{sec:rl_eval_architecture} evaluates the full neurosymbolic architecture on a large-scale systemic evaluation in the Polycraft environment, assessing the integrated capabilities of the architecture across hundreds of novelty scenarios.
 
 
 \subsection{RAPid-Learn Evaluation}
@@ -25,7 +25,7 @@ Three variants of RAPid-Learn were compared: \emph{RAPid-KGE-UCB} (with upper co
 
 \subsubsection{Results}
 
-\begin{table}[t]
+\begin{table}[htbp]
 \footnotesize
 \centering
 \begin{tabular}{l l c c}
@@ -72,7 +72,7 @@ Novelty & Agent & $T_\text{adapt}$ (timesteps) & Post-novelty SR \\
 \label{tab:rapid_learn_results}
 \end{table}
 
-\begin{figure}[t]
+\begin{figure}[htbp]
     \centering
     \begin{subfigure}[t]{0.48\textwidth}
         \centering
@@ -127,7 +127,7 @@ To evaluate the full neurosymbolic architecture, a large-scale systemic evaluati
 
 Four agent configurations were evaluated: a \emph{Base} agent using only symbolic inference and symbolic novelty exploration; \emph{Base+Agent Model}, augmenting the base with neural behavioral modeling of other actors; \emph{Base+Executor Learner}, augmenting the base with the RAPid-Learn executor learner; and a combined \emph{Base+Agent Model+Executor Learner} configuration.
 
-\begin{table}[t]
+\begin{table}[htbp]
 \footnotesize
 \centering
 \begin{tabular}{l c c c c c}
@@ -144,7 +144,7 @@ Base+AM+EL              & \textbf{0.39} & \textbf{88.7} & \textbf{1.6} & 68.1 & 
 \label{tab:polycraft_overall}
 \end{table}
 
-\begin{figure}[t]
+\begin{figure}[htbp]
     \centering
     \includegraphics[width=\textwidth]{figures/chapter4/failed_effects_policy.pdf}
     \caption{Breakdown of novelty accommodation performance across novelty categories in the Polycraft systemic evaluation. Each bar shows the goal achievement rate for the four agent configurations under each novelty type. The executor learner (Base+EL) provides the most consistent improvement on attribute, action, and concealed novelties, where symbolic recovery strategies are insufficient and learning-based executor discovery is essential.}

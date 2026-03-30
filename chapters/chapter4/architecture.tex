@@ -3,38 +3,16 @@
 
 RAPid-Learn addresses the specific problem of recovering from execution impasses caused by novelty. However, a complete open-world agent must handle the full lifecycle of novelty: detecting that something has changed, characterizing the nature of the change, exploring the environment to gather information, and accommodating the novelty to continue task performance. This section presents a neurosymbolic cognitive architecture~\citep{goel2024neurosymbolic} that integrates RAPid-Learn within a broader framework for novelty handling. The architecture combines symbolic inference, neural inference, and reinforcement learning, with each component contributing to different aspects of novelty detection and accommodation.
 
+The architecture provides a concrete instantiation of the claim developed in \cref{sec:abstractions}: that structured abstractions over actions determine whether novelty-induced mismatch can be resolved efficiently. The operator--executor decomposition is the structural feature that enables the cascading recovery pipeline described below---without it, execution failures would propagate as undifferentiated performance degradation, and the architecture would have no principled basis for selecting among recovery strategies.
+
 \subsection{Novelty Typology for Goal-Oriented Agents}
 \label{sec:novelty_typology}
 
-The formalization of novelty in \cref{sec:novelty} defined novelty as a deviation between the agent's model and the true environment. For a goal-oriented agent equipped with a symbolic planner, the functional impact of a novelty depends on how it affects the agent's ability to generate and execute plans. We refine the general notion of novelty into four types based on their impact on task performance~\citep{goel2024neurosymbolic}.
+The architecture's recovery strategies are organized around the four-way novelty taxonomy developed in \cref{sec:novelty_taxonomy}: prohibitive, obstructive, beneficial, and nuisance novelties. For a goal-oriented agent equipped with a symbolic planner, the functional impact of a novelty depends on how it affects the agent's ability to generate and execute plans~\citep{goel2024neurosymbolic}. The taxonomy maps to recovery strategies as follows.
 
-\begin{definition}[Prohibitive novelty]
-\label{def:prohibitive}
-A novelty $\nu$ is \emph{prohibitive} for agent $\mathcal{A}$ and task $T$ if for all plans $\Plan$ derivable from the agent's current knowledge, $\Plan$ does not solve $T$, but there exists a plan $\Plan_\nu$ that solves $T$ using knowledge of $\nu$.
-\end{definition}
+Prohibitive novelties (\cref{def:prohibitive}) prevent the agent from generating any valid plan---for example, if the crafting table is removed from the environment. These trigger plan-level exploration, in which the agent searches for new knowledge (entities, operators, or recipes) that would restore plannability. Obstructive novelties (\cref{def:obstructive}) are the primary focus of RAPid-Learn: the agent has a valid plan, but execution fails at a specific operator. The axe novelty from the running example is obstructive---the \texttt{break} operator's executor fails because trees are now unbreakable without an axe. These invoke the failure recovery pipeline described in \cref{sec:failure_recovery}, culminating in the RAPid-Learn executor learner if symbolic strategies are insufficient. Beneficial novelties (\cref{def:beneficial}) are exploited when discovered, and nuisance novelties (\cref{def:nuisance}) are identified and ignored.
 
-Prohibitive novelties prevent the agent from even generating a valid plan. For example, if the crafting table is removed from the environment, the agent cannot plan to craft any items; discovering an alternative source (e.g., a chest or a supplier) requires new knowledge.
-
-\begin{definition}[Obstructive novelty]
-\label{def:obstructive}
-A novelty $\nu$ is \emph{obstructive} for agent $\mathcal{A}$ and task $T$ if it causes the execution of an executor $\Executor \in \Executors$ to fail.
-\end{definition}
-
-Obstructive novelties are the primary focus of RAPid-Learn: the agent has a plan, but execution fails at a specific operator. The axe novelty from the running example is obstructive---the \texttt{break} operator's executor fails because trees are now unbreakable without an axe.
-
-\begin{definition}[Beneficial novelty]
-\label{def:beneficial}
-A novelty $\nu$ is \emph{beneficial} for agent $\mathcal{A}$ and task $T$ if incorporating $\nu$ into the agent's knowledge enables a plan $\Plan_\nu$ that solves $T$ with lower cost than any plan derivable from the agent's current knowledge.
-\end{definition}
-
-\begin{definition}[Nuisance novelty]
-\label{def:nuisance}
-A novelty $\nu$ is a \emph{nuisance} for agent $\mathcal{A}$ and task $T$ if plans incorporating $\nu$ do not improve upon existing plans---that is, the novelty does not contribute to task performance and may only increase cost.
-\end{definition}
-
-These types are agent-relative: the same environmental change may be prohibitive for one agent and merely a nuisance for another, depending on each agent's knowledge and capabilities. The architecture uses this typology to select appropriate recovery strategies: prohibitive novelties trigger plan-level exploration, obstructive novelties invoke the failure recovery pipeline (culminating in the RAPid-Learn executor learner if symbolic strategies fail), beneficial novelties are exploited when discovered, and nuisance novelties are identified and ignored.
-
-Note the relationship between this typology and the benchmark classification from \cref{sec:ngw_novelty_taxonomy}: beneficial and detrimental novelties in the benchmark correspond roughly to beneficial and obstructive/prohibitive novelties here, while irrelevant novelties correspond to nuisance novelties. The architecture's typology is more granular because it distinguishes between planning-level failures (prohibitive) and execution-level failures (obstructive), which require different recovery strategies.
+The distinction between prohibitive and obstructive novelties is operationally significant because they require different recovery strategies: prohibitive novelties demand symbolic model revision (new operators or fluents), while obstructive novelties demand new executors for existing operators. This distinction is finer-grained than the three-way classification used in the NovelGridworlds benchmark (\cref{sec:ngw_novelty_taxonomy}), where the \emph{detrimental} category encompasses both prohibitive and obstructive novelties.
 
 
 \subsection{Architecture Overview}
@@ -42,7 +20,7 @@ Note the relationship between this typology and the benchmark classification fro
 
 The architecture, depicted in \cref{fig:architecture}, consists of four main components that interact through the agent's knowledge repository $\mathcal{K} = (\KB, \Theta)$, where $\KB$ stores symbolic knowledge (facts, rules, operators in first-order logic) and $\Theta$ stores subsymbolic knowledge (neural network parameters). The components are:
 
-\begin{figure}[t]
+\begin{figure}[htbp]
     \centering
     \includegraphics[width=\textwidth]{figures/chapter4/diarcgram.pdf}
     \caption{High-level architecture of the neurosymbolic cognitive architecture for novelty handling. The four main components communicate through the shared knowledge repository $\mathcal{K} = (\KB, \Theta)$. Symbolic inference (task planner, goal manager) generates and executes plans, detecting novelties through expectation violations. Neural inference (vision model, agent model) detects visual and behavioral anomalies and asserts novelty descriptions into $\KB$. When execution fails, the novelty exploration component applies a cascading sequence of recovery strategies---culminating in the RAPid-Learn executor learner---interacting with the environment through the domain interface, which mediates symbolic state observations, images, and LiDAR sensor data.}

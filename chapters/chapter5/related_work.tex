@@ -1,0 +1,60 @@
+\section{Related Work}
+\label{sec:gen_related_work}
+
+This section reviews prior work related to the force-based learning methods developed in this chapter. The discussion is organized around four themes: robot learning for sustained-contact manipulation, object-centric representations for manipulation, model-based and control-theoretic approaches to pushing, and sim-to-real transfer under contact uncertainty.
+
+\paragraph{Robot learning for sustained-contact manipulation.}
+Sustained-contact manipulation---tasks requiring continuous force application throughout the interaction, such as pushing, sliding, or operating articulated mechanisms---poses challenges due to high-dimensional action spaces and extended task duration~\citep{kroemer2021review}. Reinforcement learning approaches have been applied to contact-rich manipulation~\citep{gu2017deep,kalashnikov2018scalable}, but typically require extensive training data and produce policies tightly coupled to specific robot platforms and task configurations. Simulated environments such as MuJoCo~\citep{todorov2012mujoco}, Robosuite~\citep{zhu2020robosuite}, and SAPIEN~\citep{xiang2020sapien} have improved training efficiency but policies still struggle with stable interactions throughout extended manipulation and managing complex state-action dynamics~\citep{elguea2023review}.
+
+Recent work has sought to simplify reinforcement learning for sustained contact by decoupling high-level policies from low-level motion planning. \citet{abbatematteo2024composable} introduce composable interaction primitives that structure the policy class for efficient learning of sustained-contact skills. \citet{lu2023decoupling} decouple object dynamics from robot control to enhance generalization. \citet{nasiriany2022augmenting} augment reinforcement learning with behavior primitives, and \citet{rosen2022role} combine structured RL with task and motion planning. While these approaches reduce action-space complexity, they remain in robot-centric or end-effector spaces, limiting transferability across platforms. The methods in this chapter take a further step by moving policy learning entirely into object-centric force space, eliminating robot-specific dynamics from the learning problem altogether.
+
+% NEW BIB ENTRIES NEEDED:
+% kroemer2021review — Kroemer et al. "A review of robot learning for manipulation" JMLR 2021
+% gu2017deep — Gu et al. "Deep RL for robotic manipulation with asynchronous off-policy updates" ICRA 2017
+% kalashnikov2018scalable — Kalashnikov et al. "Scalable deep RL for vision-based robotic manipulation" CoRL 2018
+% todorov2012mujoco — Todorov et al. "MuJoCo: A physics engine for model-based control" IROS 2012
+% zhu2020robosuite — Zhu et al. "robosuite: A modular simulation framework" arXiv 2020
+% xiang2020sapien — Xiang et al. "SAPIEN: A simulated part-based interactive environment" CVPR 2020
+% elguea2023review — Elguea-Aguinaco et al. "A review on RL for contact-rich robotic manipulation tasks" 2023
+% abbatematteo2024composable — Abbatematteo et al. "Composable interaction primitives" ICRA 2024
+% lu2023decoupling — Lu et al. "Decoupling skill learning from robotic control" ICRA 2023
+% nasiriany2022augmenting — Nasiriany et al. "Augmenting RL with behavior primitives" ICRA 2022
+% rosen2022role — Rosen et al. "On the role of structure in manipulation skill learning" CoRL Workshop 2022
+
+\paragraph{Object-centric representations for manipulation.}
+A growing body of work explores object-centric representations that focus on the object being manipulated rather than the robot, aiming to improve generalization across tasks and platforms~\citep{kroemer2021review}. Methods leveraging 3D perception have produced object-centric actions~\citep{mo2021where2act}, trajectories~\citep{wu2021vatmart}, and affordances~\citep{geng2023rlafford} that enhance skill transferability. For articulated objects specifically, point-cloud-based methods can infer joint configurations~\citep{yu2024gamma} and predict articulation flow to guide manipulation~\citep{eisner2022flowbot3d}. GAMMA~\citep{yu2024gamma} generalizes articulation modeling and manipulation from partial point clouds.
+
+While these approaches simplify robot learning through object-centric action representations, they typically remain in pose space and rely on robot-specific execution, limiting transferability for sustained-contact tasks that require stable force application. The work in this chapter differs by operating entirely in force space, where the policy's actions are forces applied to the object rather than robot motions, and by decoupling the policy from any specific robotic platform during both training and transfer.
+
+% NEW BIB ENTRIES NEEDED:
+% mo2021where2act — Mo et al. "Where2Act: From pixels to actions" ICCV 2021
+% wu2021vatmart — Wu et al. "VAT-Mart: Learning visual action trajectory proposals" 2021
+% geng2023rlafford — Geng et al. "RLAfford: End-to-end affordance learning" ICRA 2023
+% yu2024gamma — Yu et al. "GAMMA: Generalizable articulation modeling and manipulation" 2024
+% eisner2022flowbot3d — Eisner et al. "FlowBot3D: Learning 3D articulation flow" 2022
+
+\paragraph{Model-based pushing and control-theoretic approaches.}
+Planar pushing has been studied extensively through analytical models and control-theoretic formulations. Early work by \citet{mason1986mechanics} and \citet{lynch1996stable} characterized the quasi-static regime of frictional contact during pushing. Limit-surface models~\citep{goyal1991planar} compactly represent frictional force-moment pairs during planar sliding. More recently, optimization-based methods have cast pushing as constrained optimal control, handling hybrid contact modes explicitly. \citet{hogan2018reactive,hogan2020reactive} propose hybrid MPC formulations for reactive planar non-prehensile manipulation, and contact-implicit trajectory optimization enables planners to reason directly over contact interactions~\citep{bui2025push}. Impedance control~\citep{hogan1985impedance} provides a foundational framework for interaction control, with whole-body impedance formulations extending compliance to mobile manipulators~\citep{dietrich2016wholebody}. These approaches are physically grounded and interpretable but often rely on accurate contact models and nontrivial online optimization, limiting their applicability when object properties are unknown---precisely the setting addressed by the learning-based methods in this chapter.
+
+% NEW BIB ENTRIES NEEDED:
+% mason1986mechanics — Mason "Mechanics and planning of manipulator pushing operations" IJRR 1986
+% lynch1996stable — Lynch & Mason "Stable pushing: Mechanics, controllability, and planning" IJRR 1996
+% goyal1991planar — Goyal et al. "Planar sliding with dry friction" Wear 1991
+% hogan2018reactive — Hogan et al. "Reactive planar manipulation with convex hybrid MPC" ICRA 2018
+% hogan2020reactive — Hogan & Rodriguez "Reactive planar non-prehensile manipulation" IJRR 2020
+% bui2025push — Bui et al. "Push anything: Single- and multi-object pushing" 2025
+% hogan1985impedance — Hogan "Impedance control" JDSMC 1985
+% dietrich2016wholebody — Dietrich et al. "Whole-body impedance control of wheeled mobile manipulators" Autonomous Robots 2016
+
+\paragraph{Sim-to-real transfer under contact uncertainty.}
+A central challenge in manipulation is the reality gap induced by uncertain contact parameters and unmodeled interaction phenomena. Domain randomization~\citep{tobin2017domain,peng2018sim} addresses this by training over diverse simulated conditions so that real-world variations appear in-distribution at deployment. For non-prehensile manipulation, \citet{lowrey2018simtoreal} demonstrate sim-to-real transfer of learned pushing policies using carefully identified simulators and model ensembles. Data-driven contact models have been shown to outperform analytical counterparts in planar contact settings~\citep{fazeli2017learning}, and broader surveys characterize how modeling assumptions and uncertainty-handling strategies shape pushing performance~\citep{stuber2020survey}.
+
+The methods developed in this chapter adopt a complementary strategy: rather than training robot-centric policies under randomized conditions, they learn in an object-centric force space where the robot is entirely absent from the training environment. Domain randomization is applied to the \emph{object's} physical parameters (mass, friction, joint configurations, dimensions) rather than to the robot's dynamics. This separation means that sim-to-real transfer requires only a mapping from learned forces to robot commands---realized through operational space control (FLEX) or compliant impedance control (pushing heavy objects)---rather than bridging a full embodiment gap.
+
+% NEW BIB ENTRIES NEEDED:
+% lowrey2018simtoreal — Lowrey et al. "RL for non-prehensile manipulation: Transfer from simulation" SIMPAR 2018
+% fazeli2017learning — Fazeli et al. "Learning data-efficient rigid-body contact models" CoRL 2017
+% stuber2020survey — Stüber et al. "Let's push things forward: A survey on robot pushing" Frontiers 2020
+
+\paragraph{Gap addressed by this chapter.}
+Across these lines of work, robot learning for sustained-contact manipulation faces a common tension: policies trained in robot-centric action spaces achieve strong performance on specific platforms but do not transfer; model-based methods offer physical interpretability but require accurate contact parameters; and sim-to-real techniques improve robustness but remain coupled to specific embodiments. The methods in this chapter resolve this tension through object-centric force-space learning: by abstracting interaction to the level of forces and object dynamics, learned policies generalize across objects, physical parameters, and robotic platforms. This constitutes the empirical instantiation of the interaction abstraction framework developed in \cref{sec:interaction_abstractions}.
