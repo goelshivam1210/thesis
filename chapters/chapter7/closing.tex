@@ -1,0 +1,8 @@
+\section{Closing Remarks}
+\label{sec:closing}
+
+The real world does not respect the boundaries of an agent's training data. Objects appear that were never labeled, dynamics change in ways that were never simulated, and tasks evolve beyond what was anticipated during system design. The question is not whether agents will encounter novelty, but whether they can respond to it effectively.
+
+This dissertation has argued that the answer depends on how agents represent their interaction with the world. Monolithic representations that tightly couple perception, reasoning, and action provide no natural interfaces for diagnosing failures or localizing adaptation. Structured abstractions---representations that decompose behavior into compositional sequences and organize interaction around task-relevant invariants---create precisely these interfaces. They enable agents to identify what has changed, restrict learning to what must change, and preserve what still works.
+
+The formal frameworks, benchmark environments, adaptation methods, and generalization techniques developed in this dissertation provide concrete instantiations of this principle. They demonstrate that structured abstractions over actions enable efficient recovery from execution failures caused by novelty, and that structured abstractions over interaction enable learned skills to generalize across objects, physical parameters, and robotic platforms. Together, they offer a perspective on open-world autonomy in which the structure of an agent's representations is not merely a design choice but a fundamental determinant of its capacity to operate in a world that is always, in some respect, new.

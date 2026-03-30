@@ -1,0 +1,44 @@
+\section{Foundation Models and Open-World Autonomy}
+\label{sec:foundation_models}
+
+The rapid development of large-scale foundation models has fundamentally altered the landscape of autonomous agent design. This section examines how these models relate to the open-world challenges addressed in this dissertation, and argues that the abstraction-based perspective developed here provides a complementary---rather than competing---viewpoint.
+
+\subsection{Vision-Language-Action Models}
+
+A recent and rapidly growing line of work leverages large pretrained models for robotic planning and decision-making. Vision-language-action (VLA) models such as RT-2 \citep{pmlr-v229-zitkovich23a} directly map visual observations and language instructions to robot actions, drawing on the broad world knowledge encoded in large language and vision models. By training on large-scale robot demonstration datasets, these models can generalize to novel instructions and objects that were not explicitly present in the training data, exhibiting a form of open-world capability that emerges from the scale and diversity of pretraining.
+
+Generalist robot policies such as Octo \citep{team2024octo} and $\pi_0$ \citep{black2024pi_0} extend this paradigm by training on multi-robot, multi-task datasets with the goal of producing a single policy that works across embodiments and task families. These models represent an implicit approach to the cross-embodiment generalization problem that \cref{ch:generalization} addresses through explicit interaction abstractions: rather than designing representations that factor out embodiment-specific details, they attempt to learn embodiment-invariant behavior from sufficiently diverse data.
+
+\subsection{Language Models as Planners}
+
+A parallel line of work uses large language models (LLMs) as high-level planners or task decomposers. SayCan \citep{ahn2022can} grounds LLM-generated plans in an affordance model that scores the feasibility of each proposed step given the robot's current capabilities. Code as Policies \citep{liang2023code} and related approaches \citep{huang2022language} use LLMs to generate executable code or action sequences from natural language instructions. These systems decompose tasks into structured sequences of skills, performing a function analogous to the symbolic planning layer in the hybrid framework of \cref{sec:hybrid}---but using statistical language generation rather than formal search over a domain model.
+
+The appeal of LLM-based planning is its flexibility: the model can propose actions and decompositions for tasks it has never been explicitly trained on, drawing on commonsense knowledge acquired during language pretraining. However, this flexibility comes with limitations that are directly relevant to the open-world setting. LLM-generated plans are not grounded in formal preconditions and effects, making it difficult to verify plan correctness, detect when execution deviates from expectations, or localize the source of a failure. The structured action abstractions developed in \cref{ch:rapid_learn}---where each operator has explicit preconditions, effects, and a corresponding executor---provide precisely this kind of diagnostic capability, enabling the agent to convert a global failure into a targeted learning problem.
+
+\subsection{What Foundation Models Solve and What They Do Not}
+
+Foundation models bring unprecedented breadth to autonomous systems. Their ability to recognize novel objects, generate plausible task decompositions, and produce behaviors for previously unseen instructions addresses aspects of the open-world problem that were intractable for earlier methods. In the language of \cref{sec:novelty}, foundation models substantially expand the agent's prior knowledge $\KnowledgeRepo$, reducing the set of situations that constitute novelty.
+
+However, several fundamental challenges remain.
+
+\paragraph{Diagnosability and failure localization.}
+When a foundation model-based agent fails---because the VLA produces an incorrect action, or the LLM proposes an infeasible step---the monolithic nature of the model makes it difficult to determine \emph{why} the failure occurred and \emph{what} should change. The failure could stem from incorrect perception, faulty reasoning, an inadequate skill, or a combination. In contrast, the structured decomposition used in this dissertation---symbolic operators with explicit preconditions and effects, each associated with a separate executor---provides natural interfaces at which mismatch can be detected, localized, and addressed. This diagnostic capability is essential for efficient adaptation: without it, the agent's only recourse is to collect more data and retrain, which is neither sample-efficient nor targeted.
+
+\paragraph{Physical grounding in contact-rich tasks.}
+Foundation models trained primarily on vision and language data encode rich semantic knowledge but have limited understanding of contact physics, force interactions, and the dynamics of sustained manipulation. Tasks such as operating articulated mechanisms under varying resistance or pushing heavy objects under unknown friction---the settings studied in \cref{ch:generalization}---require policies that reason about forces, contact states, and physical parameters that are not well captured by vision-language representations alone. The object-centric force-space representations developed in this dissertation address precisely this gap: they capture the physically meaningful invariants of manipulation tasks at a level of abstraction that vision-language models do not operate at.
+
+\paragraph{Reliability and verifiability.}
+In safety-critical deployment settings, the stochastic nature of foundation model outputs poses challenges. LLM-generated plans may hallucinate infeasible actions or produce subtly incorrect decompositions. VLA policies may exhibit unpredictable failures on out-of-distribution inputs. Formal planning systems, despite their brittleness under model mismatch, offer guarantees about plan validity given correct models. The hybrid approach in this dissertation inherits some of these guarantees: when the symbolic model is correct, plans are provably valid; when it is not, the agent has structured mechanisms for detecting and addressing the mismatch.
+
+\paragraph{Sample efficiency in adaptation.}
+When a foundation model encounters a genuinely novel situation---one that falls outside its training distribution---adaptation typically requires collecting new demonstrations or fine-tuning on task-specific data, which can be expensive in real-world settings. The targeted learning approach in \cref{ch:rapid_learn} demonstrates that structured abstractions can reduce the adaptation problem from a global policy search to a focused learning problem over a single operator's executor, achieving one to two orders of magnitude improvement in sample efficiency over unstructured approaches. This efficiency advantage is particularly relevant in physical settings where data collection is costly and time-consuming.
+
+\subsection{Complementary Perspectives}
+
+The abstraction-based approach developed in this dissertation and the foundation model paradigm are not mutually exclusive. Several natural points of integration exist.
+
+Foundation models could serve as powerful initialization for the components of a structured agent architecture. An LLM could provide initial domain models that are then formalized into PDDL operators, with the hybrid framework providing the machinery for detecting when these models are incorrect and adapting accordingly. A VLA could provide initial executors that are refined through the targeted learning mechanisms of \cref{ch:rapid_learn} when they fail in novel situations. Open-vocabulary perception models could provide the perceptual front-end that this dissertation assumes but does not develop.
+
+Conversely, the structured abstractions developed here could provide the interpretability and diagnostic capabilities that foundation model-based systems currently lack. Organizing a foundation model's behavior through explicit operator--executor decompositions would enable failure localization and targeted adaptation even when the underlying execution is performed by a large pretrained model. Force-space representations could ground VLA policies in physical interaction dynamics, providing a level of physical reasoning that complements the semantic reasoning these models excel at.
+
+This complementary view suggests that the future of open-world autonomy may lie not in choosing between structured abstractions and large-scale learning, but in developing architectures that combine the breadth and flexibility of foundation models with the diagnosability, efficiency, and physical grounding that structured representations provide.

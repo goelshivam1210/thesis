@@ -12,9 +12,17 @@ A \emph{prismatic joint} allows linear motion along a fixed axis. The position o
 
 \begin{figure}[t]
     \centering
-    % PLACEHOLDER: Figure showing prismatic and revolute joint parametrizations
-    % Replace with actual figure from FLEX paper (Figure 2)
-    \figplaceholder{0.6\textwidth}{flex\_joints: prismatic and revolute joint parametrizations}
+    \begin{subfigure}[t]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/chapter5/joint_config_pri.png}
+        \caption{Prismatic joint}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/chapter5/joint_config_rev.png}
+        \caption{Revolute joint}
+    \end{subfigure}
     \caption{Illustration of the two joint configurations used in FLEX. (a) A prismatic joint allows linear motion along a fixed axis $h_p$. (b) A revolute joint allows rotational motion around an axis $h_r$ with radius $r$. The state representation for each joint type captures the joint axis direction and the current displacement or projected position, providing an object-centric description independent of robot kinematics.}
     \label{fig:flex_joints}
 \end{figure}
@@ -68,8 +76,7 @@ The final component translates the learned force-based policies to physical robo
 
 \begin{figure}[t]
     \centering
-    % PLACEHOLDER: FLEX architecture figure (Figure 3 from paper)
-    \figplaceholder{\textwidth}{flex\_architecture: force-based skill learning, joint estimation, robot execution}
+    \includegraphics[width=\textwidth]{figures/chapter5/framework_diagram_final.jpeg}
     \caption{Architecture of FLEX. Force-based skill learning (left) trains object-centric policies in simulation without any robot. Interactive joint parameter estimation (center) infers the object's joint type and configuration from physical interaction. Robot execution (right) maps the learned forces to joint torques through an operational space controller, enabling deployment on any robot platform.}
     \label{fig:flex_architecture}
 \end{figure}
@@ -143,9 +150,7 @@ Dishwasher & $0.64 \pm 0.11$ & $0.62 \pm 0.11$ & $0.59 \pm 0.13$ \\
 
 \begin{figure}[t]
     \centering
-    % PLACEHOLDER: FLEX results figure showing robot manipulation across platforms
-    % Replace with Figure 1 from FLEX paper
-    \figplaceholder{\textwidth}{flex\_results: cross-robot transfer on UR5e, Kinova, Panda, real UR5}
+    \includegraphics[width=\textwidth]{figures/chapter5/illustrative_figure.jpg}
     \caption{FLEX learns force-based skills for manipulating articulated objects across various robots by decoupling policy learning from robot dynamics. The UR5e opens a cabinet, Kinova opens a microwave door, Panda opens a dishwasher rack, and a real UR5 opens a drawer---all using the same learned policies without retraining.}
     \label{fig:flex_results}
 \end{figure}

@@ -12,8 +12,7 @@ This setting presents three coupled sub-problems: (1) learning an object-centric
 
 \begin{figure}[t]
     \centering
-    % PLACEHOLDER: PHO architecture overview (Figure 1 from paper)
-    \figplaceholder{\textwidth}{pho\_architecture: simulation training, impedance probing, compliant execution}
+    \includegraphics[width=\textwidth]{figures/chapter5/arch.pdf}
     \caption{Architecture of the pushing heavy objects framework. The policy is trained in simulation (top right) using a parameterized MDP conditioned on an interaction descriptor $z$. At deployment (bottom), the robot estimates $z$ through impedance-based force probing and constructs the object-centric state from proprioceptive sensing, then executes the learned boundary forces through compliant impedance control.}
     \label{fig:pho_architecture}
 \end{figure}
@@ -34,8 +33,7 @@ where $e^\text{lat}_t$ is the signed lateral deviation from the path, $e^\theta_
 
 \begin{figure}[t]
     \centering
-    % PLACEHOLDER: State space diagram (Figure 2 from paper)
-    \figplaceholder{0.55\textwidth}{pho\_state\_space: path-relative state variables $e^\text{lat}_t$, $e^\theta_t$, velocities}
+    \includegraphics[width=0.55\textwidth]{figures/chapter5/state_description.png}
     \caption{Diagrammatic representation of the state space in the parameterized MDP. The object's pose is represented relative to the reference path through lateral deviation $e^\text{lat}_t$, heading error $e^\theta_t$, and velocity components along the path tangent and normal. The normalized contact-resistance descriptor $z$ conditions the policy on the interaction regime.}
     \label{fig:pho_state}
 \end{figure}
@@ -156,8 +154,29 @@ The learned policy was deployed zero-shot on a Boston Dynamics Spot mobile manip
 
 \begin{figure}[t]
     \centering
-    % PLACEHOLDER: Chronophotography composites (Figure 3 from paper)
-    \figplaceholder{\textwidth}{pho\_realworld: chronophotographic composites of Spot pushing 8.8\,kg and 12.5\,kg}
+    \begin{subfigure}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/chapter5/8pt8kg-policy.jpg}
+        \caption{Policy, 8.8\,kg}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/chapter5/8pt8kg-baseline.jpg}
+        \caption{Baseline, 8.8\,kg}
+    \end{subfigure}
+    \\[6pt]
+    \begin{subfigure}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/chapter5/12pt5kg-Policy.jpg}
+        \caption{Policy, 12.5\,kg}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/chapter5/12pt5kg-baseline.jpg}
+        \caption{Baseline, 12.5\,kg}
+    \end{subfigure}
     \caption{Chronophotographic composites of real-world box transport on the Boston Dynamics Spot. Top row: proposed force-based policy under $8.8$~kg (a) and $12.5$~kg (c) payloads, showing consistent trajectory tracking. Bottom row: kinematic baseline under the same conditions (b, d), showing frequent deviation and failure to reach the goal.}
     \label{fig:pho_realworld}
 \end{figure}
