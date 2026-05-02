@@ -1,0 +1,33 @@
+\begin{algorithm}
+\caption{Training Routine with Crafted Reward Function}
+\label{alg:reward_func}
+\begin{algorithmic}[1]
+\STATE Plan $P$
+\STATE Ordered set (queue) $\mathcal{Q}$ of subgoals derived from $P$
+\STATE Set of past goals $\mathcal{G}_{\text{past}} \gets \emptyset$
+
+\WHILE{$\mathcal{Q}$ is not empty}
+    \STATE Let $g_{\text{current}}$ be the first element of $\mathcal{Q}$
+    
+    \IF{$g_{\text{current}}$ is achieved}
+        \STATE $\mathcal{G}_{\text{past}} \gets \mathcal{G}_{\text{past}} \cup \{ g_{\text{current}} \}$
+        \STATE Remove $g_{\text{current}}$ from $\mathcal{Q}$
+        
+        \IF{$g_{\text{current}}$ was the immediate predecessor in $\mathcal{G}_{\text{past}}$}
+            \STATE $\text{Reward}(g_{\text{current}}) \gets \frac{1}{2} \times \text{Reward}(g_{\text{current}})$
+        \ENDIF
+        
+        \FOR{each $g_{\text{subsequent}}$ in $\mathcal{Q}$}
+            \IF{$g_{\text{subsequent}}$ is achieved}
+                \STATE Remove $g_{\text{subsequent}}$ from $\mathcal{Q}$
+                \STATE $\text{Reward}(g_{\text{subsequent}}) \gets 0$
+            \ELSE
+                \STATE \textbf{break}
+            \ENDIF
+        \ENDFOR
+    \ELSE
+        \STATE Update model with $\text{Reward}(g_{\text{current}})$
+    \ENDIF
+\ENDWHILE
+\end{algorithmic}
+\end{algorithm}

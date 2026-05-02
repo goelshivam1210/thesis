@@ -1,0 +1,135 @@
+% ─────────────────────────────────────────────────────────────────────────────
+% Statistical Significance Subsection — correct tests per metric
+% ─────────────────────────────────────────────────────────────────────────────
+
+\subsubsection{Statistical Significance}
+\label{sec:statistical_significance}
+
+Not all metrics reported in this evaluation are amenable to formal hypothesis
+testing, so we first clarify which metrics warrant a test and why.
+
+\textbf{M1 (Reaction Performance)} is defined as the ratio of post-novelty to
+pre-novelty cumulative action cost. Because the pre-novelty value is the
+normalisation denominator, the default M1 is always exactly $1.00$ with zero
+variance by construction. Comparing a distribution to a constant violates the
+assumptions of any two-sample test; M1 is therefore interpreted descriptively
+and no significance test is applied.
+
+\textbf{M3 (Detection Rate)} is a binary, deterministic outcome. The planning
+agent achieved a $100\%$ detection rate in every novelty scenario, leaving no
+distributional uncertainty to test.
+
+\textbf{M2 (Steps)} is the only planning-agent metric with genuine variance on
+both sides of the novelty boundary. We treat the pre-novelty mean as a fixed
+reference value and apply a \textbf{one-sample $t$-test} to the five
+post-novelty observations, asking whether the post-novelty step count differs
+significantly from the pre-novelty baseline.
+
+\textbf{RL success rate} is computed from $n = 10$ independent trials, each a
+genuinely separate experimental run with a different random seed. We apply an
+\textbf{unpaired Welch's $t$-test}~\cite{kim2015t} between the default and each
+post-novelty condition, with a significance level of $\alpha = 0.05$.
+
+%
+% ── M2: PLANNING AGENT ───────────────────────────────────────────────────────
+%
+\begin{table}[!tb]
+\footnotesize
+\begin{center}
+\begin{tabular}{>{\centering}p{3.2cm}>{\centering}p{2.2cm}>{\centering}p{1.2cm}>{\centering}p{1.8cm}p{0.1cm}}
+
+\arrayrulecolor{taupegray}\toprule
+\textbf{\begin{small}Novelty\end{small}} &
+\textbf{\begin{small}Pre-novelty (ref.)\end{small}} &
+{\textbf{\begin{small}$p$-value\end{small}}} &
+\textbf{\begin{small}Statistically Significant\end{small}}\tabularnewline
+\midrule
+
+\multicolumn{4}{c}{\textbf{NovelGridworld-Bow-v0}}\tabularnewline
+\midrule
+Fence        & $87.6 \pm 16.8$ & $0.0117$ & Yes \tabularnewline
+Arrow/Spring & $87.6 \pm 16.8$ & $0.6798$ & No  \tabularnewline
+Axe          & $87.6 \pm 16.8$ & $0.2174$ & No  \tabularnewline
+\midrule
+
+\multicolumn{4}{c}{\textbf{NovelGridworld-Bow-v1}}\tabularnewline
+\midrule
+Fence        & $36.8 \pm 6.5$ & $0.0013$ & Yes \tabularnewline
+Arrow/Spring & $36.8 \pm 6.5$ & $0.9380$ & No  \tabularnewline
+Axe          & $36.8 \pm 6.5$ & $0.4776$ & No  \tabularnewline
+\midrule
+
+\multicolumn{4}{c}{\textbf{NovelGridworld-Pogostick-v0}}\tabularnewline
+\midrule
+Fence        & $127.8 \pm 9.0$ & $0.5482$ & No  \tabularnewline
+Arrow/Spring & $127.8 \pm 9.0$ & $0.0341$ & Yes \tabularnewline
+Axe          & $127.8 \pm 9.0$ & $0.0019$ & Yes \tabularnewline
+\midrule
+
+\multicolumn{4}{c}{\textbf{NovelGridworld-Pogostick-v1}}\tabularnewline
+\midrule
+Fence        & $94.2 \pm 12.9$ & $0.1651$ & No  \tabularnewline
+Arrow/Spring & $94.2 \pm 12.9$ & $0.5490$ & No  \tabularnewline
+Axe          & $94.2 \pm 12.9$ & $0.2525$ & No  \tabularnewline
+
+\bottomrule
+\multicolumn{4}{l}{\small One-sample $t$-test, $n=5$ post-novelty episodes, $\alpha=0.05$.}\\
+\multicolumn{4}{l}{\small Pre-novelty mean treated as fixed reference value.}\\
+\end{tabular}
+\caption{\small Statistical significance of the change in M2 (steps) for the
+planning agent across all tasks and novelty scenarios.}
+\label{tab:stat_sig_planning}
+\end{center}
+\end{table}
+
+Table~\ref{tab:stat_sig_planning} shows that the Fence novelty produces a
+significant increase in step count in the Bow environments, confirming that the
+detrimental effect of fence objects is not attributable to sampling variability.
+The result is not significant in the Pogostick environments, where higher
+step-count variance reduces the power of the test.
+The Arrow/Spring and Axe novelties are largely non-significant across all tasks,
+consistent with the expectation that an irrelevant novelty leaves performance
+unchanged and the beneficial effect of the axe is too small to detect reliably
+at $n = 5$.
+The significant results observed for Arrow/Spring and Axe in Pogostick-v0 are
+noteworthy; since these novelties are expected to have little effect, these
+results likely reflect the small sample size ($n = 5$) rather than a genuine
+performance change, and should be interpreted with caution.
+
+%
+% ── RL AGENT ─────────────────────────────────────────────────────────────────
+%
+\begin{table}[!tb]
+\footnotesize
+\begin{center}
+\begin{tabular}{>{\centering}p{4.2cm}>{\centering}p{1.2cm}>{\centering}p{1.8cm}p{0.1cm}}
+
+\arrayrulecolor{taupegray}\toprule
+\textbf{\begin{small}Comparison (Default $\leftrightarrow$ Novelty)\end{small}} &
+{\textbf{\begin{small}$p$-value\end{small}}} &
+\textbf{\begin{small}Statistically Significant\end{small}}\tabularnewline
+\midrule
+
+\multicolumn{3}{c}{\textbf{NovelGridworld-Bow-v0}}\tabularnewline
+\midrule
+Default $\leftrightarrow$ Action remapping & $0.4146$   & No  \tabularnewline
+Default $\leftrightarrow$ Fire wall        & $< 0.0001$ & Yes \tabularnewline
+Default $\leftrightarrow$ Break increase   & $< 0.0001$ & Yes \tabularnewline
+
+\bottomrule
+\multicolumn{3}{l}{\small Unpaired Welch's $t$-test, $n = 10$ independent trials, $\alpha = 0.05$.}\\
+\end{tabular}
+\caption{\small Statistical significance of the change in success rate for the
+RL agent on \emph{NovelGridworld-Bow-v0}. The non-significant result for Action
+remapping is partly attributable to high variance in that condition
+($\sigma = 40.0\%$), which limits the power of the test.}
+\label{tab:stat_sig_rl}
+\end{center}
+\end{table}
+
+Table~\ref{tab:stat_sig_rl} confirms that the Fire-wall and Break-increase
+novelties cause a statistically significant drop in task success rate. The
+Action remapping result does not reach significance, which is consistent with
+the high variance observed across trials in that condition---some trials received
+a near-identity action shuffle while others experienced full remapping---rather
+than a conclusive finding of equivalence with the default performance.

@@ -1,42 +1,44 @@
-"latex-workshop.latex.tools": [
-  {
-    "name": "latexmk",
-    "command": "/Library/TeX/texbin/latexmk",
-    "args": [
-      "-pdf",
-      "-interaction=nonstopmode",
-      "-synctex=1",
-      "-file-line-error",
-      "-halt-on-error",
-      "-outdir=build",
-      "-cd",
-      "-bibtex",
-      "%DOC%"
-    ]
-  }
-],
+{
+  "latex-workshop.latex.tools": [
+    {
+      "name": "latexmk",
+      "command": "/Library/TeX/texbin/latexmk",
+      "args": [
+        "-pdf",
+        "-interaction=nonstopmode",
+        "-synctex=1",
+        "-file-line-error",
+        "-halt-on-error",
+        "-outdir=build",
+        "-cd",
+        "-bibtex",
+        "%DOC%"
+      ]
+    }
+  ],
 
-"latex-workshop.latex.recipes": [
-  {
-    "name": "latexmk",
-    "tools": ["latexmk"]
-  }
-],
+  "latex-workshop.latex.recipes": [
+    {
+      "name": "latexmk",
+      "tools": ["latexmk"]
+    }
+  ],
 
-"latex-workshop.latex.autoBuild.run": "onSave",
-"latex-workshop.view.pdf.viewer": "tab",
-"latex-workshop.synctex.afterBuild.enabled": true,
+  "latex-workshop.latex.autoBuild.run": "onSave",
+  "latex-workshop.view.pdf.viewer": "tab",
+  "latex-workshop.synctex.afterBuild.enabled": true,
 
-"latex-workshop.latex.clean.fileTypes": [
-  "*.aux",
-  "*.bbl",
-  "*.blg",
-  "*.fdb_latexmk",
-  "*.fls",
-  "*.log",
-  "*.out",
-  "*.toc",
-  "*.lof",
-  "*.lot",
-  "*.synctex.gz"
-]
+  "latex-workshop.latex.clean.fileTypes": [
+    "*.aux",
+    "*.bbl",
+    "*.blg",
+    "*.fdb_latexmk",
+    "*.fls",
+    "*.log",
+    "*.out",
+    "*.toc",
+    "*.lof",
+    "*.lot",
+    "*.synctex.gz"
+  ]
+}

@@ -1,7 +1,7 @@
 \section{NovelGym}
 \label{sec:novelgym}
 
-NovelGym\footnote{The project website and codebase are available at \url{https://github.com/tufts-ai-robotics-group/NovelGym}. Detailed tutorials, PDDL specifications, configuration file formats, and hyperparameter settings are provided in~\citet{goel2024novelgym}.} extends and generalizes the ideas introduced in NovelGridworlds into a flexible ecosystem for developing and benchmarking open-world agents. While NovelGridworlds provides a fixed set of tasks and novelties suitable for initial evaluation, NovelGym introduces a formal framework for defining environments and their transformations, a modular software architecture for rapid development of tasks, novelties, and agent systems, and a comprehensive evaluation protocol with adaptation-focused metrics. The ecosystem supports single-agent and multi-agent scenarios, accommodates symbolic planning agents, reinforcement learning agents, and hybrid architectures, and enables composable novelty injection. The environment representation introduced in \cref{fig:ng_environment} serves as the basis for the formalism presented below.
+NovelGym\footnote{The project website and codebase are available at \url{https://github.com/tufts-ai-robotics-group/NovelGym}. Detailed tutorials, PDDL specifications, configuration file formats, and hyperparameter settings are provided in~\citet{goel2024novelgym}.} extends and generalizes the ideas introduced in NovelGridworlds into a flexible ecosystem for developing and benchmarking open-world agents. While NovelGridworlds provides a fixed set of tasks and novelties suitable for initial evaluation, NovelGym introduces a formal framework for defining environments and their transformations, a modular software architecture for rapid development of tasks, novelties, and agent systems, and a comprehensive evaluation protocol with adaptation-focused metrics. The ecosystem supports single-agent and multi-agent scenarios, accommodates symbolic planning agents, reinforcement learning agents, and hybrid architectures, and enables composable novelty injection. The environment representation introduced in \cref{sec:ng_environment} serves as the basis for the formalism presented below.
 
 \subsection{Environment Formalism}
 \label{sec:ng_environment}
@@ -119,7 +119,14 @@ These metrics extend the M1, M2, and M3 metrics of NovelGridworlds by explicitly
 \subsection{Benchmark Task and Novelties}
 \label{sec:ng_task}
 
-The benchmark task in NovelGym is a Minecraft-inspired pogostick crafting task. The agent operates in a two-room gridworld environment containing resources (oak trees, diamond ore, platinum blocks), a crafting table, and a trader (see \cref{fig:ng_environment}). The agent must collect resources, craft intermediary items, trade with the trader, and ultimately craft a pogostick. A simplified version of the task was used to make it tractable for reinforcement learning agents while preserving the sequential, multi-step nature of the crafting challenge.
+The benchmark task in NovelGym is a Minecraft-inspired pogostick crafting task. The agent operates in a two-room gridworld environment containing resources (oak trees, diamond ore, platinum blocks), a crafting table, and a trader (see \cref{fig:ng_novelties,fig:ngw2_screenshot}). The agent must collect resources, craft intermediary items, trade with the trader, and ultimately craft a pogostick. A simplified version of the task was used to make it tractable for reinforcement learning agents while preserving the sequential, multi-step nature of the crafting challenge.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.75\textwidth]{figures/chapter3/ngw-screenshot.png}
+    \caption{Screenshot of the NovelGym environment running the pogostick crafting task. The agent (blue arrow) navigates a grid containing oak logs (brown), diamond ore (teal), platinum blocks (silver), a crafting table, and a trader (green face). The right panel displays the current episode, step count, agent facing direction, selected action, total cost, and inventory contents.}
+    \label{fig:ngw2_screenshot}
+\end{figure}
 
 Five environment transformations were selected for evaluation, spanning detrimental and beneficial categories:
 \begin{enumerate}[leftmargin=*]
@@ -180,3 +187,7 @@ The most notable result appears in the chest novelty, where transfer RL agents a
 For novelties that require discovering genuinely new states or action sequences, ICM provides a clear benefit. In the fence novelty, Transfer RL with ICM adapts faster ($854{,}400$ vs.\ $701{,}760$ time steps) and achieves lower $\Delta t$ ($73.4$ vs.\ $90.9$), consistent with the hypothesis that curiosity-driven exploration helps the agent discover the fence-breaking strategy. However, for the fire novelty, ICM \emph{increases} adaptation time ($372{,}960$ vs.\ $127{,}200$) and slightly increases $\Delta t$ ($105.3$ vs.\ $103.3$). A plausible explanation is that the fire novelty introduces multiple novel state transitions---the burning crafting table, the water bucket, the extinguish action---all of which generate high prediction error in the forward model. The intrinsic reward thus disperses the agent's exploration across many novel but not equally useful transitions, rather than focusing it on the specific sequence (collect water, extinguish fire, then craft) needed for recovery. In effect, the forward model's prediction error is high in many irrelevant states, providing a noisy exploration signal that interferes with goal-directed adaptation.
 
 For hybrid agents, the effect of ICM is more muted because the planning component constrains the learning problem to a specific subgoal. The RL component operates within a focused subspace defined by the failed operator, limiting the scope over which curiosity-driven exploration can either help or hinder. This further supports the architectural advantage of hybrid systems: by decomposing the adaptation problem, they reduce sensitivity to the quality of the exploration signal.
+
+\input{chapters/chapter3/ngym_stat_significance}
+
+\input{chapters/chapter3/appendix}

@@ -1,0 +1,48 @@
+\begin{table}[!tb]
+    \centering
+    \footnotesize
+    \begin{tabular}{p{2.2cm} p{2.2cm} p{9cm}}
+    \toprule
+    
+    \textbf{Novelty} & \textbf{Category}  & \textbf{Description} \tabularnewline  \arrayrulecolor{taupegray} \midrule
+    
+    \emph{Axe} & \emph{Detrimental} & The agent is provided with an axe in its inventory at the start of the episode, and a new action ``select axe'' is added to its action set. The agent cannot break a tree unless it has selected the axe beforehand. \tabularnewline
+    \arrayrulecolor{taupegray} \midrule
+    
+    \emph{Busy} & \emph{Nuisance} & Each trader is busy during a certain percentage of time steps. During time steps that a trader is busy, the agent cannot successfully execute a trade against them. \tabularnewline
+    \arrayrulecolor{taupegray} \midrule
+    
+    \emph{Chest} & \emph{Beneficial} & A plastic chest containing all the ingredients required for crafting a pogostick appears in the grid world, and a new action ``approach plastic chest'' is added to the agent's action set. The chest can be acted upon with the ``collect'' action, upon which the ingredients contained in the chest are added to the agent's inventory.  \tabularnewline
+    \arrayrulecolor{taupegray} \midrule
+    
+    \emph{Distance} & \emph{Detrimental} & One cell must separate the trader and the agent in order for the trade action to execute successfully. \tabularnewline
+    \arrayrulecolor{taupegray} \midrule
+    
+    \emph{Fence} & \emph{Detrimental} & A breakable fence surrounds each tree in the grid world, and a new action ``approach fence'' is added to the agent's action set. \tabularnewline
+    \arrayrulecolor{taupegray} \midrule
+    
+    \emph{Fire} & \emph{Detrimental} & The crafting table in the grid world is given a new property ``on fire'', and this property is set to true at the beginning of the episode. Somewhere else in the grid world, a water bucket is placed. The agent can extinguish the fire by choosing either the ``use'' action or the ``collect'' action while near the crafting table and holding the water bucket, whereafter it is returned a ``bucket'' in its inventory. The crafting table can only be crafted at after the fire has been extinguished. \tabularnewline
+    \arrayrulecolor{taupegray} \midrule
+    
+    \emph{Moving} & \emph{Nuisance} & The traders are given action sets with ``move forward'', ``move backward'', ``move left'', and ``move right'' and select one of these actions randomly at every time step. \tabularnewline
+    \arrayrulecolor{taupegray} \midrule
+    
+    \emph{Multi-interact} & \emph{Detrimental} & There are two variants of this novelty. Either trees cannot be broken with the ``break'' action or there are no trees in the grid world at all. In either case, the agent can obtain oak logs by interacting with the traders. \tabularnewline
+    \arrayrulecolor{taupegray} \midrule
+    
+    \emph{Multi-room} & \emph{Nuisance} & Two rooms separated by a wall and doorway comprise the grid world rather than just one large room. \tabularnewline
+    \arrayrulecolor{taupegray} \midrule
+    
+    \emph{Portal Treasure} & \emph{Detrimental} & The agent is given a treasure in its inventory, a portal is placed in the grid world, and no tree can be broken using the break action. If the agent selects the action ``use'' while at the portal and with the treasure in its inventory, it loses the treasure but receives a number of oak logs in its inventory instead. \tabularnewline
+    \arrayrulecolor{taupegray} \midrule
+    
+    \emph{Random drop} & \emph{Detrimental} & The agent can no longer break trees using the break action nor any other action. However, with a certain probability, the action ``break block'' results in a given number of oak logs being dropped into the grid world. \tabularnewline
+    \arrayrulecolor{taupegray} \midrule
+    
+    \emph{Space Around} & \emph{Detrimental} & At the beginning of the episode, the agent is given a number of saplings in its inventory. These saplings can be placed in the grid world and grow into trees. The agent cannot place a sapling when there is a tree or wall within radius 1 of the item. \tabularnewline
+    \arrayrulecolor{taupegray} \bottomrule
+    
+    \end{tabular}
+    \caption{Novelties currently implemented in the NovelGym environment}
+    \label{tab:rl_systemic_examples}
+\end{table}

@@ -1,35 +1,31 @@
 # LaTeX Thesis Build System
 # Usage:
-#   make          - Compile thesis
+#   make          - Compile thesis (latexmk handles incremental builds)
+#   make watch    - Auto-compile on file changes (continuous preview)
 #   make clean    - Remove auxiliary files
-#   make watch    - Auto-compile on changes
 #   make bib      - Process bibliography only
 
-.PHONY: all clean watch bib
+.PHONY: all clean watch bib cleanall
 
-# Main target
-all: main.pdf
+LATEXMK = latexmk -pdf -interaction=nonstopmode -outdir=build -bibtex
 
-# Compile PDF
-main.pdf: main.tex bibliography.bib $(wildcard chapters/**/*.tex) $(wildcard frontmatter/*.tex) $(wildcard macros/*.tex)
-	pdflatex -interaction=nonstopmode main.tex
-	bibtex main
-	pdflatex -interaction=nonstopmode main.tex
-	pdflatex -interaction=nonstopmode main.tex
+# Main target — latexmk only re-runs pdflatex/bibtex when sources change
+all:
+	$(LATEXMK) main.tex
+
+# Auto-compile on save (continuous preview mode)
+watch:
+	$(LATEXMK) -pvc main.tex
 
 # Process bibliography only
 bib:
-	bibtex main
-
-# Auto-compile with latexmk
-watch:
-	latexmk -pvc -pdf main.tex
+	bibtex build/main
 
 # Clean auxiliary files
 clean:
-	latexmk -c
+	latexmk -c -outdir=build
 	rm -f *.bbl *.blg *.aux *.log *.out *.toc *.lof *.lot *.fdb_latexmk *.fls
 
 # Clean everything including PDF
 cleanall: clean
-	rm -f main.pdf
+	rm -f build/main.pdf main.pdf

@@ -1,0 +1,27 @@
+\begin{table}[!tb]
+\begin{center}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{l l l}
+ \toprule
+ \textbf{Environment} & \textbf{Actions} & \textbf{Blocks} \\
+ \midrule
+ Default & \small{move-forward, turn-left, turn-right,} & \small{air, wall,} \\
+         & \small{break, select-\textlangle block\textrangle} & \small{crafting-table} \\
+ \arrayrulecolor{taupegray}\midrule\arrayrulecolor{black}
+ Bow-v0 & \small{craft-bow} & \small{string, stick} \\
+ \arrayrulecolor{taupegray}\midrule\arrayrulecolor{black}
+ Bow-v1 & \small{craft-bow, extract-string,} & \small{tree-log, wool,} \\
+        & \small{craft-plank, craft-stick} & \small{string, stick} \\
+ \arrayrulecolor{taupegray}\midrule\arrayrulecolor{black}
+ Pogostick-v0 & \small{extract-rubber, craft-pogostick} & \small{tree-log, tree-tap,} \\
+              &                                          & \small{stick, plank} \\
+ \arrayrulecolor{taupegray}\midrule\arrayrulecolor{black}
+ Pogostick-v1 & \small{extract-rubber, craft-plank,} & \small{tree-log, tree-tap,} \\
+              & \small{craft-stick, craft-tree-tap,}  & \small{stick, plank} \\
+              & \small{craft-pogostick}                & \\
+ \bottomrule
+\end{tabular}
+\caption{Actions and blocks specific to each NovelGridworlds task. ``Default'' denotes the actions and blocks common to all environments; each task adds the listed actions and blocks to the default set.}
+\label{tab:actions}
+\end{center}
+\end{table}

@@ -23,6 +23,10 @@ Four tasks are implemented, each requiring the agent to craft a target item by c
     \item \textbf{NovelGridworld-Pogostick-v1}: An advanced version in which the agent must craft all intermediary items, including the tree tap itself, from raw tree logs before crafting the pogostick.
 \end{enumerate}
 
+Table~\ref{tab:actions} summarizes the task-specific actions and block types for each environment.
+
+\input{tables/chapter3/actions_blocks_in_tasks_novelgridworlds}
+
 The environment communicates with agents through a socket interface, enabling agents implemented in different programming languages to interact with the same environment. This design supports both planning agents implemented in Java-based architectures and reinforcement learning agents implemented in Python.
 
 
@@ -71,7 +75,40 @@ A central contribution of NovelGridworlds is a structured taxonomy for classifyi
     \label{fig:ngw_novelty_examples}
 \end{figure}
 
-Twelve novelties are implemented across all four tasks, spanning all combinations of class and type. Examples include a \emph{fence} (object, detrimental) that obstructs access to resources, an \emph{axe} (object and attribute, beneficial) that doubles the yield from breaking objects, \emph{break increase} (attribute, beneficial) that provides additional items upon breaking, \emph{fire wall} (object and attribute, detrimental) that causes episode termination upon contact, and \emph{action remapping} (action, detrimental) that randomly shuffles the effects of the agent's actions. Some novelties span multiple classes; for instance, \emph{axe-to-break} introduces a new object, adds a new action, and modifies the transition dynamics of the break action, spanning all three classes simultaneously.
+Twelve novelties are implemented across all four tasks, spanning all combinations of class and type. Table~\ref{tab:novel_envs} summarizes the classification of each novelty, and \cref{fig:ngw_venn_diag} shows how novelties are distributed across the three classes, highlighting that several novelties span multiple classes simultaneously.
+
+\input{tables/chapter3/novelty_type_novelgridworkds}
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.75\textwidth]{figures/chapter3/venn_diag_4.png}
+    \caption{Venn diagram classifying all twelve novelties implemented in NovelGridworlds by the novelty class they affect. Novelties in overlapping regions span multiple classes simultaneously.}
+    \label{fig:ngw_venn_diag}
+\end{figure}
+
+\paragraph{Detailed novelty descriptions.} We describe each novelty below, organized by class.
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Fence} (Object, Detrimental): A new object called \emph{fence} appears in the environment, enclosing some or all existing items to obstruct the agent's access. The agent must learn to break the fence to reach the resources.
+
+    \item \textbf{Arrow \& Spring} (Object, Irrelevant): A new item---\emph{arrow} in the Bow tasks or \emph{spring} in the Pogostick tasks---appears on some grid spaces. These novelties are irrelevant to the task and should be ignored by the agent.
+
+    \item \textbf{Break increase} (Attribute, Beneficial): The number of items received from breaking an object doubles (e.g., breaking a tree log yields 2 instead of 1). This beneficial novelty allows the agent to collect resources with fewer actions.
+
+    \item \textbf{Extract increase/decrease} (Attribute, Beneficial/Detrimental): The number of items obtained from executing the \emph{extract} action changes. An increase is beneficial; a decrease is detrimental.
+
+    \item \textbf{Action remapping} (Action, Detrimental): The effects of actions are randomly shuffled among the available action set. For example, \emph{turn-left} may now move the agent forward. This is analogous to a system malfunction requiring the agent to relearn action semantics.
+
+    \item \textbf{Jump} (Action, Beneficial): A new action \emph{jump} is added, allowing the agent to move two blocks forward in its facing direction, enabling faster navigation.
+
+    \item \textbf{Axe} (Object + Attribute, Beneficial): A new object \emph{axe} appears. If the agent selects and uses it, the yield from breaking objects doubles. This novelty introduces both a new object and modifies attribute dynamics.
+
+    \item \textbf{Fire wall} (Object + Attribute, Detrimental): The material of the arena walls changes to \emph{fire wall}. Contact with a fire wall terminates the episode, requiring the agent to navigate more carefully.
+
+    \item \textbf{Chop} (Action + Attribute, Beneficial): A new action \emph{chop} is added. Using it on breakable objects yields double the items compared to \emph{break}, combining a new action with modified attribute dynamics.
+
+    \item \textbf{Axe-to-break} (Object + Action + Attribute, Detrimental): A new object \emph{axe} appears, and the \emph{break} action only works if the agent is holding the axe. This novelty spans all three classes: it introduces a new object, modifies an existing action's preconditions, and alters transition dynamics.
+\end{itemize}
 
 
 \subsection{Evaluation Metrics}
@@ -96,7 +133,9 @@ Two types of agents were evaluated: a symbolic planning agent implemented using 
 
 \paragraph{Planning agent.} The planning agent was evaluated across all four tasks under three novelties (fence, arrow/spring, and axe); results are reported in \cref{tab:ngw_results}. The agent achieved a 100\% detection rate (M3) in all scenarios. Under the fence novelty, the cost ratio M1 consistently exceeded 1 across all tasks (for example, $1.80 \pm 0.15$ in Bow-v0 and $1.34 \pm 0.06$ in Pogostick-v1), reflecting the additional cost of breaking fences to access resources. Under irrelevant novelties (arrow/spring), the agent's performance remained close to the pre-novelty baseline, as expected. The axe novelty, although beneficial, produced negligible improvement because the agent did not always discover or exploit the new object.
 
-\paragraph{Reinforcement learning agent.} The RL agent was evaluated on the Bow-v0 task under three novelties: action remapping, fire wall, and break increase. The agent achieved a 92\% success rate on the base task after 1.8 million training time steps. Under the beneficial break-increase novelty, cumulative reward improved but the success rate dropped to 29.2\%, suggesting the agent learned to hoard resources rather than complete the task. The fire-wall novelty caused a complete failure, with 0\% success rate, as the agent could not learn to avoid the lethal walls. Action remapping showed an average 12\% decline in success rate, though performance varied substantially across trials depending on how severely the action mapping was shuffled.
+\paragraph{Reinforcement learning agent.} The RL agent was evaluated on the Bow-v0 task under three novelties: action remapping, fire wall, and break increase. The agent achieved a 92\% success rate on the base task after 1.8 million training time steps; results are reported in \cref{tab:results_rl}.
+
+\input{tables/chapter3/novelgridworld_bow_rl_agent_results} Under the beneficial break-increase novelty, cumulative reward improved but the success rate dropped to 29.2\%, suggesting the agent learned to hoard resources rather than complete the task. The fire-wall novelty caused a complete failure, with 0\% success rate, as the agent could not learn to avoid the lethal walls. Action remapping showed an average 12\% decline in success rate, though performance varied substantially across trials depending on how severely the action mapping was shuffled.
 
 \begin{figure}[t]
     \centering

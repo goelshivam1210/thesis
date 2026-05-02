@@ -97,17 +97,58 @@ Finally finally, I wanted a blank page between the title and abstract. So I defi
 \usepackage{multicol}
 \usepackage{tabularx}
 \usepackage{array}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+\usepackage{colortbl}
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  frame=single,
+  xleftmargin=1em,
+  framexleftmargin=0.5em,
+  numbers=none,
+  tabsize=2,
+  columns=fullflexible,
+  keepspaces=true,
+}
 \usepackage{siunitx}
 \sisetup{
     separate-uncertainty = true,
     table-align-text-post = false
 }
+
+%====== Revision tracking ======
+% Usage:  \rev{revised text}          — default (blue, revision round 1)
+%         \revmark{revised text}{R2}  — specific round (orange, purple, etc.)
+% To hide all markup for the final version, switch \revstrue to \revsfalse.
+\usepackage{xcolor}
+\usepackage{soul}
+\definecolor{taupegray}{RGB}{139,133,137}
+\newif\ifrevs
+\revstrue   % ← set \revsfalse to hide all revision markup
+
+\colorlet{revR1}{blue}
+\colorlet{revR2}{orange!80!black}
+\colorlet{revR3}{violet}
+
+\ifrevs
+  \newcommand{\rev}[1]{{\color{revR1}#1}}
+  \newcommand{\revmark}[2]{{\color{rev#2}#1}}
+  \newcommand{\revdel}[1]{\textcolor{red}{\st{#1}}}
+  \newcommand{\revreplace}[2]{\revdel{#1}\rev{#2}}
+\else
+  \newcommand{\rev}[1]{#1}
+  \newcommand{\revmark}[2]{#1}
+  \newcommand{\revdel}[1]{}
+  \newcommand{\revreplace}[2]{#2}
+\fi
+
 % TikZ styles for chapter 4 figures
 \usetikzlibrary{arrows.meta, positioning, calc, decorations.pathreplacing, shapes.geometric}
 
 \pagestyle{fancy}
-\setlength{\headheight}{13.59999pt}
-\addtolength{\topmargin}{-1.59999pt}
+\setlength{\headheight}{25.16252pt}
+\addtolength{\topmargin}{-13.16252pt}
 \fancyhead[RE]{Chapter \thechapter}
 \fancyhead[LE,RO]{\thepage}
 \fancyhead[LO]{\rightmark}
@@ -152,10 +193,17 @@ Finally finally, I wanted a blank page between the title and abstract. So I defi
 %==== Document =======================
 %=====================================
 
-%====== Enable fast section-only compile (point 6) ======
-% Adjust this includeonly line while editing one chapter.
-% For full recompile, comment or remove this line.
-% \includeonly{chapters/chapter2/background/main}
+%====== Fast chapter-only compile ======
+% Uncomment ONE line below to only re-typeset that chapter (fast iteration).
+% Other chapters become blank but keep correct page numbers & cross-refs.
+% Comment out all lines for a full build (e.g. before submitting).
+% \includeonly{chapters/chapter1/main}
+% \includeonly{chapters/chapter2/main}
+% \includeonly{chapters/chapter3/main}
+% \includeonly{chapters/chapter4/main}
+% \includeonly{chapters/chapter5/main}
+% \includeonly{chapters/chapter6/main}
+% \includeonly{chapters/chapter7/main}
 
 \begin{document}
 

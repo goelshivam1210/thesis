@@ -1,0 +1,328 @@
+% ─────────────────────────────────────────────────────────────────────────────
+% NovelGym Implementation Details
+% Included at the end of the NovelGym section in Chapter 3
+% ─────────────────────────────────────────────────────────────────────────────
+
+\subsection{Convergence Criteria}
+\label{sec:ng_convergence}
+
+The learner is considered to have converged if the following conditions are met:
+\begin{itemize}
+    \item The agent achieves the goal \( \delta g \geq \delta G \) in the last \( \eta \) epochs.
+    \item The average reward in these epochs is \( \delta r \geq \delta R \).
+    \item The max success rate and the max reward in the past \( \eta + \upsilon \) epochs is not greater to the those in the last \( \eta \) epochs.
+\end{itemize}
+where each epoch is 4800 time steps, $\eta = 5$, $\upsilon = 5$, $\delta G = 0.9$, $\delta R = 400$. The episode length is 400 time steps. Episode ends if the agent reaches the goal state or if it completes 400 time steps.
+
+
+\subsection{Action Space}
+\label{sec:ng_action_space}
+
+The action space for the hybrid agent is composed of higher-level action operators such as \texttt{approach <entity>}. These are implemented as executors that use the primitive actions available in the environment to execute the operators. Therefore the hybrid agent's action space includes both higher-level operators (implemented as lower-level action executors) and primitive actions. For the RL agent, each higher-level operator is grounded. The exhaustive list of the actions used:
+\begin{itemize}
+    \item \texttt{collect}
+    \item \texttt{break\_block}
+    \item \texttt{approach\_oak\_log}
+    \item \texttt{approach\_diamond\_ore}
+    \item \texttt{approach\_crafting\_table}
+    \item \texttt{approach\_block\_of\_platinum}
+    \item \texttt{approach\_entity\_103}
+    \item \texttt{interact\_103}
+    \item \texttt{select\_oak\_log}
+    \item \texttt{select\_iron\_pickaxe}
+    \item \texttt{select\_sapling}
+    \item \texttt{select\_tree\_tap}
+    \item \texttt{select\_crafting\_table}
+    \item \texttt{deselect\_item}
+    \item \texttt{craft\_stick}
+    \item \texttt{craft\_planks}
+    \item \texttt{craft\_block\_of\_diamond}
+    \item \texttt{craft\_pogo\_stick}
+    \item \texttt{trade\_block\_of\_titanium\_1}
+    \item \texttt{move\_forward}, \texttt{move\_backward}, \texttt{move\_left}, \texttt{move\_right}
+    \item \texttt{rotate\_left}, \texttt{rotate\_right}
+    \item \texttt{place}
+    \item \texttt{<slot 1>}, \texttt{<slot 2>} (vary during post-novelty situations)
+\end{itemize}
+
+
+\subsection{Observation Spaces}
+\label{sec:ng_observation_spaces}
+
+\subsubsection{LiDAR Representation}
+
+In this representation, the agent's observation space is a Gymnasium Box space. This Box space is made from a one-dimensional vector created by concatenating three vectors for the world as observed by the agent, the agent's inventory, and the item selected by the agent. The agent's world observation is generated in the following way: 8 beams of $45^\circ$ each are sent from $0^\circ$ to $360^\circ$, and the Euclidean distances of the objects that strike the LiDAR are stored in a two-dimensional array whose rows correspond to the integer encodings of all the possible objects and entities in the environment and whose columns correspond to the individual directions in which a LiDAR beam is sent. The assumption is made that occlusions do not hold true. The two-dimensional array is subsequently flattened. The inventory is represented as a one-dimensional array where the integer at each index corresponds to the number of objects encoded by the index that the agent has. The selected item is represented as a one-hot encoding in a one-dimensional array. Objects and entities in all three cases are assigned integer encodings. The low and high bounds of the Box space are arrays of a length corresponding to the maximum number of object and entity types in the environment and of maximum values corresponding to the maximum count for each object and entity type. The size of the observation used during our experiment is 250, which includes placeholders for two additional objects in post-novelty situations. We added placeholders for convenience in implementation. In principle our architecture can automatically expand the network based on new entities.
+
+\subsubsection{Image-based Representation}
+
+In this representation, the observation space of the agent is a dictionary with three key-value pairs: for the agent's local view, for the agent's inventory, and for the agent's selected item. Each of the values in the dictionary is a Gymnasium Box space, where the low and high bounds are given by the maximum number of instances of an object or entity in the environment. The agent's local view is represented as a two-dimensional square image, where the number of one-hot encoded channels corresponds to the number of possible object and entity types in the environment. The inventory is represented as a one-dimensional array where the integer at each index corresponds to the number of objects encoded by the index that the agent has. The selected item is represented as a one-hot encoding in a one-dimensional array. Objects and entities in all three cases are represented by integer encodings.
+
+
+\subsection{Reward Function}
+\label{sec:ng_reward_function}
+
+\input{chapters/chapter3/novelties_table}
+
+The reward function plays a critical role in guiding the RL agent toward completing the multi-step crafting task. Because the pogostick task requires the agent to achieve a sequence of subgoals in order---collecting resources, crafting intermediaries, trading, and finally crafting the pogostick---a sparse reward signal (rewarding only final task completion) leads to prohibitively slow learning. Instead, we use a \emph{plan-based shaped reward} that leverages the symbolic planner to decompose the task into an ordered queue of subgoals and assigns intermediate rewards as subgoals are achieved.
+
+The reward-shaping mechanism works as follows. The planner generates a plan $P$ for the current task, from which an ordered queue $\mathcal{Q}$ of subgoals is extracted. The subgoals used in the pogostick task are:
+\begin{enumerate}[leftmargin=*]
+    \item \texttt{break \textlangle block of platinum\textrangle}
+    \item \texttt{trade block of titanium}
+    \item \texttt{break block of diamond}
+    \item \texttt{break tree}
+    \item \texttt{craft planks}
+    \item \texttt{craft stick}
+    \item \texttt{craft pogostick}
+\end{enumerate}
+
+A reward is only given for the first unachieved subgoal in the queue. Once a subgoal is achieved for the first time, it becomes a \emph{past goal} and the next subgoal in the queue becomes the active target. Two additional mechanisms prevent reward exploitation:
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Reward decay}: If the agent re-accomplishes the immediately preceding past goal (e.g., by collecting an already-collected resource type), the reward for that subgoal is halved. This discourages the agent from repeatedly achieving easy subgoals for reward.
+    \item \textbf{Inventory check}: When a subgoal is achieved, the algorithm scans subsequent subgoals in the queue and checks them against the agent's current inventory. If any subsequent subgoal is already satisfied (e.g., the agent already has the required items from an earlier action), that subgoal is marked complete with zero reward and skipped.
+\end{itemize}
+
+Algorithm~\ref{alg:reward_func} formalizes this training routine.
+
+\input{chapters/chapter3/algo}
+
+\subsubsection{Pre-Novelty Base RL}
+
+During pre-novelty training, the agent receives the plan-based shaped reward described above. The planner generates a complete plan for the pogostick task, and the subgoal queue guides the agent through the correct sequence of resource collection and crafting steps.
+
+\subsubsection{Post-Novelty Transfer RL}
+
+After novelty injection, the transfer RL agent uses a simplified reward: $+1000$ for achieving the goal of crafting a pogostick, and $-1$ for each time step. The plan-based shaping is not used because the planner's model may no longer be valid in the transformed environment.
+
+\subsubsection{Post-Novelty Hybrid Planning and Learning}
+
+The hybrid agent's post-novelty reward combines goal completion ($+1000$ for crafting a pogostick), a per-step penalty ($-1$ per time step), and a planning-failure penalty ($-250$ if the agent reaches a state from which the planner cannot generate a valid plan). The planning-failure penalty discourages the RL component from exploring states that are irrecoverable from the planner's perspective.
+
+
+\subsection{Novelty Implementations}
+\label{sec:ng_novelty_implementations}
+
+For a list of the environment transformations currently implemented in the NovelGym environment, see Table~\ref{tab:rl_systemic_examples}. The components of a novelty being integrated into the system are as follows.
+\begin{itemize}
+    \item \textbf{YAML config file}: This config file serves as an add-on to the existing YAML config file that configures the environment. Anything included in the new config expands on the settings in the environment config, and anything included under the key ``novelties'' overrides any chosen component of the original settings. Common entries to the config add or modify actions, action sets, action preconditions and effects, entities, entity properties, and the grid world layout. A novelty can be created through a YAML config file alone when it does not involve adding or modifying any modules, an example of which are the \textit{Multi-room} and \textit{Distance} novelties in Table~\ref{tab:rl_systemic_examples}. This is possible when no new source Python module is required for the novelty to function.
+    \item \textbf{Python source file(s)}: In the case that a novelty requires the addition or modification of an entity or action module, it is necessary to include the Python source code for this adjustment. All the novelties specified in Table~\ref{tab:rl_systemic_examples} except for \textit{Multi-room} and \textit{Distance} involve the addition of one or more modules. Note that changing the details of an existing module can be accomplished by changing the source Python code for the module in the novelty config file.
+\end{itemize}
+
+
+\subsection{Sample Configuration File}
+\label{sec:ng_sample_config}
+
+Here we provide a sample configuration file, which generates trees in the world, allows the user to move around in the world, break the trees, and craft planks from the trees:
+\begin{lstlisting}
+---
+actions:
+  break_block:
+    module: gym_novel_gridworlds2.contrib.polycraft.actions.Break
+    step_cost: 3600
+  move_forward:
+    module: gym_novel_gridworlds2.contrib.polycraft.actions.SmoothMove
+    direction: W
+  move_backward:
+    module: gym_novel_gridworlds2.contrib.polycraft.actions.SmoothMove
+    direction: X
+  move_left:
+    module: gym_novel_gridworlds2.contrib.polycraft.actions.SmoothMove
+    direction: A
+  move_right:
+    module: gym_novel_gridworlds2.contrib.polycraft.actions.SmoothMove
+    direction: D
+  craft:
+    module: gym_novel_gridworlds2.contrib.polycraft.actions.Craft
+  trade:
+    module: gym_novel_gridworlds2.contrib.polycraft.actions.Trade
+action_sets:
+  main:
+  - break_block
+  - craft_planks
+  - move_*
+object_types:
+  default: gym_novel_gridworlds2.contrib.polycraft.objects.PolycraftObject
+  oak_log: gym_novel_gridworlds2.contrib.polycraft.objects.easy_oak_log.OakLog
+map_size: [16, 16]
+rooms:
+  '2':
+    start: [0, 0]
+    end: [15, 15]
+objects:
+  oak_log:
+    quantity: 5
+    room: 2
+    chunked: 'False'
+entities:
+  main_1:
+    agent: gym_novel_gridworlds2.agents.KeyboardAgent
+    name: entity.polycraft.Player.name
+    type: agent
+    entity: gym_novel_gridworlds2.contrib.polycraft.objects.PolycraftEntity
+    action_set: main
+    inventory:
+      iron_pickaxe: 1
+      tree_tap: 1
+    id: 0
+    room: 2
+    max_step_cost: 100000
+recipes:
+  planks:
+    input:
+    - oak_log
+    - '0'
+    - '0'
+    - '0'
+    output:
+      planks: 4
+    step_cost: 1200
+trades: {}
+auto_pickup_agents:
+- 0
+\end{lstlisting}
+
+
+\subsection{PDDL Specification}
+\label{sec:ng_pddl}
+
+\subsubsection{Pre-Novelty Domain}
+
+The pre-novelty domain is defined as follows:
+\input{chapters/chapter3/simplified_domain}
+
+\subsubsection{Pre-Novelty Problem}
+
+The pre-novelty problem is defined as follows:
+\input{chapters/chapter3/simplified_problem}
+
+
+\subsection{Hyperparameters}
+\label{sec:ng_hyperparameters}
+
+\subsubsection{PPO}
+
+Table~\ref{tab:ppo-param} shows the hyperparameters for the PPO algorithm:
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{cc}
+    \toprule
+        Name &  Value  \\
+    \midrule
+        Hidden Dense NN Layers  & 256, 64\\
+        Optimizer & Adam \\
+        Learning Rate & $10^{-5}$ \\
+        $\gamma$ (discount factor) & 0.99 \\
+        $\epsilon$ (PPO clip) & 0.2 \\
+    \bottomrule
+    \end{tabular}
+    \caption{PPO hyperparameters.}
+    \label{tab:ppo-param}
+\end{table}
+
+\subsubsection{ICM}
+
+Table~\ref{tab:icm-param} shows the hyperparameters for the Intrinsic Curiosity Module:
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{cc}
+    \toprule
+        Name &  Value  \\
+    \midrule
+        Feature Net Hidden Layers & 256, 64 \\
+        Feature Dimension & 16 \\
+        Learning Rate Scale & 1 \\
+        Reward Scale & 0.01 \\
+        Forward Loss Weight & 0.2 \\
+        Learning Rate & $10^{-4}$ \\
+    \bottomrule
+    \end{tabular}
+    \caption{ICM hyperparameters.}
+    \label{tab:icm-param}
+\end{table}
+
+\subsubsection{Training Dynamics}
+
+Table~\ref{tab:pre-n-train-hyper} shows the hyperparameters for the pre-novelty training routine:
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{cc}
+    \toprule
+        Name &  Value  \\
+    \midrule
+        Epoch Length     & 28800\\
+        Train Frequency  & 2400 \\
+        Maximum Episode Length & 1200 \\
+        Parallel Env Thread Count & 8 \\
+        Batch Size       & 128 \\
+        Batches per Train & 20 \\
+        Episodes per Test & 100 \\
+    \bottomrule
+    \end{tabular}
+    \caption{Pre-novelty training routine hyperparameters.}
+    \label{tab:pre-n-train-hyper}
+\end{table}
+
+Different epoch lengths and maximum episode length are used for the post-novelty situation:
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{cc}
+    \toprule
+        Name &  Value  \\
+    \midrule
+        Epoch Length     & 4800\\
+        Train Frequency  & 800 \\
+        Maximum Episode Length & 400 \\
+        Parallel Env Thread Count & 4 \\
+        Batch Size       & 128 \\
+        Batches per Train & 8 \\
+        Episodes per Test & 100 \\
+    \bottomrule
+    \end{tabular}
+    \caption{Post-novelty training routine hyperparameters.}
+    \label{tab:post-n-train-hyper}
+\end{table}
+
+
+\subsection{Novelty Implementation Example}
+\label{sec:ng_novelty_example}
+
+Here is an implementation of an example novelty, which makes the traders busy 50\% of the time (and they will not trade with the agent when they are busy).
+
+\subsubsection{Configuration File}
+
+This is the content of the novelty configuration YAML file. It specifies that the novelty needs to be injected at episode 0, and updates the action module associated with the \texttt{trade} action to be the new \texttt{BusyTrade} module. It also supplies the parameter of the new trade module, the percentage of time when the traders are busy.
+\begin{lstlisting}
+---
+novelties:
+  '0':
+    actions:
+      trade:
+        module: novelties.evaluation1.busy_traders.trade_busy.BusyTrade
+        busy_ratio: 0.5
+\end{lstlisting}
+
+\subsubsection{Modified Trade Action Module}
+
+This is the content of the modified \texttt{Trade} action module, which inherits from the default module. The new module raises an error when the internally generated random number is below the 50\% threshold, and gives the error message saying that it is busy.
+\begin{lstlisting}[language=Python]
+from gym_novel_gridworlds2.actions.action import PreconditionNotMetError
+from gym_novel_gridworlds2.contrib.polycraft.actions import Trade
+
+import numpy as np
+
+class BusyTrade(Trade):
+    def __init__(self, busy_ratio=0, *args, **kwargs):
+        self.busy_ratio = busy_ratio
+        super().__init__(*args, **kwargs)
+
+    def do_action(self, agent_entity, target_type=None,
+                  target_object=None, **kwargs):
+        threshold = self.dynamics.rng.uniform(0, 1)
+        if threshold < self.busy_ratio:
+            raise PreconditionNotMetError(
+                "Trader is busy. Please try again later.")
+        return super().do_action(
+            agent_entity, target_type, target_object, **kwargs)
+\end{lstlisting}
+
+More examples of novelty implementations can be found in the NovelGym repository\footnote{\url{https://github.com/tufts-ai-robotics-group/NovelGym}}.
