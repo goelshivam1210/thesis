@@ -5,7 +5,7 @@
 \subsubsection{Statistical Significance}
 \label{sec:ng_stat_sig}
 
-To demonstrate that the hybrid agents (RapidLearn family) adapt significantly
+\rev{To demonstrate that the hybrid agents (RapidLearn family) adapt significantly
 faster than the Transfer RL baselines, we perform an unpaired $t$-test~\cite{kim2015t}
 with a confidence interval of $95\%$.
 The primary metric for comparison is $T_\text{adapt}$, the number of time steps
@@ -13,7 +13,7 @@ required to converge after novelty injection, which is the central efficiency
 claim of the hybrid architecture.
 For each novelty, we compare the best-performing hybrid agent against each
 Transfer RL baseline.
-Table~\ref{tab:ng_stat_sig} reports the $p$-values and significance verdicts.
+Table~\ref{tab:ng_stat_sig} reports the $p$-values and significance verdicts.}
 
 \begin{table}[!tb]
 \footnotesize
@@ -64,14 +64,14 @@ RL(PPO) $\leftrightarrow$ TRL     & $<0.001$ & Yes$^\ddagger$\tabularnewline
 \multicolumn{3}{l}{\small $^\dagger$ High variance in TRL+ICM ($\pm 198$k steps) limits power.}\\
 \multicolumn{3}{l}{\small $^\ddagger$ Significant but reversed: TRL adapts faster than hybrid on Fire.}\\
 \end{tabular}
-\caption{\small Results of unpaired $t$-test between the best-performing hybrid agent
+\caption{\rev{\small Results of unpaired $t$-test between the best-performing hybrid agent
 and each Transfer RL baseline on $T_\text{adapt}$ (time steps to adapt). The hybrid
-advantage is statistically significant across Axe, Trader, and Fence novelties.}
+advantage is statistically significant across Axe, Trader, and Fence novelties.}}
 \label{tab:ng_stat_sig}
 \end{center}
 \end{table}
 
-The results confirm that the hybrid architecture adapts significantly faster than
+\rev{The results confirm that the hybrid architecture adapts significantly faster than
 both Transfer RL baselines across the Axe, Trader, and Fence novelties ($p < 0.01$
 in all cases).
 The Fire novelty presents a notable exception: Transfer RL (without ICM) adapts
@@ -81,4 +81,4 @@ to the RL subproblem.
 The comparison against TRL+ICM on Fire is not significant ($p = 0.09$), driven
 by the high variance of that agent on this novelty ($\pm 198$k steps).
 The Chest novelty is excluded as hybrid agents never triggered adaptation ---
-the original plan continued to succeed, leaving the novelty undetected.
+the original plan continued to succeed, leaving the novelty undetected.}

@@ -119,12 +119,12 @@ These metrics extend the M1, M2, and M3 metrics of NovelGridworlds by explicitly
 \subsection{Benchmark Task and Novelties}
 \label{sec:ng_task}
 
-The benchmark task in NovelGym is a Minecraft-inspired pogostick crafting task. The agent operates in a two-room gridworld environment containing resources (oak trees, diamond ore, platinum blocks), a crafting table, and a trader (see \cref{fig:ng_novelties,fig:ngw2_screenshot}). The agent must collect resources, craft intermediary items, trade with the trader, and ultimately craft a pogostick. A simplified version of the task was used to make it tractable for reinforcement learning agents while preserving the sequential, multi-step nature of the crafting challenge.
+The benchmark task in NovelGym is a Minecraft-inspired pogostick crafting task. The agent operates in a two-room gridworld environment containing resources (oak trees, diamond ore, platinum blocks), a crafting table, and a trader (see \cref{fig:ng_novelties}\rev{, \cref{fig:ngw2_screenshot}}). The agent must collect resources, craft intermediary items, trade with the trader, and ultimately craft a pogostick. A simplified version of the task was used to make it tractable for reinforcement learning agents while preserving the sequential, multi-step nature of the crafting challenge.
 
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.75\textwidth]{figures/chapter3/ngw-screenshot.png}
-    \caption{Screenshot of the NovelGym environment running the pogostick crafting task. The agent (blue arrow) navigates a grid containing oak logs (brown), diamond ore (teal), platinum blocks (silver), a crafting table, and a trader (green face). The right panel displays the current episode, step count, agent facing direction, selected action, total cost, and inventory contents.}
+    \caption{\rev{Screenshot of the NovelGym environment running the pogostick crafting task. The agent (blue arrow) navigates a grid containing oak logs (brown), diamond ore (teal), platinum blocks (silver), a crafting table, and a trader (green face). The right panel displays the current episode, step count, agent facing direction, selected action, total cost, and inventory contents.}}
     \label{fig:ngw2_screenshot}
 \end{figure}
 

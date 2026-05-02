@@ -23,7 +23,7 @@ Four tasks are implemented, each requiring the agent to craft a target item by c
     \item \textbf{NovelGridworld-Pogostick-v1}: An advanced version in which the agent must craft all intermediary items, including the tree tap itself, from raw tree logs before crafting the pogostick.
 \end{enumerate}
 
-Table~\ref{tab:actions} summarizes the task-specific actions and block types for each environment.
+\rev{Table~\ref{tab:actions} summarizes the task-specific actions and block types for each environment.}
 
 \input{tables/chapter3/actions_blocks_in_tasks_novelgridworlds}
 
@@ -75,7 +75,7 @@ A central contribution of NovelGridworlds is a structured taxonomy for classifyi
     \label{fig:ngw_novelty_examples}
 \end{figure}
 
-Twelve novelties are implemented across all four tasks, spanning all combinations of class and type. Table~\ref{tab:novel_envs} summarizes the classification of each novelty, and \cref{fig:ngw_venn_diag} shows how novelties are distributed across the three classes, highlighting that several novelties span multiple classes simultaneously.
+\rev{Twelve novelties are implemented across all four tasks, spanning all combinations of class and type. Table~\ref{tab:novel_envs} summarizes the classification of each novelty, and \cref{fig:ngw_venn_diag} shows how novelties are distributed across the three classes, highlighting that several novelties span multiple classes simultaneously.}
 
 \input{tables/chapter3/novelty_type_novelgridworkds}
 
@@ -86,28 +86,28 @@ Twelve novelties are implemented across all four tasks, spanning all combination
     \label{fig:ngw_venn_diag}
 \end{figure}
 
-\paragraph{Detailed novelty descriptions.} We describe each novelty below, organized by class.
+\rev{\paragraph{Detailed novelty descriptions.} We describe each novelty below, organized by class.}
 
 \begin{itemize}[leftmargin=*]
-    \item \textbf{Fence} (Object, Detrimental): A new object called \emph{fence} appears in the environment, enclosing some or all existing items to obstruct the agent's access. The agent must learn to break the fence to reach the resources.
+    \item \rev{\textbf{Fence} (Object, Detrimental): A new object called \emph{fence} appears in the environment, enclosing some or all existing items to obstruct the agent's access. The agent must learn to break the fence to reach the resources.}
 
-    \item \textbf{Arrow \& Spring} (Object, Irrelevant): A new item---\emph{arrow} in the Bow tasks or \emph{spring} in the Pogostick tasks---appears on some grid spaces. These novelties are irrelevant to the task and should be ignored by the agent.
+    \item \rev{\textbf{Arrow \& Spring} (Object, Irrelevant): A new item---\emph{arrow} in the Bow tasks or \emph{spring} in the Pogostick tasks---appears on some grid spaces. These novelties are irrelevant to the task and should be ignored by the agent.}
 
-    \item \textbf{Break increase} (Attribute, Beneficial): The number of items received from breaking an object doubles (e.g., breaking a tree log yields 2 instead of 1). This beneficial novelty allows the agent to collect resources with fewer actions.
+    \item \rev{\textbf{Break increase} (Attribute, Beneficial): The number of items received from breaking an object doubles (e.g., breaking a tree log yields 2 instead of 1). This beneficial novelty allows the agent to collect resources with fewer actions.}
 
-    \item \textbf{Extract increase/decrease} (Attribute, Beneficial/Detrimental): The number of items obtained from executing the \emph{extract} action changes. An increase is beneficial; a decrease is detrimental.
+    \item \rev{\textbf{Extract increase/decrease} (Attribute, Beneficial/Detrimental): The number of items obtained from executing the \emph{extract} action changes. An increase is beneficial; a decrease is detrimental.}
 
-    \item \textbf{Action remapping} (Action, Detrimental): The effects of actions are randomly shuffled among the available action set. For example, \emph{turn-left} may now move the agent forward. This is analogous to a system malfunction requiring the agent to relearn action semantics.
+    \item \rev{\textbf{Action remapping} (Action, Detrimental): The effects of actions are randomly shuffled among the available action set. For example, \emph{turn-left} may now move the agent forward. This is analogous to a system malfunction requiring the agent to relearn action semantics.}
 
-    \item \textbf{Jump} (Action, Beneficial): A new action \emph{jump} is added, allowing the agent to move two blocks forward in its facing direction, enabling faster navigation.
+    \item \rev{\textbf{Jump} (Action, Beneficial): A new action \emph{jump} is added, allowing the agent to move two blocks forward in its facing direction, enabling faster navigation.}
 
-    \item \textbf{Axe} (Object + Attribute, Beneficial): A new object \emph{axe} appears. If the agent selects and uses it, the yield from breaking objects doubles. This novelty introduces both a new object and modifies attribute dynamics.
+    \item \rev{\textbf{Axe} (Object + Attribute, Beneficial): A new object \emph{axe} appears. If the agent selects and uses it, the yield from breaking objects doubles. This novelty introduces both a new object and modifies attribute dynamics.}
 
-    \item \textbf{Fire wall} (Object + Attribute, Detrimental): The material of the arena walls changes to \emph{fire wall}. Contact with a fire wall terminates the episode, requiring the agent to navigate more carefully.
+    \item \rev{\textbf{Fire wall} (Object + Attribute, Detrimental): The material of the arena walls changes to \emph{fire wall}. Contact with a fire wall terminates the episode, requiring the agent to navigate more carefully.}
 
-    \item \textbf{Chop} (Action + Attribute, Beneficial): A new action \emph{chop} is added. Using it on breakable objects yields double the items compared to \emph{break}, combining a new action with modified attribute dynamics.
+    \item \rev{\textbf{Chop} (Action + Attribute, Beneficial): A new action \emph{chop} is added. Using it on breakable objects yields double the items compared to \emph{break}, combining a new action with modified attribute dynamics.}
 
-    \item \textbf{Axe-to-break} (Object + Action + Attribute, Detrimental): A new object \emph{axe} appears, and the \emph{break} action only works if the agent is holding the axe. This novelty spans all three classes: it introduces a new object, modifies an existing action's preconditions, and alters transition dynamics.
+    \item \rev{\textbf{Axe-to-break} (Object + Action + Attribute, Detrimental): A new object \emph{axe} appears, and the \emph{break} action only works if the agent is holding the axe. This novelty spans all three classes: it introduces a new object, modifies an existing action's preconditions, and alters transition dynamics.}
 \end{itemize}
 
 
