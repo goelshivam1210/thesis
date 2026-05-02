@@ -1,6 +1,6 @@
 % ─────────────────────────────────────────────────────────────────────────────
-% NovelGym Implementation Details
-% Included at the end of the NovelGym section in Chapter 3
+% NovelGym: Additional Implementation Details
+% Included inline at the end of the NovelGym section in Chapter 3
 % ─────────────────────────────────────────────────────────────────────────────
 
 \subsection{Convergence Criteria}
@@ -58,10 +58,20 @@
 \rev{In this representation, the observation space of the agent is a dictionary with three key-value pairs: for the agent's local view, for the agent's inventory, and for the agent's selected item. Each of the values in the dictionary is a Gymnasium Box space, where the low and high bounds are given by the maximum number of instances of an object or entity in the environment. The agent's local view is represented as a two-dimensional square image, where the number of one-hot encoded channels corresponds to the number of possible object and entity types in the environment. The inventory is represented as a one-dimensional array where the integer at each index corresponds to the number of objects encoded by the index that the agent has. The selected item is represented as a one-hot encoding in a one-dimensional array. Objects and entities in all three cases are represented by integer encodings.}
 
 
-\subsection{Reward Function}
-\label{sec:ng_reward_function}
+\subsection{Novelty Implementations}
+\label{sec:ng_novelty_implementations}
+
+\rev{For a list of the environment transformations currently implemented in the NovelGym environment, see Table~\ref{tab:rl_systemic_examples}. The components of a novelty being integrated into the system are as follows.}
+\begin{itemize}
+    \item \rev{\textbf{YAML config file}: This config file serves as an add-on to the existing YAML config file that configures the environment. Anything included in the new config expands on the settings in the environment config, and anything included under the key ``novelties'' overrides any chosen component of the original settings. Common entries to the config add or modify actions, action sets, action preconditions and effects, entities, entity properties, and the grid world layout. A novelty can be created through a YAML config file alone when it does not involve adding or modifying any modules, an example of which are the \textit{Multi-room} and \textit{Distance} novelties in Table~\ref{tab:rl_systemic_examples}. This is possible when no new source Python module is required for the novelty to function.}
+    \item \rev{\textbf{Python source file(s)}: In the case that a novelty requires the addition or modification of an entity or action module, it is necessary to include the Python source code for this adjustment. All the novelties specified in Table~\ref{tab:rl_systemic_examples} except for \textit{Multi-room} and \textit{Distance} involve the addition of one or more modules. Note that changing the details of an existing module can be accomplished by changing the source Python code for the module in the novelty config file.}
+\end{itemize}
 
 \input{chapters/chapter3/novelties_table}
+
+
+\subsection{Reward Function}
+\label{sec:ng_reward_function}
 
 \rev{The reward function plays a critical role in guiding the RL agent toward completing the multi-step crafting task. Because the pogostick task requires the agent to achieve a sequence of subgoals in order---collecting resources, crafting intermediaries, trading, and finally crafting the pogostick---a sparse reward signal (rewarding only final task completion) leads to prohibitively slow learning. Instead, we use a \emph{plan-based shaped reward} that leverages the symbolic planner to decompose the task into an ordered queue of subgoals and assigns intermediate rewards as subgoals are achieved.}
 
@@ -97,16 +107,6 @@
 \subsubsection{Post-Novelty Hybrid Planning and Learning}
 
 \rev{The hybrid agent's post-novelty reward combines goal completion ($+1000$ for crafting a pogostick), a per-step penalty ($-1$ per time step), and a planning-failure penalty ($-250$ if the agent reaches a state from which the planner cannot generate a valid plan). The planning-failure penalty discourages the RL component from exploring states that are irrecoverable from the planner's perspective.}
-
-
-\subsection{Novelty Implementations}
-\label{sec:ng_novelty_implementations}
-
-\rev{For a list of the environment transformations currently implemented in the NovelGym environment, see Table~\ref{tab:rl_systemic_examples}. The components of a novelty being integrated into the system are as follows.}
-\begin{itemize}
-    \item \rev{\textbf{YAML config file}: This config file serves as an add-on to the existing YAML config file that configures the environment. Anything included in the new config expands on the settings in the environment config, and anything included under the key ``novelties'' overrides any chosen component of the original settings. Common entries to the config add or modify actions, action sets, action preconditions and effects, entities, entity properties, and the grid world layout. A novelty can be created through a YAML config file alone when it does not involve adding or modifying any modules, an example of which are the \textit{Multi-room} and \textit{Distance} novelties in Table~\ref{tab:rl_systemic_examples}. This is possible when no new source Python module is required for the novelty to function.}
-    \item \rev{\textbf{Python source file(s)}: In the case that a novelty requires the addition or modification of an entity or action module, it is necessary to include the Python source code for this adjustment. All the novelties specified in Table~\ref{tab:rl_systemic_examples} except for \textit{Multi-room} and \textit{Distance} involve the addition of one or more modules. Note that changing the details of an existing module can be accomplished by changing the source Python code for the module in the novelty config file.}
-\end{itemize}
 
 
 \subsection{Sample Configuration File}
