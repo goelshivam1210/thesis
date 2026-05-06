@@ -1,0 +1,53 @@
+% 
+\begin{table}[t]
+\footnotesize
+\begin{center}
+\begin{tabular}{>{\centering}p{4.2cm}>{\centering}p{1.2cm}>{\centering}p{1.8cm}p{0.1cm}}
+
+\arrayrulecolor{taupegray}\toprule
+
+\textbf{\begin{small}Methods\end{small}} & {\textbf{\begin{small}p-value\end{small} }} & \textbf{\begin{small}Statistical significance\end{small} }\tabularnewline
+\midrule
+\multicolumn{3}{c}{\textbf{Axe to Break (ATB) + Fire Crafting Table (FCT) - Easy}} \tabularnewline
+\midrule
+ 
+% $ ATB+FCT-Easy
+
+RAPid-KGE-UCB $\leftrightarrow$ Actor-critic & $0.0062$ &\centering Yes\tabularnewline
+RAPid-KGE-UCB $\leftrightarrow$ Policy Reuse & $0.0012$ &\centering Yes\tabularnewline
+
+
+\midrule
+\multicolumn{3}{c}{\textbf{Axe To Break (ATB) - Hard}} \tabularnewline
+\midrule
+ 
+% Axe to break hard
+
+RAPid-KGE-UCB $\leftrightarrow$ Actor-critic & $0.00336$ &\centering Yes\tabularnewline
+RAPid-KGE-UCB $\leftrightarrow$ Policy Reuse & $0.0012$ &\centering Yes\tabularnewline
+
+\midrule
+\multicolumn{3}{c}{\textbf{Fire Crafting Table (FCT) - Hard}}\tabularnewline
+\midrule
+
+RAPid-KGE-UAB $\leftrightarrow$ Actor-critic & $< 0.0001$ &\centering Yes\tabularnewline
+
+RAPid-KGE-UAB $\leftrightarrow$ Policy Reuse & $< 0.0001$ &\centering Yes\tabularnewline
+
+% DQN-TL  & did not converge &\centering N.A \tabularnewline
+\midrule
+
+\multicolumn{3}{c}{\textbf{Scrape Plank (SP)}}\tabularnewline
+\midrule
+
+% Scrape plank
+RAPid-KGE-EG $\leftrightarrow$ Actor-critic & $0.0077$ &\centering Yes\tabularnewline
+RAPid-KGE-UCB $\leftrightarrow$ Policy Reuse & $0.0608$ &\centering No\tabularnewline
+
+% DQN-TL  & did not converge &\centering N.A \tabularnewline
+\bottomrule
+\end{tabular}
+\caption{\small Results of unpaired t-test between best performing RAPid-Learn and transfer learning baselines}\label{stat_sig}
+\end{center}
+% \vspace{-2.5em}
+\end{table}

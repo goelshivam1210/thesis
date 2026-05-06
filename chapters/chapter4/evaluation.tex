@@ -9,25 +9,52 @@ This section presents experimental evaluations at two levels. First, \cref{sec:r
 
 \subsubsection{Experimental Setup}
 
-RAPid-Learn was evaluated on a $12 \times 12$ NovelGridworlds domain~\citep{goel2021novelgridworlds} with the pogostick crafting task described in \cref{sec:novelgridworlds}. The agent's sub-symbolic observation space consists of LiDAR-like sensors emitting beams at $\frac{\pi}{4}$ increments for each entity type (observation size $8 \times |\Entities|$), augmented with inventory and selected-item vectors. The action space includes navigation actions (\texttt{turn-left}, \texttt{turn-right}, \texttt{move-forward}), interaction actions (\texttt{break}, \texttt{extract-rubber}), crafting actions, and hierarchical operators (\texttt{approach-entity}) implemented by the internal planner.
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/chapter4/rapid-learn-prenovelty-screenshot.png}
+    \caption{Screenshot of the NovelGridworld-Pogostick environment. The agent (triangle) can navigate in the environment and collect items such as trees(shown in yellow). The agent can use the crafting-table to craft complicated items such as tree-tap, sticks etc. Blue spaces represent air blocks through which the agent can navigate, and purple blocks represent walls.}
+    \label{fig:ngw_pogostick_screenshot}
+\end{figure}
 
+RAPid-Learn was evaluated on a $12 \times 12$ NovelGridworlds domain~\citep{goel2021novelgridworlds} with the pogostick crafting task described in \cref{sec:novelgridworlds} (shown in Figure~\ref{fig:ngw_pogostick_screenshot}). The agent's sub-symbolic observation space consists of LiDAR-like sensors emitting beams at $\frac{\pi}{4}$ increments for each entity type (observation size $8 \times |\Entities|$), augmented with inventory and selected-item vectors. The action space includes navigation actions (\texttt{turn-left}, \texttt{turn-right}, \texttt{move-forward}), interaction actions (\texttt{break}, \texttt{extract-rubber}), crafting actions, and hierarchical operators (\texttt{approach-entity}) implemented by the internal planner.
+\rev{
 Five novelty scenarios were designed, spanning different types of environmental changes:
 \begin{enumerate}[leftmargin=*]
-    \item \textbf{Axe-to-break (ATB) hard}: A novel axe entity appears in the environment; trees can only be broken while holding the axe. The agent must find the axe, collect it, and use it.
-    \item \textbf{Fire-crafting-table (FCT) hard}: The crafting table is set on fire. Water and a spray action are introduced; the agent must collect water from the environment and extinguish the fire.
-    \item \textbf{Rubber-tree (RT) hard}: A novel rubber-tree entity appears; rubber can only be extracted by placing a tree-tap in front of the rubber-tree. The agent must learn spatial relations (\emph{in front of}) not represented in its symbolic knowledge.
-    \item \textbf{Scrape-plank (SP)}: The \texttt{break} action no longer produces tree-logs. A novel \texttt{scrape-plank} action is introduced that produces planks directly from trees.
+    \item \textbf{Axe-to-break (ATB) hard}: In this novelty, a novel entity \emph{axe} appears in the environment and the agent cannot break \emph{trees} without holding the \emph{axe}. We implement two versions of the novelty, easy and hard. In the easy version, the \emph{axe} is present in the agent's inventory, and the agent needs to learn to select the \emph{axe} and use it in front of the \emph{tree} to get \emph{tree-log} into its inventory. In the hard version, the \emph{axe} is present in the environment, and the agent needs to find it to get into its inventory and then use it to break \emph{trees}. We observe that the agent is able to generate executors that can reason about the affordances of new entities in the environment, i.e. learn to pick up the \emph{axe}, select it, and then \emph{break} the \emph{tree} by locating itself next to the \emph{tree}.
+    
+    \item \textbf{Fire-crafting-table (FCT) hard}: In this novelty, the agent cannot access the \emph{crafting-table} since its set on \emph{fire}. Two novel entities \emph{water} and \emph{fire} appears in the environment, and novel actions \emph{spray} and \emph{select-water} are added to the list of available actions. In order to access the \emph{crafting-table} the agent needs to select \emph{water} and use the action \emph{spray} in front of the \emph{crafting-table} in order to put it out from \emph{fire}, and hence successfully access it. In the easy version, the \emph{water} is already present in the agent's inventory and in the hard version \emph{water} is present in the environment and the agent needs to collect it to use it.
+    The agent's sub-symbolic representation has information about the status of the \emph{fire} (on/off). 
+    % The agent's learned executor in successfully dealing with more than one novel entities, and also novel predicates that are absent in the agent's knowledge base. 
+    \item \textbf{Rubber-tree (RT) hard}: In this novelty, the agent cannot extract \emph{rubber} from the regular trees anymore, but a new entity \emph{rubber-tree} appears in the environment and the agent needs to use the \emph{rubber-tree} for \emph{rubber} extraction.
+    We have two versions of this novelty, in the \emph{easy} version, the agent needs to select the \emph{tree-tap} and standing in front of a \emph{rubber-tree} it needs to use the action \emph{extract-rubber} to extract rubber. In the hard version, the agent's action space is augmented with a new action called \emph{place-tree-tap}, and in order to get rubber, the agent now needs to place the \emph{tree-tap} in front of the \emph{rubber-tree} and \emph{rubber} can only be extracted when the agent is in front of the placed \emph{tree-tap}. The agent's knowledge base does not have any \emph{in front of} predicate. The agent's executor learns the policy to place the new entity of \emph{tree-tap}, locate itself in front of it, and then extract \emph{rubber}. We observe that the agent is successful in synthesizing executors with predicates missing from the knowledge base.
+    
+    \item \textbf{Scrape-plank (SP)}: In this novelty, the \emph{break} action has no effect, and a novel action \emph{scrape-plank} is augmented in the agent's action space. The dynamics of the world changes in a way that the agent can no longer break \emph{trees} to get \emph{tree-logs}, but it can scrape planks from trees and using the action \emph{scrape-plank} in front of a \emph{tree} it gets $4$ \emph{planks} into its inventory. This novelty emphasizes on failure of effects of the operator rather than failure of the action itself. The executor learns a policy to generate \emph{planks}, by utilizing the \emph{scrape-plank} action to move ahead in the plan. Thus, the agent learns to tackle a novel scenario even when there are no new entities in the environment. 
     \item \textbf{ATB + FCT (easy)}: Two novelties are introduced simultaneously---axe-to-break and fire-crafting-table in their easy variants (items are pre-placed in inventory). This tests recovery from multiple independent operator failures.
-\end{enumerate}
+\end{enumerate}}
+\rev{
+\subsubsection{Baselines}
+\label{subsubsec:baselines}
+We now describe how the baselines were designed and trained. In early experiments, the pre-novelty task with sparse rewards proved intractable for pure RL approaches. Moreover, the RAPid-Learn agent has access to the full PDDL description of the environment, which heavily biases any comparison in its favor. We therefore employ strong reward shaping to allow the RL baseline to learn the prenovelty task. A small reward ($+50$) is given for completing intermediate steps (e.g. crafting sticks or planks) when they are needed for the next major step in the crafting process. Larger rewards are given for the subgoals of crafting the treetap ($+200$), extracting rubber ($+300$) and finally crafting the pogostick ($+1000$). Note that the rewards are only given if the intermediate step is the appropriate thing to do next. I.e. no reward is given for breaking a tree, if the agent already has a treetap and enough sticks and planks in its inventory to craft the pogostick. In this case, a reward would only be given for obtaining the missing ingredient (rubber).
+Making the reward conditional on the stage within the crafting process was essential in getting the agent to learn the pre-novelty task. In early versions of the reward shaping, we attempted to give reward for completing intermediate steps (approaching a tree, crafting sticks, etc.). This was exploited by the agent, which learned that the reward could be optimized by periodically turning away and re-approaching a tree until the end of its life.
+}
 
-Three variants of RAPid-Learn were compared: \emph{RAPid-KGE-UCB} (with upper confidence bound action biasing), \emph{RAPid-KGE-UAB} (with uniform action biasing), and \emph{RAPid-EG} (with standard $\epsilon$-greedy exploration). Two transfer learning baselines were used: \emph{Actor-Critic Transfer}~\citep{clegg2017haptics}, which transfers both the policy and value function through PPO~\citep{schulman2017proximal}, and \emph{Policy Reuse}~\citep{glatt2017policy}, which transfers the learned policy. Both baselines were pre-trained on the base task with dense reward shaping until convergence ($>96\%$ success rate). The reinforcement learning component in all RAPid-Learn variants used the policy gradient algorithm~\citep{williams1992reinforce}. All results are reported as mean $\pm$ standard deviation over 10 independent trials.
+\rev{
+ We evaluate their performance to make sure that they are at par with the RAPid-Learn approach (RAPid-Learn, being a planning agent, shows a $100\%$ performance in the pre-novelty scenario). Table~\ref{tab:baseline_prenovelty_performance} shows how many timesteps the pre-novelty models have experienced until reaching convergence and their performance on $100$ evaluation instances of the environment on $10$ random seeds. Results in Table~\ref{tab:baseline_prenovelty_performance} show that both the baseline agents converge to a policy which performs with a success of the task being achieved $95\%$ of the time.
 
+\input{tables/chapter4/rapid_learn_baseline_performance}
+\paragraph{Baseline Transfer Learning}
+The injected novelties alter the shape of the observation and action spaces of the environment. E.g.  the Fire crafting table novelty adds new observations for the \emph{water} item in the inventory and the LiDAR-sensor, as well as the \emph{select water} and \emph{spray} actions. 
+In order to allow transferring the model from pre-novelty to post-novelty environments, we pad the observation and action spaces of all environments (pre- and post-novelty) with placeholder elements such that all of them have the same shape. Observation placeholders simply always return zero. When the model chooses to perform a placeholder action, the action actually passed on to the environment is always the \emph{approach treelog}.
+}
 
-\subsubsection{Results}
+% \include{}
+
+\subsubsection{Experiments \& Results}
+\rev{In this section, we describe the experiments we ran to answer the following questions. (Q1) How does the rapid-learn approach compare to the adapted transfer learning approaches in terms of the adaptation efficiency, and post adaptation success rates, compared across 5 novelty scenarios (Q2) How does each variant of knowledge-guided exploration component of Rapid-Learn fair, in terms of the adaptation efficiency across all novelty scenarios.}
 
 \input{tables/chapter4/rapid_learn_results}
 
-\begin{figure}[htbp]
+\begin{figure}[t]
     \centering
     \begin{subfigure}[t]{0.48\textwidth}
         \centering
@@ -62,7 +89,7 @@ Three variants of RAPid-Learn were compared: \emph{RAPid-KGE-UCB} (with upper co
     \label{fig:rapid_learn_curves}
 \end{figure}
 
-
+Three variants of RAPid-Learn were compared: \emph{RAPid-KGE-UCB} (with upper confidence bound action biasing), \emph{RAPid-KGE-UAB} (with uniform action biasing), and \emph{RAPid-EG} (with standard $\epsilon$-greedy exploration). Two transfer learning baselines were used: \emph{Actor-Critic Transfer}~\citep{clegg2017haptics}, which transfers both the policy and value function through PPO~\citep{schulman2017proximal}, and \emph{Policy Reuse}~\citep{glatt2017policy}, which transfers the learned policy. Both baselines were pre-trained on the base task with dense reward shaping until convergence ($>96\%$ success rate). The reinforcement learning component in all RAPid-Learn variants used the policy gradient algorithm~\citep{williams1992reinforce}. All results are reported as mean $\pm$ standard deviation over 10 independent trials.
 
 \paragraph{Sample efficiency.} \Cref{tab:rapid_learn_results,fig:rapid_learn_curves} show that RAPid-Learn consistently adapts one to two orders of magnitude faster than the transfer learning baselines across all novelty scenarios. In the axe-to-break hard novelty, RAPid-KGE-UCB adapts in approximately $2.35 \times 10^3$ time steps compared to $9.80 \times 10^4$ for actor-critic transfer and $5.57 \times 10^5$ for policy reuse---improvements of roughly $40\times$ and $230\times$, respectively. The advantage is most pronounced in the rubber-tree hard novelty, where both baselines fail to converge entirely, while all RAPid-Learn variants converge within $3.7 \times 10^4$ time steps. The sample efficiency advantage arises from two sources: the symbolic planner constrains the learning problem to a specific subgoal (the failed operator's effects), and knowledge-guided exploration focuses the agent on actions and states likely related to the novelty.
 
@@ -73,7 +100,183 @@ Three variants of RAPid-Learn were compared: \emph{RAPid-KGE-UCB} (with upper co
 \paragraph{Statistical significance.} Unpaired $t$-tests between the best-performing RAPid-Learn variant and each baseline confirm that the differences in post-novelty success rate are statistically significant ($p < 0.01$) in all scenarios except scrape-plank versus policy reuse ($p = 0.06$), where the baselines achieve comparable final performance albeit at substantially higher sample cost.
 
 \paragraph{Ablation: hierarchical actions.} An ablation study removing hierarchical actions (the \texttt{approach} operator) from the learner's action space shows that their inclusion substantially improves sample efficiency, particularly for complex novelties. Without hierarchical actions, RAPid-EG fails to converge on the fire-crafting-table hard novelty, while RAPid-KGE-UCB still converges but requires more episodes. This confirms that composing learned behaviors with existing executors is a key advantage of the hybrid architecture.
+\input{tables/chapter4/stat_significance_tab}
 
+
+
+\begin{figure*}[t]
+	\centering
+	\begin{minipage}{0.49\columnwidth}
+		\centering
+		\includegraphics[width=\textwidth]{figures/chapter4/baselines_firecraftingtablehard.png}
+% 		\caption{Fire-crafting-table hard}
+		\small (a) Fire-crafting-table hard
+        % \subcaption{Fire-crafting-table hard}
+		\label{fig:firecraftingtablehard}
+	\end{minipage}%
+	\begin{minipage}{0.49\columnwidth}
+		\centering
+		\includegraphics[width=\textwidth]{figures/chapter4/baselines_axetobreakhard.png}
+% 		\caption{Caption 2}
+        \small (b) Axe-to-break hard
+		\label{fig:axetobreakhard}
+    	\end{minipage}
+	\begin{minipage}{0.49\columnwidth}
+		\centering
+		\includegraphics[width=\textwidth]{figures/chapter4/baselines_scrapeplank.png}
+% 		\small{(a)Caption 2}
+        \small (c) Scrape plank
+		\label{fig:rubber_tree_easy}
+	\end{minipage}
+	\begin{minipage}{0.49\columnwidth}
+		\centering
+		\includegraphics[width=\textwidth]{figures/chapter4/baselines_axefirecteasy.png}
+        \small (d) Axetobreak+FCT(easy)
+% 		\caption{Caption 2}
+		\label{fig:axeFCT}
+	\end{minipage}
+	\caption{Baseline learning curves on the four novelties. Green curve shows the actor-critic transfer, and the red curve shows policy-reuse. Each plot demonstrates the performance during the novelty adaptation phase.}
+    \label{fig:baselines_plots}
+\end{figure*}
+
+
+\subsection{Domain PDDL}
+Below is the original PDDL domain given to RAPid-Learn for the pogostick-crafting task inspired by Minecraft in novelgridworlds.
+
+\begin{lstlisting}[
+  style=pddlstyle,
+  caption={Domain PDDL for the pogostick-crafting task.},
+  label={lst:pogostick-domain-pddl}
+]
+(:requirements :typing :strips :fluents)
+(:types
+    wall - physobj
+    entity - physobj
+    plank - physobj
+    crafting_table - physobj
+    tree_tap - physobj
+    var - object
+    rubber - physobj
+    physobj - physical
+    actor - physical
+    pogo_stick - physobj
+    stick - physobj
+    tree_log - physobj
+    air - physobj
+)
+
+(:predicates
+    (holding ?v0 - physobj)
+    (floating ?v0 - physobj)
+    (facing ?v0 - physobj)
+)
+
+(:functions
+    (world ?v0 - object)
+    (inventory ?v0 - object)
+)
+
+(:action approach
+    :parameters    (?physobj01 - physobj ?physobj02 - physobj )
+    :precondition  (and
+        (>= ( world ?physobj02) 1)
+        (facing ?physobj01)
+    )
+    :effect  (and
+        (facing ?physobj02)
+        (not (facing ?physobj01))
+    )
+)
+
+(:action crafttree_tap ; 
+    :parameters    ()
+    :precondition  (and
+        (>= ( inventory plank) 4)
+        (>= ( inventory stick) 1)
+        (facing crafting_table)
+    )
+    :effect  (and
+        (increase ( inventory tree_tap) 1)
+        (decrease ( inventory plank) 5)
+        (decrease ( inventory stick) 1)
+    )
+)
+
+(:action craftplank
+    :parameters    ()
+    :precondition  (>= ( inventory tree_log) 1)
+    :effect  (and
+        (increase ( inventory plank) 4)
+        (decrease ( inventory tree_log) 1)
+    )
+)
+
+(:action break
+    :parameters    ()
+    :precondition  (and
+        (facing tree_log)
+        (not (floating tree_log))
+    )
+    :effect  (and
+        (facing air)
+        (not (facing tree_log))
+        (increase ( inventory tree_log) 1)
+        (increase ( world air) 1)
+        (decrease ( world tree_log) 1)
+    )
+)
+
+(:action craftstick
+    :parameters    ()
+    :precondition  (>= ( inventory plank) 2)
+    :effect  (and
+        (increase ( inventory stick) 4)
+        (decrease ( inventory plank) 2)
+    )
+)
+
+(:action extractrubber
+    :parameters    ()
+    :precondition  (and
+        (>= ( inventory tree_tap) 1)
+        (facing tree_log)
+        (holding tree_tap)
+    )
+    :effect  (and
+        (increase ( inventory rubber) 1)
+    )
+)
+
+(:action craftpogo_stick
+    :parameters    ()
+    :precondition  (and
+        (>= ( inventory plank) 2)
+        (>= ( inventory stick) 4)
+        (>= ( inventory rubber) 1)
+        (facing crafting_table)
+    )
+    :effect  (and
+        (increase ( inventory pogo_stick) 1)
+        (decrease ( inventory plank) 2)
+        (decrease ( inventory stick) 4)
+        (decrease ( inventory rubber) 1)
+    )
+)
+
+(:action select
+    :parameters    (?physobj01 - physobj )
+    :precondition  (and
+        (>= ( inventory ?physobj01) 1)
+        ; (holding air)
+    )
+    :effect  (and
+        (holding ?physobj01)
+        (not (holding air))
+    )
+)
+
+)
+\end{lstlisting}
 
 \subsection{Integrated Architecture Evaluation}
 \label{sec:rl_eval_architecture}

@@ -1,0 +1,31 @@
+% 
+\begin{table}[h]
+\begin{center}
+\small
+\begin{tabular}{@{}cc@{}}
+ \arrayrulecolor{taupegray}\toprule
+    \textbf{Parameter} & \textbf{Value} \\ \midrule
+    max-epsilon ($\epsilon_{max}$) & $0.3$ \\ \midrule
+    min-epsilon ($\epsilon_{min}$) & $0.05$ \\ \midrule
+    guided curriculum parameter ($\rho_{\text{max}}$) & $0.3$ \\ \midrule
+    guided curriculum parameter ($\rho_{\text{min}}$) & $0.05$ \\ \midrule
+    parameter decay speed & $\ln(0.01)/2000$ \\ \midrule
+    UCB- parameter ($c$) & $0.0005$ \\ \midrule
+    UAB-parameter( $\mu$) &$2$  \\ \midrule
+    update\_rate & $10$ \\ \midrule
+    max episodes ($e_{max}$) & $100000$ \\ \midrule
+    max timesteps ($T$) & $300$ \\ \midrule
+    Hidden Layers & $24$ (single layer network) \\ \midrule
+    Discount factor ($\gamma$) & $0.98$ \\ \midrule
+    learning rate ($\alpha$) & $1e-3$ \\ \midrule
+    reward threshold ($\delta_{R}$) & $900$ \\ \midrule
+    episodes threshold ($\delta_{G}$) & $100$ \\ \midrule
+    no of success ($\eta$) & $96$ \\ \midrule
+    positive reinforcement ($\phi_1$) & $1000$ \\ \midrule
+    negative reinforcement ($\phi_2$) & $-350$ \\ \midrule
+\end{tabular}
+\end{center}
+\caption{Hyperparameters for RAPid-Learn}
+\label{tab:hyper_rapid}
+\end{table}
+% 

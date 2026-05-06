@@ -1,0 +1,23 @@
+% 
+\begin{table}[t]
+\begin{center}
+\small
+\begin{tabular}{>{\centering}p{2.5cm}>{\centering}p{2.0cm}>{\centering}p{2.8cm}p{1.3cm}}
+\arrayrulecolor{taupegray}\toprule
+ \multicolumn{3}{c}{\textbf{Pre-novelty}} \tabularnewline
+ \midrule
+\centering \textbf{Agent} & \centering {\textbf{Time to learn\\(timesteps)}} &\centering \textbf{Pre-novelty performance\\(success rate \%)}\tabularnewline
+ \midrule
+ &\begin{small} \end{small}
+ & \begin{small}Mean $\pm$ SD\end{small}
+\tabularnewline
+ \midrule
+Actor-Critic Transfer  & $2.47 \times 10^5$ &\centering $0.95 \pm 0.22$ \tabularnewline
+Policy Reuse  & $1.48 \times 10^6$ &\centering $0.95 \pm 0.22$ \tabularnewline
+\bottomrule
+\end{tabular}
+\caption{Performance and timesteps trained for the best pre-novelty model that was later used in transfer learning the novelty environments}
+\label{tab:baseline_prenovelty_performance}
+\end{center}
+\end{table}
+% 

@@ -123,6 +123,42 @@ Finally finally, I wanted a blank page between the title and abstract. So I defi
 % To hide all markup for the final version, switch \revstrue to \revsfalse.
 \usepackage{xcolor}
 \usepackage{soul}
+
+% \usepackage{xcolor}
+\usepackage{listings}
+
+\lstdefinelanguage{PDDL}{
+  morekeywords={
+    define,domain,problem,:requirements,:typing,:strips,:fluents,
+    :types,:predicates,:functions,:action,:parameters,
+    :precondition,:effect,and,or,not,forall,exists,when,
+    increase,decrease
+  },
+  sensitive=false,
+  morecomment=[l]{;},
+  morestring=[b]"
+}
+
+\lstdefinestyle{pddlstyle}{
+  language=PDDL,
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\bfseries,
+  commentstyle=\itshape,
+  numbers=none,
+  numberstyle=\tiny,
+  stepnumber=1,
+  numbersep=8pt,
+  showstringspaces=false,
+  breaklines=true,
+  breakatwhitespace=false,
+  columns=fullflexible,
+  keepspaces=true,
+  tabsize=2,
+  frame=single,
+  captionpos=b
+}
+
+
 \definecolor{taupegray}{RGB}{139,133,137}
 \newif\ifrevs
 \revstrue   % ← set \revsfalse to hide all revision markup

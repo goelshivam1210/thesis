@@ -1,0 +1,23 @@
+% 
+\begin{table}[h]
+  \small
+  \begin{center}
+\begin{tabular}{@{}cc@{}}
+     \arrayrulecolor{taupegray} \toprule
+    \textbf{Parameter} & \textbf{Value} \\  \midrule
+    learning\_rate & $3e-4 $ \\ \midrule
+    batch\_size & $64 $ \\ \midrule
+    n\_epochs & $10 $ \\ \midrule
+    n\_steps & $2048 $ \\ \midrule
+    gamma & $0.98 $ \\ \midrule
+    gae\_lambda & $0.95 $ \\ \midrule
+    clip\_range & $0.2 $ \\ \midrule
+    max\_grad\_norm & $0.5 $ \\ \midrule
+    ent\_coef & $0.0 $ \\ \midrule
+    vf\_coef & $0.5 $ \\ \midrule
+    optimiser & Adam \\ \midrule
+  \end{tabular}
+  \end{center}
+  \caption{Hyperparameters used for the PPO models (both pre- and post-novelty).}\label{tab:hyper_baselines}
+\end{table}
+% 
