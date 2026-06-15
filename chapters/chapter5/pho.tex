@@ -59,9 +59,46 @@ Starting from an established boundary contact, the robot incrementally displaces
 z = \text{clip}\left(\frac{f_\text{max}}{F_\text{max}}, 0, 1\right).
 \]
 
+\begin{algorithm}[t]
+\vspace*{0.2cm}
+\footnotesize
+\caption{\footnotesize Reactive Force Estimation via Impedance Probing}
+\label{alg:force_probe}
+\begin{algorithmic}[1]
+\REQUIRE Probe axis $\hat{u}$, step size $\delta$, max steps $N$, window size $w$, break threshold $\Delta_f$, $F_{\max}$
+\ENSURE $z \in [0,1]$
+\STATE Activate impedance controller and wait for settling
+\STATE $f_{\text{base}} \gets \mathrm{mean}(\text{baseline samples})$
+\STATE $f_{\max} \gets 0$
+\STATE $\mathcal{W} \gets \varnothing$
+\FOR{$i = 1$ to $N$}
+    \STATE Advance virtual reference by $i\delta$ along $\hat{u}$
+    \STATE $f_i \gets \max_t (f_{\text{proj}}(t) - f_{\text{base}})$
+    \STATE $f_{\max} \gets \max(f_{\max}, f_i)$
+    \STATE Append $f_i$ to $\mathcal{W}$ (retain last $w$ samples)
+    \IF{$|\mathcal{W}| = w$}
+        \STATE $\bar{f} \gets \mathrm{mean}(\mathcal{W})$
+        \IF{$f_{\max} - \bar{f} > \Delta_f$}
+            \STATE \textbf{break} \COMMENT{breakaway detected}
+        \ENDIF
+    \ENDIF
+\ENDFOR
+\STATE \RETURN $z \gets \mathrm{clip}(f_{\max}/F_{\max}, 0, 1)$
+\end{algorithmic}
+\end{algorithm}
+
 The descriptor $z$ approximates the breakaway friction force required to initiate sliding. Under quasi-static planar pushing, this force scales with $\mu m g$, capturing the combined influence of object mass and surface friction without requiring explicit identification of either parameter individually. The scalar $z$ remains fixed for the duration of the episode.
 
 After estimating $z$, the remaining state components are computed at each control step from proprioceptive measurements. The object centroid is recovered from the known contact offset, and geometric errors (lateral deviation, heading error) and kinematic quantities (velocities, angular velocity) are computed relative to the reference path.
+\rev{
+\paragraph{Complexity.}
+Let $N$ be the maximum number of probing steps and $w$ be the window size. The
+algorithm performs at most $N$ probing iterations. In each iteration, it updates
+the force estimate, maintains a sliding window of at most $w$ samples, and
+computes the window mean. If the mean is computed directly, each iteration costs
+$O(w)$, giving a total time complexity of $O(Nw)$. If the sliding-window mean is maintained incrementally using a running sum, then
+each iteration takes constant time, and the total time complexity reduces to $O(N)$. The space complexity is
+$O(w)$ since the algorithm stores only the most recent $w$ force samples.}
 
 
 \subsection{Robot Execution}

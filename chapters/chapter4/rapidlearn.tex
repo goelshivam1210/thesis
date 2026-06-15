@@ -42,42 +42,54 @@ This process is summarized in \cref{alg:rapid_learn} and illustrated concretely 
 \ENDFOR
 \end{algorithmic}
 \end{algorithm}
+% 
+\rev{
+\paragraph{Complexity.}
+Let $|\Plan|$ denote the length of the symbolic plan, and let $F$ be the number
+of failed operator executions during the run. Let $C_{\text{plan}}$ denote the
+cost of calling the symbolic planner, $C_{\text{exec}}$ the cost of executing an
+executor, and $C_{\text{disc}}$ the cost of one call to
+\textsc{Discover-Executor}. Assume that $\Executors$ is implemented as a hash
+set, so membership checks and insertions are $O(1)$ on average.
+
+The algorithm first calls the planner once, which costs $C_{\text{plan}}$.
+It then constructs the initial executor set by mapping each operator in the plan
+to its executor, which costs $O(|\Plan|)$. The main loop executes each operator
+once, giving $O(|\Plan| \cdot C_{\text{exec}})$ execution cost. For each failed
+operator, the algorithm either executes an already discovered executor or calls
+\textsc{Discover-Executor} and then executes the returned executor. Therefore,
+the total cost is
+
+\[
+O\!\left(
+C_{\text{plan}}
++
+|\Plan|
++
+|\Plan| C_{\text{exec}}
++
+F(C_{\text{disc}} + C_{\text{exec}})
+\right).
+\]
+
+Since $F \leq |\Plan|$, the worst-case time complexity is $O\!\left(
+C_{\text{plan}}
++
+|\Plan|
++
+|\Plan| C_{\text{exec}}
++
+|\Plan|(C_{\text{disc}} + C_{\text{exec}})
+\right)$,
+which simplifies to $O\!\left(
+C_{\text{plan}} + |\Plan|(C_{\text{disc}} + C_{\text{exec}}) \right)$.
 
 
-%%%%%%%%%%%%%%%%%%%%%%%% ALGO 3: RewardFuncGen %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{algorithm}[t]
-\small
-\caption{\textit{\textbf{PlannableStateGenerator}} ($\Sigma, \mathcal{P}, o_i) \rightarrow \mathcal{S}_r$}
-\label{alg:rewardfuncgen}
-\begin{algorithmic}[1] %[1] enables line numbers
-% \STATE Input: $\Sigma=\langle\mathcal{E}, \mathcal{F}, \mathcal{S}, \mathcal{O}\rangle$
-% \STATE $\Psi = \{o_1^{\psi_1, \psi_2, \ldots}, o_2^{\psi_1, \psi_2, \ldots}, \ldots\}$: preconditions of all the known operators
-\STATE $\mathcal{P}=\left[o_{1}, \ldots o_{\mid \mathcal{P}]}\right]$: Plan as an ordered list of operators 
-\STATE $\Psi = \{{\psi_{o_1}, \psi_{o_2}, \ldots, \psi_{o_{\mid \mathcal{P}]}} }\}$: Set of preconditions of all the known operators
-\STATE $\Omega = \{{\omega_{o_1}, \omega_{o_2}, \ldots, \omega_{o_{\mid \mathcal{P}]}} }\}$: Set of effects of all the known operators
+The space required by the top-level algorithm is dominated by the plan and the
+executor set. Thus, excluding the internal memory used by the planner and
+\textsc{Discover-Executor}, the space complexity is $O(|\Plan|)$.
 
-
-% \STATE  $\Omega = \{o_1^{\omega_1, \omega_2, \ldots}, o_2^{\omega_1, \omega_2, \ldots}, \ldots\}$: effects of all the known operators 
-\STATE $\mathcal{S}_r \rightarrow \emptyset$
-\FOR{$o_j$ in \textit{reversed}$(\mathcal{P})$}
-% \WHILE
-\IF{  {$o_j \neq o_i$} $\And$ $\psi_{o_j}  \not\supseteq \omega_{o_i}$}
-\STATE$\mathcal{S}_r \cup \psi_{o_j}$
-\FOR{$\omega \in \omega_{o_j}$ }
-\IF{$\omega \subseteq \mathcal{S}_r$}
-\STATE $\mathcal{S}_r \setminus \{\omega\}$
-\ENDIF
-\ENDFOR
-\ENDIF
-% \ENDWHILE
-\STATE $\mathcal{S}_r \cup \omega_{o_i}$
-\ENDFOR
-\if
-\RETURN $\mathcal{S}_r$
-\end{algorithmic}
-\end{algorithm}
-%
-
+}
 \subsection{Executor Discovery}
 \label{sec:executor_discovery_method}
 
@@ -94,6 +106,56 @@ When operator $\Operator_i$ fails during plan execution, the agent instantiates 
 Formally, $S_r = \{ \SymState : \SymState \models \Eff_{\Operator_i} \} \cup \{ \SymState : \SymState \models \Eff_{\hat{\Operator}} \text{ for all } \hat{\Operator} \in \hat{\Operators} \}$, where $\hat{\Operators}$ is defined as in \cref{sec:ipt_def}. 
 % The disjunctive structure of $S_r$ provides the learner with multiple possible recovery targets, increasing the likelihood of finding a viable solution.
 % ). This way we generate our algorithm generates a list of all the states from where the agent can successfully plan to reach the goal state. 
+
+%%%%%%%%%%%%%%%%%%%%%%%% ALGO 3: PlannableStateGenerator %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{algorithm}[t]
+\small
+\caption{\textit{\textbf{PlannableStateGenerator}}$(\Sigma, \mathcal{P}, o_i) \rightarrow \mathcal{S}_r$}
+\label{alg:plannablestategenerator}
+\begin{algorithmic}[1]
+\STATE $\mathcal{P}=[o_1,\ldots,o_{|\mathcal{P}|}]$: plan as an ordered list of operators
+\STATE $\Psi=\{\psi_{o_1},\psi_{o_2},\ldots,\psi_{o_{|\mathcal{P}|}}\}$: preconditions of operators in $\mathcal{P}$
+\STATE $\Omega=\{\omega_{o_1},\omega_{o_2},\ldots,\omega_{o_{|\mathcal{P}|}}\}$: effects of operators in $\mathcal{P}$
+\STATE $\mathcal{S}_r \leftarrow \emptyset$
+
+\FOR{$o_j$ in \textit{reversed}$(\mathcal{P})$}
+    \IF{$o_j \neq o_i$ \textbf{and} $\psi_{o_j} \not\supseteq \omega_{o_i}$}
+        \STATE $\mathcal{S}_r \leftarrow \mathcal{S}_r \cup \psi_{o_j}$
+        \FOR{$\omega \in \omega_{o_j}$}
+            \IF{$\omega \in \mathcal{S}_r$}
+                \STATE $\mathcal{S}_r \leftarrow \mathcal{S}_r \setminus \{\omega\}$
+            \ENDIF
+        \ENDFOR
+    \ENDIF
+\ENDFOR
+
+\STATE $\mathcal{S}_r \leftarrow \mathcal{S}_r \cup \omega_{o_i}$
+\RETURN $\mathcal{S}_r$
+\end{algorithmic}
+\end{algorithm}
+%
+\rev{
+\paragraph{Complexity.}
+Let $|\mathcal{P}|$ denote the plan length, $\psi_{\max}$ the maximum number of
+preconditions per operator, and $\omega_{\max}$ the maximum number of effects
+per operator. Assume preconditions, effects, and $\mathcal{S}_r$ are represented
+as hash sets over atomic literals, so membership, insertion, and deletion of a
+single literal are $O(1)$ on average.
+
+The algorithm performs a single reverse pass over $\mathcal{P}$. For each
+operator, checking whether $\psi_{o_j} \not\supseteq \omega_{o_i}$ costs
+$O(|\omega_{o_i}|) \subseteq O(\omega_{\max})$. If the condition holds, adding
+$\psi_{o_j}$ to $\mathcal{S}_r$ costs $O(|\psi_{o_j}|) \subseteq
+O(\psi_{\max})$, and checking/removing effects of $o_j$ costs
+$O(|\omega_{o_j}|) \subseteq O(\omega_{\max})$. Finally, adding
+$\omega_{o_i}$ once after the loop costs $O(\omega_{\max})$.
+
+\begin{itemize}
+  \item \textbf{Time:} $O(|\mathcal{P}|(\psi_{\max}+\omega_{\max}))$. In
+  bounded-arity domains, this reduces to $O(|\mathcal{P}|)$.
+  \item \textbf{Space:} $O(|\mathcal{P}|\psi_{\max}+\omega_{\max})$, reducing
+  to $O(|\mathcal{P}|)$ in bounded-arity domains.
+\end{itemize}}
 
 % We describe the algorithm which generates the set of plannable states. 
 % The agent accumulates the set of preconditions $\Psi$ and effects $\Omega$ of all known operators, using the  pre-novelty domain knowledge. Using that, it generates a set of plannable states $\mathcal{S}_r$, which contains: 1) the states that satisfy the effects  $\omega_{o_i}$ of the failed operator $o_i$ and 2) the states that satisfy the effects of all subsequent operators $\hat{o}\in\hat{\mathcal{O}}$ in the plan $\mathcal{P}$ (($d(\tilde{s}) \supseteq \omega_{\hat{o}}) \forall \hat{o} \in \hat{\mathcal{O}} $), where the preconditions of $\hat{o}$ contain the effects of $o$ ($\psi_{\hat{o}} \supseteq \omega_o$)

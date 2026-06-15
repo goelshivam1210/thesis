@@ -103,3 +103,163 @@ FLEX was evaluated on four articulated object types (cabinets, trashcans, microw
 \paragraph{Cross-robot transfer.} \Cref{tab:flex_transfer} reports success rates when transferring the same learned policies---without retraining---to three different robot platforms: Panda, UR5e, and Kinova Gen3. FLEX maintains consistent performance across all platforms with minimal degradation, demonstrating that the object-centric force-space representation enables direct cross-embodiment transfer. In contrast, all baselines are trained and evaluated on a single platform and would require full retraining for each new robot.
 
 \paragraph{Real-world demonstration.} FLEX was validated on a real UR5 robot opening a physical drawer, demonstrating that the force-space policies trained entirely in simulation transfer to real-world articulated object manipulation.
+
+
+\subsection{Simulation Details}
+Our experiments are performed in three simulation environments:
+
+\begin{itemize}
+    \item \textbf{TrainingEnv:} This environment excludes the robot and focuses on force-based interactions with objects. Random objects from the training set are selected and placed at \([-1, 0]\) with randomized rotations around the Z-axis. Force application points are randomly sampled, and actions are applied using the simulator. 
+    \item \textbf{BaselineTrainingEnv:} Includes both a Panda robot and objects. The objects are placed on a partial circle around the robot to ensure reachability. Object orientations are randomized for evaluation consistency.
+    \item \textbf{EvalEnv:} Both FLEX and baseline methods are evaluated in this environment with consistent settings.
+\end{itemize}
+
+\subsection{Learning Process}
+
+\subsubsection{Network Design}
+The actor network for TD3 has two heads:
+
+\[
+\begin{aligned}
+\text{Action Direction: } & \text{3 dimensions}, \\
+\text{Action Scale: } & \text{1 dimension}.
+\end{aligned}
+\]
+Both the action dimensions and action scale are limited to (0, 1] using bounded activation functions.
+The action is then computed as:
+
+\[
+a_t = \pi_{\text{direction}}(s_t) \cdot \pi_{\text{scale}}(s_t) \cdot \eta
+\]
+
+where \(\eta\) is the maximum allowable force.
+
+\subsubsection{Curriculum Learning for Revolute Objects}
+Training for revolute objects uses the following curricula with increasing rotation randomization:
+% 
+\[
+\begin{gathered}
+(-0.25, 0.25), \\
+(-\pi/2, 0), \\
+(-\pi/2, \pi/2), \\
+(-\pi, 0), \\
+(-\pi, \pi).
+\end{gathered}
+\]
+% 
+The next curriculum is used when the agent applies 80\% of force in the correct direction over 100 episodes. 
+\subsubsection{Network Structure}
+The actor network is a two-headed MLP network. One input layer and two hidden layers encode the state. The scale head and direction head then map the encoded features to normalized three-dimensional action direction and one-dimensional action scale in order to compute actions.
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{cc}
+\toprule
+\textbf{Parameter} & \textbf{Value} \\
+\midrule
+Actor Hidden layers & 2 \\
+Actor Hidden layer dimensions & (400,300) \\
+ $\pi_{\text{direction}}$ Activation function & Sigmoid \\
+  $\pi_{\text{scale}}$ Activation function & Tahn \\
+Critic Hidden Layers & 2 \\
+Critic Hidden layer dimensions & (400,300) \\
+Critic Activation Function & ReLU \\
+
+\bottomrule
+\end{tabular}
+\caption{Agent Network Struture}
+\end{table}
+
+\subsubsection{RL Hyperparameters}
+
+\begin{table}[t]
+\centering
+\begin{tabular}{cc}
+\toprule
+\textbf{Parameter} & \textbf{Value} \\
+\midrule
+Discount Factor (\(\gamma\)) & 0.99 \\
+Batch Size & 100 \\
+Learning Rate & 0.001 \\
+Policy Update (\(\tau\)) & 0.995 \\
+Noise Clip & 1 \\
+Policy Delay & 2 \\
+Max Timesteps per Episode & 200 \\
+Rollouts & 5 \\
+State Dimension & 6 \\
+Action Dimension & 3 \\
+Max Action & 5 \\
+ max force magnitude ($\eta$) & $0.02$\\
+\bottomrule
+\end{tabular}
+\caption{Reinforcement Learning Hyperparameters}
+\end{table}
+
+The training was performed with 24 parallel environments on an Intel i9-12900K processor with an Nvidia RTX 3080 GPU.
+
+\subsection{Execution Details}
+
+\subsubsection{Execution Assumptions and Object Placement}
+To avoid collisions, revolute objects are placed $0.7$m away with a randomized rotation angle between \([- \pi/2, 0]\), while prismatic objects are placed $0.9$m away with an angle between \([-3\pi/4, \pi/4]\).
+
+\subsection{Baselines}
+
+\subsubsection{End-to-End RL}
+The end-to-end RL agent is trained using the StableBaselines3 TD3 agent, with objects placed at a \textit{fixed} location. The reward function is designed to guide the robot through sequential stages: approaching, grasping, and manipulating the object. . Despite the use of a dense reward function, the poor (almost nil) performance highlights the complexity of the task and demonstrates why \textit{conventional} RL-based control is an inefficient approach.
+
+
+\subsubsection{CIPS Training}
+To improve efficiency, CIPS training begins with the robot \textit{already} grasping the object. Four pre-recorded initial states are uniformly sampled from the $1/4$ circle around the robot. This method accelerates training by reducing unnecessary exploration.
+\subsubsection{GAMMA}
+As stated in the paper, we assume knowledge of joint type for GAMMA evaluation. We designed a simple planning method that complies with the ideal joint dynamics. Specifically, for revolute objects, 
+
+\[
+\boldsymbol{a}_t^{GAMMA}=-\hat{\boldsymbol{h}_r} \times \hat{\boldsymbol{v}_t}
+\]
+
+For prismatic objects, 
+
+\[
+\boldsymbol{a}_t^{GAMMA}=
+\hat{\boldsymbol{h}_p}
+\]
+
+Where $\hat{\boldsymbol{h}_r}$ and $\hat{\boldsymbol{h}_p}$ are the selected prediction results of joint parameters given by GAMMA.
+
+We observed that GAMMA tends to overestimate the number of joints on complex objects with multiple moving parts, leading to incorrect joint inferences. To mitigate this, we only select the first inference result that complies with our ground-truth knowledge of the joint type. If no correct inference exists, we randomly choose from the remaining detected joints.
+
+\begin{table}[t]
+\centering
+\begin{tabular}{cc}
+\toprule
+\textbf{Parameter} & \textbf{Value} \\
+\midrule
+Policy Learning Rate & Default (SB3) \\
+Discount Factor (\(\gamma\)) & Default (SB3) \\
+Replay Buffer Size & Default (SB3) \\
+\bottomrule
+\end{tabular}
+\caption{Baseline Hyperparameters for CIPS}
+\end{table}
+
+\subsection{Real-world setup}
+
+\subsubsection{Hardware and simplifications}
+The real-world experiments used a UR-5 arm and an Intel Realsense D455 RGBD camera. To simplify, we used an inverse kinematics (IK) controller and a toy drawer. We assumed knowledge of the drawer pose and skipped interactive perception. The hyperparameters stayed the same with simulation experiment settings.
+% \textbf{\textit{SG: Value of eta and other params used here can be added.
+% }}
+\subsection{Additional experiments and results}
+
+\subsubsection{80\% opening criterion}
+In our experiments, success is defined as opening the object to at least 80\% of its joint limit.
+
+\subsubsection{Additional experiments}
+Several additional experiments were conducted on objects with different joint configurations, but due to space limitations, they are not included in the main paper.
+
+\subsection{Object details and dataset}
+
+\subsubsection{Object scaling and preprocessing}
+Objects were selected from the Partnet-Mobility dataset and scaled for simulation. Prismatic objects were scaled to 50\% and revolute objects to 30\% of their original size.
+
+\subsubsection{Collision handling}
+Due to self-collision issues in the dataset, we disabled collisions for the main body of objects during training. Since the objects were partially opened before manipulation, this did not affect the results.
