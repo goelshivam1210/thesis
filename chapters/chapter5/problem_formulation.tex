@@ -90,7 +90,7 @@ e'(\Operator_i) = \Executor'_i
 for each failed operator $\Operator_i$, making $\tilde{\IPT}$ solvable.
 \end{definition}
 
-\input{figures/chapter4/ipt_stretch_ipt}
+\input{figures/chapter5/ipt_stretch_ipt}
 
 
 The executor discovery problem captures the essence of adaptation under novelty: the agent must acquire new low-level behaviors that realize high-level operator specifications in a changed environment. This cannot be achieved through symbolic reasoning alone, as the model is incomplete, nor through unguided learning, as exhaustive exploration is inefficient. Instead, the agent must leverage its symbolic structure to guide the learning of new executors. The next section presents RAPid-Learn, which addresses this problem by instantiating focused reinforcement learning problems for failed operators, guided by existing domain knowledge.

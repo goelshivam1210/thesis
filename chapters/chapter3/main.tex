@@ -1,9 +1,20 @@
-\chapter[Benchmark Environments for Open-World Novelty]{Benchmark Environments for Open-World Novelty\footnotemark}
-\label{ch:benchmarks}
-\footnotetext{This chapter is based on: S.~Goel, G.~Tatiya, M.~Scheutz, and J.~Sinapov, ``NovelGridworlds: A Benchmark Environment for Detecting and Adapting to Novelties in Open Worlds,'' in \textit{AAMAS Workshop on Adaptive Learning Agents (ALA)}, 2021; and S.~Goel, Y.~Wei, P.~Lymperopoulos, K.~Chur\'{a}, M.~Scheutz, and J.~Sinapov, ``NovelGym: A Flexible Ecosystem for Hybrid Planning and Learning Agents Designed for Open Worlds,'' in \textit{Proc.\ of the 23rd International Conference on Autonomous Agents and Multiagent Systems (AAMAS)}, pp.~688--696, 2024.}
+\chapter{Related Work and Perspectives on Open-World Autonomy}
+\label{ch:perspectives}
 
-\input{chapters/chapter3/motivation}
-\input{chapters/chapter3/related_work}
-\input{chapters/chapter3/novelgridworlds}
-\input{chapters/chapter3/novelgym}
+This chapter situates the contributions of this dissertation within the broader landscape of open-world autonomy research. The subsequent technical chapters develop three contributions toward enabling agents and robots to operate in open-world environments: benchmark environments for systematically evaluating agents for open worlds (\cref{ch:benchmarks}), action and state abstractions that enable efficient adaptation when execution fails (\cref{ch:rapid_learn}), and interaction abstractions that support generalization across objects, physical parameters, and robotic embodiments (\cref{ch:generalization}). Each of those chapters includes focused discussions of related work specific to its technical contribution.
+
+This chapter presents an overview of the current state of research in open-world autonomy and provides a perspective on the future directions of this field.
+
+% This chapter reviews prior work organized around the stages of the perceive--plan--execute loop that serves as a recurring conceptual framework throughout this dissertation, and discusses how the field has evolved---particularly with the emergence of large-scale foundation models that are reshaping the design space for autonomous agents. We then examine how the contributions of this dissertation relate to and complement these broader developments, and identify open problems that remain.
+
+\input{chapters/chapter3/sensing}
+
+\input{chapters/chapter3/planning_learning}
+
+\input{chapters/chapter3/execution_recovery}
+
+\input{chapters/chapter3/foundation_models}
+
+\input{chapters/chapter3/integration}
+
 \input{chapters/chapter3/summary}

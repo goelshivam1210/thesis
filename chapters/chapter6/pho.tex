@@ -12,7 +12,7 @@ This setting presents three coupled sub-problems: (1) learning an object-centric
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=\textwidth]{figures/chapter5/arch.pdf}
+    \includegraphics[width=\textwidth]{figures/chapter6/arch.pdf}
     \caption{Architecture of the pushing heavy objects framework. The policy is trained in simulation (top right) using a parameterized MDP conditioned on an interaction descriptor $z$. At deployment (bottom), the robot estimates $z$ through impedance-based force probing and constructs the object-centric state from proprioceptive sensing, then executes the learned boundary forces through compliant impedance control.}
     \label{fig:pho_architecture}
 \end{figure}
@@ -33,7 +33,7 @@ where $e^\text{lat}_t$ is the signed lateral deviation from the path, $e^\theta_
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=0.55\textwidth]{figures/chapter5/state_description.png}
+    \includegraphics[width=0.55\textwidth]{figures/chapter6/state_description.png}
     \caption{Diagrammatic representation of the state space in the parameterized MDP. The object's pose is represented relative to the reference path through lateral deviation $e^\text{lat}_t$, heading error $e^\theta_t$, and velocity components along the path tangent and normal. The normalized contact-resistance descriptor $z$ conditions the policy on the interaction regime.}
     \label{fig:pho_state}
 \end{figure}
@@ -122,40 +122,40 @@ Policies were trained in MuJoCo~\citep{todorov2012mujoco} with mass randomized o
 
 \paragraph{Parameter generalization.} \Cref{tab:pho_ood} reports tracking performance (centroid-to-path RMSE) under controlled OOD shifts. The fully in-distribution baseline achieves $2.9 \pm 0.4$~cm. Across all OOD conditions---mass, friction, path radius, and box dimensions---RMSE remains within a narrow range of $2.7$--$3.3$~cm, demonstrating stable generalization. Box dimension and path radius variations were introduced only at evaluation time and not included during training.
 
-\input{tables/chapter5/pho_ood}
+\input{tables/chapter6/pho_ood}
 
 \paragraph{Path generalization.} \Cref{tab:pho_paths} evaluates generalization to novel path geometries with physical parameters kept in-distribution. Performance degrades gradually as curvature increases: 60° and 120° arcs remain close to baseline ($2.2$--$2.8$~cm), while S-shaped and sinusoidal paths---which introduce curvature sign reversals absent from training---show higher RMSE ($9$--$10$~cm). Even in the most challenging cases, the deviation remains well below one-fifth of the object width, indicating bounded transport despite the distribution shift.
 
-\input{tables/chapter5/pho_paths}
+\input{tables/chapter6/pho_paths}
 
 \paragraph{Interaction descriptor ablation.} \Cref{tab:pho_ablation} presents an ablation study evaluating the role of the normalized contact-resistance descriptor $z$. Removing the descriptor ($z = 0$) increases tracking error by 45\%, while setting $z = 1$ produces an order-of-magnitude increase in RMSE with high variance. Replacing the descriptor with its in-distribution mean ($\mathbb{E}[z] = 0.245$) yields nearly identical performance to the full system, suggesting that the policy uses $z$ as a coarse regime indicator rather than a precise estimate.
 
-\input{tables/chapter5/pho_ablation}
+\input{tables/chapter6/pho_ablation}
 
 
 \begin{figure}[t]
     \centering
     \begin{subfigure}[t]{0.48\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{figures/chapter5/8pt8kg-policy.jpg}
+        \includegraphics[width=\textwidth]{figures/chapter6/8pt8kg-policy.jpg}
         \caption{Policy, 8.8\,kg}
     \end{subfigure}
     \hfill
     \begin{subfigure}[t]{0.48\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{figures/chapter5/8pt8kg-baseline.jpg}
+        \includegraphics[width=\textwidth]{figures/chapter6/8pt8kg-baseline.jpg}
         \caption{Baseline, 8.8\,kg}
     \end{subfigure}
     \\[6pt]
     \begin{subfigure}[t]{0.48\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{figures/chapter5/12pt5kg-Policy.jpg}
+        \includegraphics[width=\textwidth]{figures/chapter6/12pt5kg-Policy.jpg}
         \caption{Policy, 12.5\,kg}
     \end{subfigure}
     \hfill
     \begin{subfigure}[t]{0.48\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{figures/chapter5/12pt5kg-baseline.jpg}
+        \includegraphics[width=\textwidth]{figures/chapter6/12pt5kg-baseline.jpg}
         \caption{Baseline, 12.5\,kg}
     \end{subfigure}
     \caption{Chronophotographic composites of real-world box transport on the Boston Dynamics Spot. Top row: proposed force-based policy under $8.8$~kg (a) and $12.5$~kg (c) payloads, showing consistent trajectory tracking. Bottom row: kinematic baseline under the same conditions (b, d), showing frequent deviation and failure to reach the goal.}

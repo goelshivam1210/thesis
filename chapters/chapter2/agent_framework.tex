@@ -1,7 +1,9 @@
 \section{A Framework for Open-World Agents}
 \label{sec:agent_framework}
 
-Having defined the environment and the nature of novelty, we now turn to the structure of the agent itself. The agents studied in this dissertation operate by combining symbolic reasoning at the level of plans with subsymbolic execution at the level of environment interaction. This section formalizes the components of this framework: symbolic planning, reinforcement learning, and their integration into a hybrid architecture. Rather than presenting these as independent formalisms, we develop them as complementary components of a single agent that must reason, act, and adapt under novelty.
+Having defined the environment and the nature of novelty, we now turn to the structure of the agent itself. The agents studied in this dissertation operate by combining symbolic reasoning at the level of plans with subsymbolic execution at the level of environment interaction. 
+This section formalizes the components of this framework: symbolic planning, reinforcement learning, and their integration into a hybrid architecture. 
+% Rather than presenting these as independent formalisms, we develop them as complementary components of a single agent that must reason, act, and adapt under novelty.
 
 \subsection{Symbolic Planning}
 \label{sec:symbolic_planning}
@@ -34,9 +36,11 @@ In the context of this dissertation, reinforcement learning serves as the mechan
 \subsection{Hybrid Planning and Learning}
 \label{sec:hybrid}
 
-Neither symbolic planning nor reinforcement learning alone is sufficient for open-world settings. Symbolic planning enables structured long-horizon reasoning but assumes complete and correct domain models---exactly the assumption that novelty violates. Reinforcement learning can acquire new behaviors through interaction but lacks the structured decomposition that enables efficient reuse and targeted adaptation. Hybrid systems combine these paradigms by integrating symbolic reasoning with learned execution.
+% Neither symbolic planning nor reinforcement learning alone is sufficient for open-world settings.
+%  Symbolic planning enables structured long-horizon reasoning but assumes complete and correct domain models---exactly the assumption that novelty violates. Reinforcement learning provides a decision making framework that can acquire new behaviors through interaction but lacks the structured decomposition that enables efficient reuse and targeted adaptation. Hybrid systems combine these paradigms by integrating symbolic reasoning with learned execution.
 
-In a hybrid system, decision-making operates over two levels of representation. At the symbolic level, the agent uses its planning task $\PlanningTask = \langle \Fluents, \Operators, \SymState_0, \Goal \rangle$ to generate plans. At the execution level, actions unfold within an MDP $M = \langle \States, \Actions, \Transition, \Reward, \Discount \rangle$. An abstraction function $\Abstraction : \States \rightarrow \SymStates$ maps environment states to symbolic state descriptions, connecting the two levels of representation.
+In a hybrid system, decision-making operates over two levels of representation. At the symbolic level, the agent uses its planning task $\PlanningTask = \langle \Fluents, \Operators, \SymState_0, \Goal \rangle$ to generate plans. At the execution level, an MDP $M = \langle \States, \Actions, \Transition, \Reward, \Discount \rangle$, describes and implements the agent's interaction with the environment. 
+An abstraction function $\Abstraction : \States \rightarrow \SymStates$ maps symbolic states (described using fluents and grounded predicates) to subsymbolic states (often represented as high dimensional inputs such as images or sensor readings), connecting the two levels of states representation.
 
 The critical link between planning and execution is the \emph{executor}. Each operator $\Operator \in \Operators$ is associated with an executor $\Executor_\Operator \in \Executors$ that realizes the operator's intended effects in the environment. An executor is defined as a triplet $\Executor_\Operator = \langle I_\Operator, \Policy_\Operator, \beta_\Operator \rangle$, where $I_\Operator$ specifies the initiation conditions (which environment states are acceptable starting states for this executor), $\Policy_\Operator : \States \rightarrow \Actions$ is a policy that selects low-level actions, and $\beta_\Operator$ specifies the termination conditions (which environment states indicate successful completion). This formulation draws on the options framework \citep{sutton1999options}, with the additional constraint that each executor is associated with a specific symbolic operator whose preconditions and effects provide its semantic meaning.
 

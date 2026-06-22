@@ -7,7 +7,7 @@
 
 .PHONY: all clean watch bib cleanall
 
-LATEXMK = latexmk -pdf -interaction=nonstopmode -outdir=build -bibtex
+LATEXMK = latexmk -pdf -interaction=nonstopmode -bibtex -outdir=build
 
 # Main target — latexmk only re-runs pdflatex/bibtex when sources change
 all:
@@ -19,7 +19,7 @@ watch:
 
 # Process bibliography only
 bib:
-	bibtex build/main
+	bibtex main
 
 # Clean auxiliary files
 clean:
@@ -28,4 +28,4 @@ clean:
 
 # Clean everything including PDF
 cleanall: clean
-	rm -f build/main.pdf main.pdf
+	rm -f main.pdf

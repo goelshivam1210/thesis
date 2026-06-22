@@ -1,4 +1,11 @@
 {
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 4000,
+
+  "latex-workshop.latex.rootFile": "main.tex",
+  "latex-workshop.latex.rootFile.useSubFile": false,
+  "latex-workshop.latex.outDir": "%DIR%/build",
+
   "latex-workshop.latex.tools": [
     {
       "name": "latexmk",
@@ -8,9 +15,8 @@
         "-interaction=nonstopmode",
         "-synctex=1",
         "-file-line-error",
-        "-halt-on-error",
-        "-outdir=build",
         "-cd",
+        "-outdir=build",
         "-bibtex",
         "%DOC%"
       ]
@@ -25,6 +31,7 @@
   ],
 
   "latex-workshop.latex.autoBuild.run": "onSave",
+  "latex-workshop.latex.autoBuild.interval": 5000,
   "latex-workshop.view.pdf.viewer": "tab",
   "latex-workshop.synctex.afterBuild.enabled": true,
 

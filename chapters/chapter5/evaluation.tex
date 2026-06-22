@@ -11,7 +11,7 @@ This section presents experimental evaluations at two levels. First, \cref{sec:r
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=0.8\textwidth]{figures/chapter4/rapid-learn-prenovelty-screenshot.png}
+    \includegraphics[width=0.8\textwidth]{figures/chapter5/rapid-learn-prenovelty-screenshot.png}
     \caption{Screenshot of the NovelGridworld-Pogostick environment. The agent (triangle) can navigate in the environment and collect items such as trees(shown in yellow). The agent can use the crafting-table to craft complicated items such as tree-tap, sticks etc. Blue spaces represent air blocks through which the agent can navigate, and purple blocks represent walls.}
     \label{fig:ngw_pogostick_screenshot}
 \end{figure}
@@ -41,7 +41,7 @@ Making the reward conditional on the stage within the crafting process was essen
 \rev{
  We evaluate their performance to make sure that they are at par with the RAPid-Learn approach (RAPid-Learn, being a planning agent, shows a $100\%$ performance in the pre-novelty scenario). Table~\ref{tab:baseline_prenovelty_performance} shows how many timesteps the pre-novelty models have experienced until reaching convergence and their performance on $100$ evaluation instances of the environment on $10$ random seeds. Results in Table~\ref{tab:baseline_prenovelty_performance} show that both the baseline agents converge to a policy which performs with a success of the task being achieved $95\%$ of the time.
 
-\input{tables/chapter4/rapid_learn_baseline_performance}
+\input{tables/chapter5/rapid_learn_baseline_performance}
 \paragraph{Baseline Transfer Learning}
 The injected novelties alter the shape of the observation and action spaces of the environment. E.g.  the Fire crafting table novelty adds new observations for the \emph{water} item in the inventory and the LiDAR-sensor, as well as the \emph{select water} and \emph{spray} actions. 
 In order to allow transferring the model from pre-novelty to post-novelty environments, we pad the observation and action spaces of all environments (pre- and post-novelty) with placeholder elements such that all of them have the same shape. Observation placeholders simply always return zero. When the model chooses to perform a placeholder action, the action actually passed on to the environment is always the \emph{approach treelog}.
@@ -52,39 +52,39 @@ In order to allow transferring the model from pre-novelty to post-novelty enviro
 \subsubsection{Experiments \& Results}
 \rev{In this section, we describe the experiments we ran to answer the following questions. (Q1) How does the rapid-learn approach compare to the adapted transfer learning approaches in terms of the adaptation efficiency, and post adaptation success rates, compared across 5 novelty scenarios (Q2) How does each variant of knowledge-guided exploration component of Rapid-Learn fair, in terms of the adaptation efficiency across all novelty scenarios.}
 
-\input{tables/chapter4/rapid_learn_results}
+\input{tables/chapter5/rapid_learn_results}
 
 \begin{figure}[t]
     \centering
     \begin{subfigure}[t]{0.48\textwidth}
         \centering
-        \includegraphics[width=\linewidth]{figures/chapter4/ATB_S_TS.png}
+        \includegraphics[width=\linewidth]{figures/chapter5/ATB_S_TS.png}
         \caption{ATB hard (axe-to-break)}
         \label{fig:atb_curve}
     \end{subfigure}
     \hfill
     \begin{subfigure}[t]{0.48\textwidth}
         \centering
-        \includegraphics[width=\linewidth]{figures/chapter4/FCT_S_TS.png}
+        \includegraphics[width=\linewidth]{figures/chapter5/FCT_S_TS.png}
         \caption{FCT hard (fire-crafting-table)}
         \label{fig:fct_curve}
     \end{subfigure}
     \\[6pt]
     \begin{subfigure}[t]{0.48\textwidth}
         \centering
-        \includegraphics[width=\linewidth]{figures/chapter4/RT_S_TS.png}
+        \includegraphics[width=\linewidth]{figures/chapter5/RT_S_TS.png}
         \caption{RT hard (rubber-tree)}
         \label{fig:rt_curve}
     \end{subfigure}
     \hfill
     \begin{subfigure}[t]{0.48\textwidth}
         \centering
-        \includegraphics[width=\linewidth]{figures/chapter4/AFCT_S_TS.png}
+        \includegraphics[width=\linewidth]{figures/chapter5/AFCT_S_TS.png}
         \caption{ATB+FCT easy (combined)}
         \label{fig:afct_curve}
     \end{subfigure}
     \\[8pt]
-    \includegraphics[width=0.65\textwidth]{figures/chapter4/rapid_graph_label.pdf}
+    \includegraphics[width=0.65\textwidth]{figures/chapter5/rapid_graph_label.pdf}
     \caption{Learning curves (success rate vs.\ training time steps) for four of the five novelty scenarios. All RAPid-Learn variants (KGE-UCB, KGE-UAB, EG) converge one to two orders of magnitude faster than the transfer learning baselines (Actor-Critic Transfer and Policy Reuse). Shaded regions denote one standard deviation over 10 independent trials. Transfer learning baselines did not converge on the RT hard scenario within the evaluation budget and are therefore omitted from that panel.}
     \label{fig:rapid_learn_curves}
 \end{figure}
@@ -100,7 +100,7 @@ Three variants of RAPid-Learn were compared: \emph{RAPid-KGE-UCB} (with upper co
 \paragraph{Statistical significance.} Unpaired $t$-tests between the best-performing RAPid-Learn variant and each baseline confirm that the differences in post-novelty success rate are statistically significant ($p < 0.01$) in all scenarios except scrape-plank versus policy reuse ($p = 0.06$), where the baselines achieve comparable final performance albeit at substantially higher sample cost.
 
 \paragraph{Ablation: hierarchical actions.} An ablation study removing hierarchical actions (the \texttt{approach} operator) from the learner's action space shows that their inclusion substantially improves sample efficiency, particularly for complex novelties. Without hierarchical actions, RAPid-EG fails to converge on the fire-crafting-table hard novelty, while RAPid-KGE-UCB still converges but requires more episodes. This confirms that composing learned behaviors with existing executors is a key advantage of the hybrid architecture.
-\input{tables/chapter4/stat_significance_tab}
+\input{tables/chapter5/stat_significance_tab}
 
 
 
@@ -108,7 +108,7 @@ Three variants of RAPid-Learn were compared: \emph{RAPid-KGE-UCB} (with upper co
 	\centering
 	\begin{minipage}{0.49\columnwidth}
 		\centering
-		\includegraphics[width=\textwidth]{figures/chapter4/baselines_firecraftingtablehard.png}
+		\includegraphics[width=\textwidth]{figures/chapter5/baselines_firecraftingtablehard.png}
 % 		\caption{Fire-crafting-table hard}
 		\small (a) Fire-crafting-table hard
         % \subcaption{Fire-crafting-table hard}
@@ -116,21 +116,21 @@ Three variants of RAPid-Learn were compared: \emph{RAPid-KGE-UCB} (with upper co
 	\end{minipage}%
 	\begin{minipage}{0.49\columnwidth}
 		\centering
-		\includegraphics[width=\textwidth]{figures/chapter4/baselines_axetobreakhard.png}
+		\includegraphics[width=\textwidth]{figures/chapter5/baselines_axetobreakhard.png}
 % 		\caption{Caption 2}
         \small (b) Axe-to-break hard
 		\label{fig:axetobreakhard}
     	\end{minipage}
 	\begin{minipage}{0.49\columnwidth}
 		\centering
-		\includegraphics[width=\textwidth]{figures/chapter4/baselines_scrapeplank.png}
+		\includegraphics[width=\textwidth]{figures/chapter5/baselines_scrapeplank.png}
 % 		\small{(a)Caption 2}
         \small (c) Scrape plank
 		\label{fig:rubber_tree_easy}
 	\end{minipage}
 	\begin{minipage}{0.49\columnwidth}
 		\centering
-		\includegraphics[width=\textwidth]{figures/chapter4/baselines_axefirecteasy.png}
+		\includegraphics[width=\textwidth]{figures/chapter5/baselines_axefirecteasy.png}
         \small (d) Axetobreak+FCT(easy)
 % 		\caption{Caption 2}
 		\label{fig:axeFCT}
@@ -285,11 +285,11 @@ To evaluate the full neurosymbolic architecture, a large-scale systemic evaluati
 
 Four agent configurations were evaluated: a \emph{Base} agent using only symbolic inference and symbolic novelty exploration; \emph{Base+Agent Model}, augmenting the base with neural behavioral modeling of other actors; \emph{Base+Executor Learner}, augmenting the base with the RAPid-Learn executor learner; and a combined \emph{Base+Agent Model+Executor Learner} configuration.
 
-\input{tables/chapter4/polycraft_overall}
+\input{tables/chapter5/polycraft_overall}
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=\textwidth]{figures/chapter4/failed_effects_policy.pdf}
+    \includegraphics[width=\textwidth]{figures/chapter5/failed_effects_policy.pdf}
     \caption{Breakdown of novelty accommodation performance across novelty categories in the Polycraft systemic evaluation. Each bar shows the goal achievement rate for the four agent configurations under each novelty type. The executor learner (Base+EL) provides the most consistent improvement on attribute, action, and concealed novelties, where symbolic recovery strategies are insufficient and learning-based executor discovery is essential.}
     \label{fig:failed_effects_policy}
 \end{figure}

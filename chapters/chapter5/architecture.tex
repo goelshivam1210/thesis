@@ -22,7 +22,7 @@ The architecture, depicted in \cref{fig:architecture}, consists of four main com
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=\textwidth]{figures/chapter4/diarcgram.pdf}
+    \includegraphics[width=\textwidth]{figures/chapter5/diarcgram.pdf}
     \caption{High-level architecture of the neurosymbolic cognitive architecture for novelty handling. The four main components communicate through the shared knowledge repository $\mathcal{K} = (\KB, \Theta)$. Symbolic inference (task planner, goal manager) generates and executes plans, detecting novelties through expectation violations. Neural inference (vision model, agent model) detects visual and behavioral anomalies and asserts novelty descriptions into $\KB$. When execution fails, the novelty exploration component applies a cascading sequence of recovery strategies---culminating in the RAPid-Learn executor learner---interacting with the environment through the domain interface, which mediates symbolic state observations, images, and LiDAR sensor data.}
     \label{fig:architecture}
 \end{figure}

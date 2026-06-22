@@ -10,7 +10,7 @@ Each NovelGridworlds environment is a discrete gridworld of configurable size. T
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=0.8\textwidth]{figures/chapter3/screen-shot_ng.png}
+    \includegraphics[width=0.8\textwidth]{figures/chapter4/screen-shot_ng.png}
     \caption{Screenshot of the NovelGridworld-Bow-v0 environment. The agent (triangle) faces the crafting table (green). Sticks (yellow) and strings (orange) are distributed in the gridworld. Blue spaces represent air blocks through which the agent can navigate, and purple blocks represent walls.}
     \label{fig:ngw_screenshot}
 \end{figure}
@@ -25,7 +25,7 @@ Four tasks are implemented, each requiring the agent to craft a target item by c
 
 \rev{Table~\ref{tab:actions} summarizes the task-specific actions and block types for each environment.}
 
-\input{tables/chapter3/actions_blocks_in_tasks_novelgridworlds}
+\input{tables/chapter4/actions_blocks_in_tasks_novelgridworlds}
 
 The environment communicates with agents through a socket interface, enabling agents implemented in different programming languages to interact with the same environment. This design supports both planning agents implemented in Java-based architectures and reinforcement learning agents implemented in Python.
 
@@ -53,21 +53,21 @@ A central contribution of NovelGridworlds is a structured taxonomy for classifyi
     \centering
     \begin{subfigure}[t]{0.32\textwidth}
         \centering
-        \includegraphics[width=\linewidth,keepaspectratio]{figures/chapter3/gridworld_fence.png}
+        \includegraphics[width=\linewidth,keepaspectratio]{figures/chapter4/gridworld_fence.png}
         \caption{Fence (object, detrimental)}
         \label{fig:ngw_novelty_fence}
     \end{subfigure}
     \hfill
     \begin{subfigure}[t]{0.32\textwidth}
         \centering
-        \includegraphics[width=\linewidth,keepaspectratio]{figures/chapter3/gridworld_axe.png}
+        \includegraphics[width=\linewidth,keepaspectratio]{figures/chapter4/gridworld_axe.png}
         \caption{Axe (object/attribute, beneficial)}
         \label{fig:ngw_novelty_axe}
     \end{subfigure}
     \hfill
     \begin{subfigure}[t]{0.32\textwidth}
         \centering
-        \includegraphics[width=\linewidth,keepaspectratio]{figures/chapter3/gridworld_firewall4.png}
+        \includegraphics[width=\linewidth,keepaspectratio]{figures/chapter4/gridworld_firewall4.png}
         \caption{Fire wall (object/attribute, detrimental)}
         \label{fig:ngw_novelty_firewall}
     \end{subfigure}
@@ -77,11 +77,11 @@ A central contribution of NovelGridworlds is a structured taxonomy for classifyi
 
 \rev{Twelve novelties are implemented across all four tasks, spanning all combinations of class and type. Table~\ref{tab:novel_envs} summarizes the classification of each novelty, and \cref{fig:ngw_venn_diag} shows how novelties are distributed across the three classes, highlighting that several novelties span multiple classes simultaneously.}
 
-\input{tables/chapter3/novelty_type_novelgridworkds}
+\input{tables/chapter4/novelty_type_novelgridworkds}
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=0.75\textwidth]{figures/chapter3/venn_diag_4.png}
+    \includegraphics[width=0.75\textwidth]{figures/chapter4/venn_diag_4.png}
     \caption{Venn diagram classifying all twelve novelties implemented in NovelGridworlds by the novelty class they affect. Novelties in overlapping regions span multiple classes simultaneously.}
     \label{fig:ngw_venn_diag}
 \end{figure}
@@ -127,7 +127,7 @@ NovelGridworlds introduces three evaluation metrics designed to capture differen
 
 Two types of agents were evaluated: a symbolic planning agent implemented using the DIARC cognitive architecture~\citep{schermerhorn2006diarc, scheutz2019diarc} with the MetricFF planner~\citep{hoffmann2003metricff}, and a reinforcement learning agent trained using Proximal Policy Optimization (PPO)~\citep{schulman2017proximal}. The RL agent used a LiDAR-like observation space consisting of eight beams at $45^\circ$ increments, each returning the Euclidean distance to the nearest object, augmented by inventory and selected-item vectors.
 
-\input{tables/chapter3/ng_results}
+\input{tables/chapter4/ng_results}
 
 
 
@@ -135,11 +135,11 @@ Two types of agents were evaluated: a symbolic planning agent implemented using 
 
 \paragraph{Reinforcement learning agent.} The RL agent was evaluated on the Bow-v0 task under three novelties: action remapping, fire wall, and break increase. The agent achieved a 92\% success rate on the base task after 1.8 million training time steps; results are reported in \cref{tab:results_rl}.
 
-\input{tables/chapter3/novelgridworld_bow_rl_agent_results} Under the beneficial break-increase novelty, cumulative reward improved but the success rate dropped to 29.2\%, suggesting the agent learned to hoard resources rather than complete the task. The fire-wall novelty caused a complete failure, with 0\% success rate, as the agent could not learn to avoid the lethal walls. Action remapping showed an average 12\% decline in success rate, though performance varied substantially across trials depending on how severely the action mapping was shuffled.
+\input{tables/chapter4/novelgridworld_bow_rl_agent_results} Under the beneficial break-increase novelty, cumulative reward improved but the success rate dropped to 29.2\%, suggesting the agent learned to hoard resources rather than complete the task. The fire-wall novelty caused a complete failure, with 0\% success rate, as the agent could not learn to avoid the lethal walls. Action remapping showed an average 12\% decline in success rate, though performance varied substantially across trials depending on how severely the action mapping was shuffled.
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=0.8\textwidth]{figures/chapter3/results_latest.png}
+    \includegraphics[width=0.8\textwidth]{figures/chapter4/results_latest.png}
     \caption{Learning performance of the RL agent on NovelGridworld-Bow-v0. The vertical line at 2 million time steps marks the introduction of novelty. Break increase (orange) shows improved reward but reduced success rate. Fire wall (green) causes complete failure. Action remapping (blue) shows partial recovery.}
     \label{fig:ngw_rl_curves}
 \end{figure}
