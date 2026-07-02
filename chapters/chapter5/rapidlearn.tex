@@ -103,7 +103,7 @@ When operator $\Operator_i$ fails during plan execution, the agent instantiates 
     \item States that satisfy the effects $\Eff_{\hat{\Operator}}$ of all subsequent operators $\hat{\Operator} \in \hat{\Operators}$ whose preconditions depend on the effects of $\Operator_i$ (the skip-ahead case, allowing the agent to bypass the failed operator entirely if an alternative path exists).
 \end{enumerate}
  We provide this as a disjunction of condition 1 and 2 for the agent to satisfy at each time step. In other words, if the agent satisfies either 1 or 2, it gets a positive reward $\phi_1$ and the episode terminates. 
-Formally, $S_r = \{ \SymState : \SymState \models \Eff_{\Operator_i} \} \cup \{ \SymState : \SymState \models \Eff_{\hat{\Operator}} \text{ for all } \hat{\Operator} \in \hat{\Operators} \}$, where $\hat{\Operators}$ is defined as in \cref{sec:ipt_def}. 
+Formally, $S_r = \{ \SymState : \SymState \models \Eff_{\Operator_i} \} \cup \{ \SymState : \SymState \models \Eff_{\hat{\Operator}} \text{ for all } \hat{\Operator} \in \hat{\Operators} \}$, where $\hat{\Operators} = \{\Operator_j \in \Plan : j > i \land \Operator_i \Dep \Operator_j\}$ as defined in \cref{sec:symbolic_planning}. 
 % The disjunctive structure of $S_r$ provides the learner with multiple possible recovery targets, increasing the likelihood of finding a viable solution.
 % ). This way we generate our algorithm generates a list of all the states from where the agent can successfully plan to reach the goal state. 
 

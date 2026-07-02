@@ -7,7 +7,7 @@ This section extends the hybrid planning--learning framework developed in \cref{
 \subsection{Executors}
 \label{sec:executors}
 
-\Cref{sec:hybrid} introduced executors as the mechanism connecting symbolic operators to environment interaction, defining each executor as a triplet $\Executor_\Operator = \langle \gamma_\Operator, \Policy_\Operator, \beta_\Operator \rangle$ of initiation conditions, policy, and termination conditions. We now provide a formal definition that makes the executor's components precise and establishes the notation used throughout this chapter. In particular, we use $I_\Executor$ to denote the initiation set, replacing the $\gamma_\Operator$ notation from \cref{sec:hybrid} to emphasize that the initiation condition is a set of states rather than a general condition.
+\Cref{sec:hybrid,sec:rl} introduced executors as the mechanism connecting symbolic operators to environment interaction, defining each executor as a triplet $\Executor_\Operator = \langle I_\Operator, \Policy_\Operator, \beta_\Operator \rangle$ of initiation set, policy, and termination condition. We now provide a formal definition that establishes the notation used throughout this chapter.
 
 \begin{definition}[Executor]
 \label{def:executor}
@@ -30,8 +30,8 @@ To connect symbolic planning with subsymbolic execution, we define an integrated
 \label{def:ipt}
 An Integrated Planning Task (IPT) is a tuple $\IPT = \langle \PlanningTask, M, \Abstraction, e \rangle$, where:
 \begin{itemize}[leftmargin=*]
-    \item $\PlanningTask = \langle \Fluents, \Operators, \SymState_0, \Goal \rangle$ is a symbolic planning task,
-    \item $M = \langle \States, \Actions, \Transition, \Reward, \Discount \rangle$ is a Markov decision process modeling the environment,
+    \item $\PlanningTask = \langle \PlanningDomain, \SymState_0, \Goal \rangle$ is a symbolic planning task as defined in \cref{sec:symbolic_planning},
+    \item $M = \langle \States, \Actions, \Transition, \Reward, \Discount \rangle$ is a Markov decision process modeling the environment (\cref{sec:rl}),
     \item $\Abstraction : \States \rightarrow \SymStates$ is an abstraction function mapping environment states to symbolic states, and
     \item $e : \Operators \rightarrow \Executors$ is an \emph{executor mapping} that assigns each symbolic operator to an executor.
 \end{itemize}
@@ -41,7 +41,7 @@ An Integrated Planning Task (IPT) is a tuple $\IPT = \langle \PlanningTask, M, \
 The IPT extends the hybrid system $\Hybrid = \langle \PlanningTask, M, \Abstraction, \Executors \rangle$ from \cref{sec:hybrid} by making the operator--executor correspondence an explicit, first-class component through the executor mapping $e$. In the hybrid system, each operator $\Operator$ is associated with an executor $\Executor_\Operator$; the IPT formalizes this association as a function and specifies the consistency requirements it must satisfy.
 
 \paragraph{Consistency between operators and executors.}
-For an IPT to function correctly, each executor must be consistent with the symbolic specification of its corresponding operator. Let $\Operator \in \Operators$ have preconditions $\Pre_{\Operator}$ and effects $\Eff_{\Operator}$. The executor $e(\Operator)$ must satisfy:
+For an IPT to function correctly, each executor must be consistent with the symbolic specification of its corresponding operator (\cref{sec:symbolic_planning}). Let $\Operator \in \Operators$ have precondition literal set $\Pre_{\Operator}$ and effect literal set $\Eff_{\Operator}$. The executor $e(\Operator)$ must satisfy:
 
 \begin{enumerate}[leftmargin=*]
     \item \emph{Initiation consistency}:
@@ -59,13 +59,13 @@ For an IPT to function correctly, each executor must be consistent with the symb
         0 & \text{otherwise},
     \end{cases}
     \]
-    where $\hat{\Operators}$ denotes subsequent operators in the plan whose preconditions depend on $\Eff_{\Operator_i}$.
+    where $\hat{\Operators} = \{\Operator_j \in \Plan : j > i \land \Operator_i \Dep \Operator_j\}$ denotes subsequent operators in the plan that depend on the effects of $\Operator_i$ (\cref{sec:symbolic_planning}).
 \end{enumerate}
 
 The first case corresponds to exact satisfaction of the operator’s effects. The second allows progress beyond the current operator if downstream effects are satisfied and a valid plan to the goal still exists. In other words, once the executor reaches a plannable state, it can be terminated. Later, we will formalize and explain how the plannable states are generated.
 
 \paragraph{Solutions to an IPT.}
-A \emph{planning solution} to an IPT is a plan $\Plan = [\Operator_1, \ldots, \Operator_n]$ that solves $\PlanningTask$. A \emph{solution} is the corresponding sequence of executors $[e(\Operator_1), \ldots, e(\Operator_n)]$ such that executing them in the environment from any state $s$ with $\Abstraction(s) \models \SymState_0$ yields a state $s'$ with $\Abstraction(s') \models \Goal$. An IPT is \emph{plannable} if a planning solution exists and \emph{solvable} if a solution exists.
+A \emph{planning solution} to an IPT is a plan $\Plan = [\Operator_1, \ldots, \Operator_n]$ that solves $\PlanningTask$. A \emph{solution} is the corresponding sequence of executors $[e(\Operator_1), \ldots, e(\Operator_n)]$ such that executing them in the environment from an initial state $s_0$ with $\Abstraction(s_0) = \SymState_0$ yields a state $s'$ with $\Abstraction(s') \models \Goal$. An IPT is \emph{plannable} if a planning solution exists and \emph{solvable} if a solution exists.
 
 \subsection{The Executor Discovery Problem}
 \label{sec:executor_discovery}
@@ -83,7 +83,7 @@ Using the novelty formalism from \cref{sec:novelty}, a novelty introduces elemen
 
 \begin{definition}[Executor Discovery Problem]
 \label{def:edp}
-Given a Stretch-IPT $\tilde{\IPT} = \langle \PlanningTask', M', \Abstraction, e' \rangle$ with updated planning task $\PlanningTask' = \langle \Fluents \cup \Fluents', \Operators \cup \Operators', \SymState_0', \Goal \rangle$ and failed operators $\{\Operator_1, \ldots, \Operator_m\}$, construct new executors $\{\Executor'_1, \ldots, \Executor'_m\}$ such that
+Given a Stretch-IPT $\tilde{\IPT} = \langle \PlanningTask', M', \Abstraction, e' \rangle$ with updated planning task $\PlanningTask' = \langle \PlanningDomain', \SymState_0', \Goal \rangle$, where $\PlanningDomain' = \langle \Fluents \cup \Fluents', \Operators \cup \Operators' \rangle$, and failed operators $\{\Operator_1, \ldots, \Operator_m\}$, construct new executors $\{\Executor'_1, \ldots, \Executor'_m\}$ such that
 \[
 e'(\Operator_i) = \Executor'_i
 \]
