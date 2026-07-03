@@ -31,3 +31,29 @@
 \ENDWHILE
 \end{algorithmic}
 \end{algorithm}
+
+\rev{
+\paragraph{Complexity.}
+We analyze the overhead of the reward-shaping routine itself, excluding the cost
+of the underlying policy optimization. Let $n = |\mathcal{Q}|$ denote the number
+of subgoals derived from the plan (bounded by the plan length, $n \leq |P|$).
+Assume the queue $\mathcal{Q}$ and the past-goal set $\mathcal{G}_{\text{past}}$
+are represented so that achievement checks, membership tests, insertions, and
+single-subgoal removals are $O(1)$ on average, and the immediate-predecessor
+test is $O(1)$ via a stored pointer.
+
+Each of the $n$ subgoals is removed from $\mathcal{Q}$ exactly once over the
+entire run---either as $g_{\text{current}}$ when it is achieved or inside the
+skip-ahead inner loop---and the reward-decay and inventory-skip steps are $O(1)$
+per subgoal. The nested loop therefore does not make the bookkeeping quadratic:
+a subgoal removed in the inner loop is never revisited.
+
+\begin{itemize}
+  \item \textbf{Time:} $O(n) = O(|P|)$ for the reward-shaping bookkeeping. The
+  overall wall-clock cost is dominated by the underlying policy optimization,
+  which the routine only augments with a constant amount of work per step.
+  \item \textbf{Space:} $O(n) = O(|P|)$ for the subgoal queue $\mathcal{Q}$ and
+  the past-goal set $\mathcal{G}_{\text{past}}$, each holding at most $n$
+  subgoals (excluding the memory of the underlying RL model).
+\end{itemize}
+}

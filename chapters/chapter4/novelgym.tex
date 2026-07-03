@@ -99,8 +99,73 @@ NovelGym introduces an evaluation protocol consisting of four phases, illustrate
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=0.85\textwidth,keepaspectratio]{figures/chapter4/eval_metrics.pdf}
-    \caption{Illustration of the NovelGym evaluation protocol and performance over time: success rate as training progresses, with novelty injection dividing pre- and post-novelty regimes. The annotated regions correspond to the metrics in \cref{sec:ng_evaluation} (pre-novelty asymptotic performance, novelty impact, adaptation, and post-novelty performance).}
+    \begin{tikzpicture}[
+        >=Stealth,
+        axisline/.style={->, thick, gray!70!black},
+        curve/.style={very thick, black},
+        baseline/.style={thick, blue!65!black},
+        inject/.style={very thick, red!80!black},
+        measure/.style={<->, thick},
+        phaselabel/.style={font=\small\bfseries, gray!35!black},
+        annot/.style={font=\footnotesize},
+    ]
+        % ----- geometry -----
+        % x: time (0..12), y: success rate (0..4.4)
+        \def\xmax{12.2}
+        \def\ymax{4.6}
+        \def\xinj{5.6}     % novelty injection time
+        \def\ybase{0.9}    % random baseline success rate
+        \def\ypre{3.9}     % pre-novelty asymptote
+        \def\ypost{3.7}    % post-novelty asymptote
+        \def\ximm{6.05}    % x-position of the novelty-impact annotation
+        \def\xconv{9.9}    % post-novelty convergence time
+
+        % ----- axes -----
+        \draw[axisline] (0,0) -- (\xmax,0) node[below left=1pt and 0pt, font=\small] {time};
+        \draw[axisline] (0,0) -- (0,\ymax) node[above right=0pt and -2pt, font=\small, align=left, rotate=90, anchor=south west] {};
+        \node[font=\small, rotate=90] at (-0.55, {\ymax/2}) {success rate};
+
+        % ----- random baseline -----
+        \draw[baseline] (0,\ybase) -- (\xmax,\ybase);
+        \node[annot, blue!65!black, anchor=west] at (\xmax, \ybase) {};
+        \node[annot, blue!65!black, anchor=east, fill=white, inner sep=1pt] at (\xmax, {\ybase+0.32}) {random baseline};
+
+        % ----- novelty injection line -----
+        \draw[inject] (\xinj,0) -- (\xinj,\ymax);
+        \node[annot, red!80!black, anchor=south, align=center] at (\xinj, \ymax) {novelty\\[-2pt]injection};
+
+        % ----- phase labels -----
+        \node[phaselabel] at ({\xinj/2}, {\ymax-0.35}) {pre-novelty};
+        \node[phaselabel] at ({(\xinj+\xmax)/2}, {\ymax-0.35}) {post-novelty};
+
+        % ----- pre-novelty learning curve (starts AT the random baseline) -----
+        \draw[curve] plot[smooth, tension=0.7] coordinates {
+            (0,\ybase) (0.8,1.0) (1.6,1.5) (2.4,2.4) (3.3,3.3) (4.2,3.75) (5.0,3.88) (\xinj,\ypre)
+        };
+
+        % ----- post-novelty learning curve (restarts FROM the baseline point;
+        %        no falling line connecting it to the pre-novelty peak) -----
+        \draw[curve] plot[smooth, tension=0.7] coordinates {
+            (\xinj,\ybase) (6.6,1.15) (7.4,1.95) (8.3,2.9) (9.2,3.5) (\xconv,\ypost) (11.4,3.72)
+        };
+
+        % ----- pre-novelty asymptotic performance -----
+        \draw[measure, brown!70!black] (4.55,0) -- (4.55,\ypre);
+        \node[annot, brown!70!black, anchor=west] at (2.05,{\ypre/2+0.15}) {$S_{\text{pre}}$ (asymptotic perf.)};
+
+        % ----- novelty impact (drop from pre-novelty asymptote to baseline) -----
+        \draw[measure, orange!85!black] (\ximm,\ybase) -- (\ximm,\ypre);
+        \node[annot, orange!85!black, anchor=west] at ({\ximm+0.1},{(\ybase+\ypre)/2}) {$I_{\text{novelty}}$};
+
+        % ----- time to adapt -----
+        \draw[measure, green!45!black] (\xinj,-0.45) -- (\xconv,-0.45);
+        \node[annot, green!45!black, anchor=north] at ({(\xinj+\xconv)/2},-0.5) {$T_{\text{adapt}}$ (time to adapt)};
+
+        % ----- post-novelty asymptotic performance -----
+        \draw[measure, brown!70!black] (10.9,0) -- (10.9,\ypost);
+        \node[annot, brown!70!black, anchor=south, align=center] at (10.9,\ypost) {$S_{\text{post}}$};
+    \end{tikzpicture}
+    \caption{Illustration of the NovelGym evaluation protocol and performance over time: the learning agent's success rate (black) as training progresses, with novelty injection (red) dividing the pre- and post-novelty regimes. At initialization the agent's policy is effectively random, so the curve begins at the random-action baseline (blue) and learning lifts it above this chance-level reference. Novelty injection collapses performance back to the chance-level baseline; the post-novelty learning curve then restarts from this baseline point and adaptation gradually recovers performance to $S_{\text{post}}$. The annotated regions correspond to the metrics in \cref{sec:ng_evaluation}: pre-novelty asymptotic performance ($S_{\text{pre}}$), novelty impact ($I_{\text{novelty}}$), time to adapt ($T_{\text{adapt}}$), and post-novelty asymptotic performance ($S_{\text{post}}$).}
     \label{fig:ng_metrics}
 \end{figure}
 
@@ -169,12 +234,15 @@ All agents achieved perfect pre-novelty performance ($S_\text{pre} = 1.0$), with
 \input{tables/chapter4/ng_performance}
 
 
+\input{figures/chapter4/tadapt_bars}
+
+
 \input{tables/chapter4/ng_efficiency}
 
 
 \paragraph{Novelty impact.} As shown in \cref{tab:ng_performance}, upon novelty injection all agents experienced performance degradation for detrimental novelties, with the fire novelty producing the most severe impact ($I_\text{novelty} = 1.0$ for all agents). Transfer RL agents were generally more sensitive to novelty than hybrid agents, as reflected in higher $I_\text{novelty}$ values. However, hybrid agents showed lower immediate impact in some cases due to their targeted adaptation approach, which activates only upon execution failure.
 
-\paragraph{Adaptation speed.} \Cref{tab:ng_efficiency} reveals that hybrid agents consistently outperformed transfer learning methods on the $T_\text{adapt}$ metric across all novelties. For the fence novelty, hybrid agents adapted in approximately 67{,}000--71{,}000 time steps, while transfer RL agents required 700{,}000--854{,}000 time steps---an order of magnitude difference. This advantage arises from the hybrid architecture's ability to focus learning on the specific subproblem caused by the novelty rather than relearning the entire task.
+\paragraph{Adaptation speed.} \Cref{tab:ng_efficiency} (visualized in \cref{fig:ng_tadapt}) reveals that hybrid agents consistently outperformed transfer learning methods on the $T_\text{adapt}$ metric across all novelties. For the fence novelty, hybrid agents adapted in approximately 67{,}000--71{,}000 time steps, while transfer RL agents required 700{,}000--854{,}000 time steps---an order of magnitude difference. This advantage arises from the hybrid architecture's ability to focus learning on the specific subproblem caused by the novelty rather than relearning the entire task.
 
 \paragraph{Post-adaptation performance.} Returning to \cref{tab:ng_performance}, all agents achieved high post-adaptation success rates ($S_\text{post} \geq 0.92$), though none reached perfect scores due to the use of a convergence criterion rather than exhaustive training.
 

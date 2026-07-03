@@ -155,7 +155,11 @@ $\omega_{o_i}$ once after the loop costs $O(\omega_{\max})$.
   bounded-arity domains, this reduces to $O(|\mathcal{P}|)$.
   \item \textbf{Space:} $O(|\mathcal{P}|\psi_{\max}+\omega_{\max})$, reducing
   to $O(|\mathcal{P}|)$ in bounded-arity domains.
-\end{itemize}}
+\end{itemize}
+A \emph{bounded-arity domain} is one in which every predicate and operator takes
+at most a fixed constant number of arguments (as in standard planning
+benchmarks), so $\psi_{\max}$ and $\omega_{\max}$ are constants independent of
+the plan length and the number of objects in the problem.}
 
 % We describe the algorithm which generates the set of plannable states. 
 % The agent accumulates the set of preconditions $\Psi$ and effects $\Omega$ of all known operators, using the  pre-novelty domain knowledge. Using that, it generates a set of plannable states $\mathcal{S}_r$, which contains: 1) the states that satisfy the effects  $\omega_{o_i}$ of the failed operator $o_i$ and 2) the states that satisfy the effects of all subsequent operators $\hat{o}\in\hat{\mathcal{O}}$ in the plan $\mathcal{P}$ (($d(\tilde{s}) \supseteq \omega_{\hat{o}}) \forall \hat{o} \in \hat{\mathcal{O}} $), where the preconditions of $\hat{o}$ contain the effects of $o$ ($\psi_{\hat{o}} \supseteq \omega_o$)

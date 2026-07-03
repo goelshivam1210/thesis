@@ -1,0 +1,41 @@
+\begin{figure}[t]
+    \centering
+    \begin{tikzpicture}
+    \begin{axis}[
+        ybar=2pt,
+        bar width=14pt,
+        width=\textwidth, height=8.5cm,
+        enlarge x limits=0.18,
+        ymode=log,
+        log origin=infty,
+        ymin=10000, ymax=2000000,
+        ylabel={$T_{\text{adapt}}$ (time steps, log scale)},
+        symbolic x coords={Axe, Chest, Trader, Fence, Fire},
+        xtick={Axe, Chest, Trader, Fence, Fire},
+        legend style={at={(0.5,1.02)}, anchor=south, legend columns=2, font=\small, draw=none},
+        error bars/y dir=both, error bars/y explicit,
+        tick label style={font=\small},
+        label style={font=\small},
+    ]
+    % RapidLearn+ (PPO+ICM)
+    \addplot+[draw=red!60!black, fill=red!25] coordinates {
+        (Axe,71040) +- (0,17413) (Trader,102720) +- (0,20724)
+        (Fence,69120) +- (0,15657) (Fire,263520) +- (0,81979) };
+    % RapidLearn (PPO)
+    \addplot+[draw=orange!70!black, fill=orange!30] coordinates {
+        (Axe,68160) +- (0,17934) (Trader,96480) +- (0,21191)
+        (Fence,66400) +- (0,20999) (Fire,252000) +- (0,49663) };
+    % Transfer RL (PPO)+ICM
+    \addplot+[draw=blue!60!black, fill=blue!25] coordinates {
+        (Axe,169440) +- (0,97949) (Chest,24000) +- (0,0) (Trader,227040) +- (0,112120)
+        (Fence,854400) +- (0,52974) (Fire,372960) +- (0,198096) };
+    % Transfer RL (PPO)
+    \addplot+[draw=teal!60!black, fill=teal!25] coordinates {
+        (Axe,114240) +- (0,19651) (Chest,24000) +- (0,0) (Trader,350880) +- (0,237039)
+        (Fence,701760) +- (0,100589) (Fire,127200) +- (0,37932) };
+    \legend{RapidLearn$^{+}$(PPO+ICM), RapidLearn (PPO), Transfer RL (PPO)+ICM, Transfer RL (PPO)}
+    \end{axis}
+    \end{tikzpicture}
+    \caption{Time to adapt ($T_{\text{adapt}}$, lower is better) across novelty scenarios, shown on a logarithmic scale; error bars denote one standard deviation over 10 seeds. Hybrid agents (RapidLearn, RapidLearn$^{+}$) adapt up to an order of magnitude faster than the Transfer RL baselines, most dramatically under the fence novelty. The Chest novelty was detected only by the Transfer RL agents (the hybrid agents' plans never failed, so no adaptation was triggered), and the Fire novelty is the exception where Transfer RL~(PPO) adapts quickly. Full numerical values, including the $\Delta t$ metric, are reported in \cref{tab:ng_efficiency}.}
+    \label{fig:ng_tadapt}
+\end{figure}

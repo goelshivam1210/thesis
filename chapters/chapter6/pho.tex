@@ -92,7 +92,9 @@ The descriptor $z$ approximates the breakaway friction force required to initiat
 After estimating $z$, the remaining state components are computed at each control step from proprioceptive measurements. The object centroid is recovered from the known contact offset, and geometric errors (lateral deviation, heading error) and kinematic quantities (velocities, angular velocity) are computed relative to the reference path.
 \rev{
 \paragraph{Complexity.}
-Let $N$ be the maximum number of probing steps and $w$ be the window size. The
+Let $N$ be the maximum number of probing steps and $w$ be the window size.
+Assume the sliding window is maintained in a fixed-size buffer so that appending
+a sample and evicting the oldest are $O(1)$ operations. The
 algorithm performs at most $N$ probing iterations. In each iteration, it updates
 the force estimate, maintains a sliding window of at most $w$ samples, and
 computes the window mean. If the mean is computed directly, each iteration costs
