@@ -1,20 +1,20 @@
 \section{Problem Formulation}
 \label{sec:ipt}
 
-This section extends the hybrid planning--learning framework developed in \cref{sec:hybrid} to formalize the problem of adaptation under novelty. The hybrid system $\Hybrid = \langle \PlanningTask, M, \Abstraction, \Executors \rangle$ introduced in \cref{sec:hybrid} connects symbolic planning over operators with subsymbolic execution through executors, but treats the operator--executor correspondence as given. In open-world settings, this correspondence can break: novelty may render an executor invalid, creating a gap between what the symbolic model prescribes and what the agent can actually execute. We formalize this gap through the concept of an \emph{integrated planning task} (IPT) and define the \emph{executor discovery problem} as the core challenge of adaptation.
+This section extends the integrated planning task (IPT) formalism developed in \cref{sec:hybrid} to characterize adaptation under novelty. The IPT $\IPT = \langle \PlanningTask, M, \Abstraction, e \rangle$ couples symbolic planning with subsymbolic execution through the detector $\Abstraction$ and the executor mapping $e$. In open-world settings, this correspondence can break: novelty may render an executor invalid, creating a gap between what the symbolic model prescribes and what the agent can actually execute. We extend the operator--executor accuracy conditions from \cref{sec:hybrid} and define the \emph{executor discovery problem} as the core challenge of adaptation when executors fail under obstructive novelty.
 
 
 \subsection{Executors}
 \label{sec:executors}
 
-\Cref{sec:hybrid,sec:rl} introduced executors as the mechanism connecting symbolic operators to environment interaction, defining each executor as a triplet $\Executor_\Operator = \langle I_\Operator, \Policy_\Operator, \beta_\Operator \rangle$ of initiation set, policy, and termination condition. We now provide a formal definition that establishes the notation used throughout this chapter.
+\Cref{sec:hybrid,sec:rl} introduced executors as the mechanism connecting symbolic operators to environment interaction. We restate the definition here to establish the notation used throughout this chapter.
 
 \begin{definition}[Executor]
 \label{def:executor}
 An executor $\Executor = \langle I_{\Executor}, \Policy_{\Executor}, \beta_{\Executor} \rangle$ consists of:
 \begin{itemize}[leftmargin=*]
     \item An \emph{initiation set} $I_{\Executor} \subseteq \States$, the set of environment states in which the executor can be initiated.
-    \item A \emph{policy} $\Policy_{\Executor}(a \mid s)$, which defines a probability distribution over actions $a \in \Actions$ given the current state $s \in \States$.
+    \item An \emph{intra-executor policy} $\Policy_{\Executor}(a \mid s_0, s)$, which defines a probability distribution over actions $a \in \Actions$ given initiation state $s_0 \in \States$ and current state $s \in \States$.
     \item A \emph{termination condition} $\beta_{\Executor} : \States \times \States \rightarrow \{0, 1\}$, where $\beta_{\Executor}(s_0, s) = 1$ if the executor terminates in state $s$ given that it was initiated in state $s_0$, and $0$ otherwise.
 \end{itemize}
 \end{definition}
@@ -24,21 +24,12 @@ Let $\Executors = \{\Executor_1, \Executor_2, \ldots\}$ denote the set of all av
 \subsection{Integrated Planning Task}
 \label{sec:ipt_def}
 
-To connect symbolic planning with subsymbolic execution, we define an integrated planning task that specifies explicit mappings between symbolic operators and their execution in the environment~\cite{sarathy2021spotter}.
-
 \begin{definition}[Integrated Planning Task]
 \label{def:ipt}
-An Integrated Planning Task (IPT) is a tuple $\IPT = \langle \PlanningTask, M, \Abstraction, e \rangle$, where:
-\begin{itemize}[leftmargin=*]
-    \item $\PlanningTask = \langle \PlanningDomain, \SymState_0, \Goal \rangle$ is a symbolic planning task as defined in \cref{sec:symbolic_planning},
-    \item $M = \langle \States, \Actions, \Transition, \Reward, \Discount \rangle$ is a Markov decision process modeling the environment (\cref{sec:rl}),
-    \item $\Abstraction : \States \rightarrow \SymStates$ is an abstraction function mapping environment states to symbolic states, and
-    \item $e : \Operators \rightarrow \Executors$ is an \emph{executor mapping} that assigns each symbolic operator to an executor.
-\end{itemize}
+An integrated planning task (IPT) is a tuple $\IPT = \langle \PlanningTask, M, \Abstraction, e \rangle$ as defined in \cref{sec:hybrid}, where $\PlanningTask = \langle \PlanningDomain, \SymState_0, \Goal \rangle$ is a symbolic planning task (\cref{sec:symbolic_planning}), $M = \langle \States, \Actions, \Transition, \Reward, \Discount \rangle$ is a Markov decision process (\cref{sec:rl}), $\Abstraction : \States \rightarrow \SymStates$ is a detector mapping subsymbolic states to symbolic states, and $e : \Operators \rightarrow \Executors$ is an executor mapping.
 \end{definition}
 
-
-The IPT extends the hybrid system $\Hybrid = \langle \PlanningTask, M, \Abstraction, \Executors \rangle$ from \cref{sec:hybrid} by making the operator--executor correspondence an explicit, first-class component through the executor mapping $e$. In the hybrid system, each operator $\Operator$ is associated with an executor $\Executor_\Operator$; the IPT formalizes this association as a function and specifies the consistency requirements it must satisfy.
+An IPT is well-formed when each $e(\Operator)$ is accurate to $\Operator$ as defined in \cref{sec:hybrid}. The termination condition is extended below for open-world execution.
 
 \paragraph{Consistency between operators and executors.}
 For an IPT to function correctly, each executor must be consistent with the symbolic specification of its corresponding operator (\cref{sec:symbolic_planning}). Let $\Operator \in \Operators$ have precondition literal set $\Pre_{\Operator}$ and effect literal set $\Eff_{\Operator}$. The executor $e(\Operator)$ must satisfy:
@@ -70,20 +61,18 @@ A \emph{planning solution} to an IPT is a plan $\Plan = [\Operator_1, \ldots, \O
 \subsection{The Executor Discovery Problem}
 \label{sec:executor_discovery}
 
-In closed-world settings, every operator has a valid executor, and a plannable IPT is also solvable. In open-world environments, novelty can break this correspondence: an executor may fail because the environment dynamics no longer match the operator’s modeled effects. We call the resulting situation a \emph{Stretch-IPT}, reflecting the idea that the agent is being stretched beyond the capabilities of its current executor repertoire---the task remains solvable in the environment, but the agent's existing knowledge cannot reach the solution.
+In closed-world settings, every operator has a valid executor, and a plannable IPT is also solvable (\cref{sec:hybrid}). In open-world environments, novelty can break this correspondence: an executor may fail because the environment dynamics no longer match the operator's modeled effects. When operator--executor correspondence breaks while the symbolic plan remains valid, the IPT remains plannable but is no longer solvable (\cref{sec:novelty_hybrid,def:obstructive}).
 
 \begin{definition}[Stretch-IPT]
 \label{def:stretch_ipt}
-A Stretch-IPT $\tilde{\IPT}$ is an IPT for which a solution exists in the environment, but no planning solution exists under the agent’s current symbolic model.
+A \emph{stretch-IPT} $\tilde{\IPT}$ is an IPT $\IPT = \langle \PlanningTask', M', \Abstraction, e \rangle$ whose planning task $\PlanningTask'$ incorporates novelty, for which a planning solution exists but the current executor mapping $e$ does not yield an execution solution~\citep{goel2022rapidlearn}.
 \end{definition}
 
-A Stretch-IPT arises when novelty renders the agent’s domain model incomplete. The planner may still generate a plan using existing operators, but execution fails because one or more executors do not produce states satisfying the corresponding operator effects. The key observation is that the task remains solvable; the failure arises from missing or invalid executors.
-
-Using the novelty formalism from \cref{sec:novelty}, a novelty introduces elements not captured by the current model. When an operator $\Operator_i$ fails during execution—i.e., $e(\Operator_i)$ does not produce a state satisfying $\Eff_{\Operator_i}$—the agent faces a Stretch-IPT.
+Using the novelty formalism from \cref{sec:novelty}, a novelty introduces elements not captured by the current model. When an operator $\Operator_i$ fails during execution---that is, $e(\Operator_i)$ does not produce a state satisfying $\Eff_{\Operator_i}$---the agent faces a stretch-IPT and must discover a new executor for $\Operator_i$ while preserving the existing symbolic plan structure.
 
 \begin{definition}[Executor Discovery Problem]
 \label{def:edp}
-Given a Stretch-IPT $\tilde{\IPT} = \langle \PlanningTask', M', \Abstraction, e' \rangle$ with updated planning task $\PlanningTask' = \langle \PlanningDomain', \SymState_0', \Goal \rangle$, where $\PlanningDomain' = \langle \Fluents \cup \Fluents', \Operators \cup \Operators' \rangle$, and failed operators $\{\Operator_1, \ldots, \Operator_m\}$, construct new executors $\{\Executor'_1, \ldots, \Executor'_m\}$ such that
+Given a stretch-IPT $\tilde{\IPT} = \langle \PlanningTask', M', \Abstraction, e' \rangle$ with $\PlanningTask' = \langle \PlanningDomain', \SymState_0', \Goal \rangle$, where $\PlanningDomain' = \langle \Fluents \cup \Fluents', \Operators \cup \Operators' \rangle$, and failed operators $\{\Operator_1, \ldots, \Operator_m\}$, construct new executors $\{\Executor'_1, \ldots, \Executor'_m\}$ such that
 \[
 e'(\Operator_i) = \Executor'_i
 \]

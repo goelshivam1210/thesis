@@ -1,0 +1,52 @@
+\begin{figure}[t]
+    \centering
+    \begin{tikzpicture}[
+        >=Stealth,
+        inbox/.style={
+            rectangle, rounded corners=3pt, draw=blue!60!black, fill=blue!8,
+            minimum width=1.9cm, minimum height=0.7cm,
+            font=\small, align=center, thick
+        },
+        planner/.style={
+            rectangle, rounded corners=3pt, draw=blue!60!black, fill=blue!14,
+            minimum width=5.0cm, minimum height=0.85cm,
+            font=\small, align=center, thick
+        },
+        symstate/.style={
+            circle, draw=blue!60!black, fill=blue!8,
+            minimum size=0.8cm, font=\footnotesize, thick
+        },
+        opnode/.style={font=\scriptsize, blue!60!black},
+        planflow/.style={->, thick, blue!50!black},
+        notelabel/.style={font=\scriptsize\itshape, gray!70!black, align=center},
+    ]
+
+    % Inputs
+    \node[inbox] (dom)  at (-2.4, 1.7) {Domain\\[-2pt]{\scriptsize $\PlanningDomain=\langle\Fluents,\Operators\rangle$}};
+    \node[inbox] (init) at (0.0, 1.7) {Init\\[-2pt]{\scriptsize $\SymState_0$}};
+    \node[inbox] (goal) at (2.4, 1.7) {Goal\\[-2pt]{\scriptsize $\Goal$}};
+
+    % Planner
+    \node[planner] (plan) at (0.0, 0.3) {Planner\\[-1pt]{\scriptsize heuristic search}};
+
+    \draw[planflow] (dom.south)  -- (dom.south  |- plan.north);
+    \draw[planflow] (init.south) -- (init.south |- plan.north);
+    \draw[planflow] (goal.south) -- (goal.south |- plan.north);
+
+    % Plan output (symbolic state chain)
+    \node[symstate] (p0) at (-2.4, -1.35) {$\SymState_0$};
+    \node[symstate] (p1) at (0.0, -1.35) {$\SymState_1$};
+    \node[symstate] (p2) at (2.4, -1.35) {$\Goal$};
+
+    \draw[planflow] (plan.south) -- (0.0, -0.85)
+        node[midway, right=1pt, font=\scriptsize, blue!60!black] {plan $\Plan$};
+    \draw[planflow] (p0) -- (p1) node[midway, above, opnode] {$\Operator_1$};
+    \draw[planflow] (p1) -- (p2) node[midway, above, opnode] {$\Operator_2$};
+
+    \node[notelabel] at (0.0, -2.4)
+        {Deliberative: search a known model for a\\ sequence of operators that reaches the goal};
+
+    \end{tikzpicture}
+    \caption[Symbolic planning]{Symbolic planning. Given a domain model $\PlanningDomain=\langle\Fluents,\Operators\rangle$, an initial symbolic state $\SymState_0$, and a goal condition $\Goal$, a planner searches for a plan $\Plan = [\Operator_1, \Operator_2, \dots]$---a sequence of operators that transforms $\SymState_0$ into a state satisfying $\Goal$. Reasoning is deliberative and model-based, operating over discrete symbolic states $\SymState_i \in \SymStates$.}
+    \label{fig:symbolic_planning}
+\end{figure}

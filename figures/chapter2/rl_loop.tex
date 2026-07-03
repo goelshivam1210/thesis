@@ -1,0 +1,36 @@
+\begin{figure}[t]
+    \centering
+    \begin{tikzpicture}[
+        >=Stealth,
+        agentbox/.style={
+            rectangle, rounded corners=3pt, draw=teal!70!black, fill=teal!10,
+            minimum width=3.4cm, minimum height=1.0cm,
+            font=\small, align=center, thick
+        },
+        envbox/.style={
+            rectangle, rounded corners=3pt, draw=teal!70!black, fill=teal!10,
+            minimum width=3.4cm, minimum height=1.0cm,
+            font=\small, align=center, thick
+        },
+        rlflow/.style={->, thick, teal!55!black},
+        notelabel/.style={font=\scriptsize\itshape, gray!70!black, align=center},
+    ]
+
+    \node[agentbox] (agent) at (0.0, 1.3) {Agent\\[-2pt]{\scriptsize policy $\Policy_\theta(a\mid s)$}};
+    \node[envbox]   (env)   at (0.0, -1.3) {Environment\\[-2pt]{\scriptsize MDP $\langle\States,\Actions,\Transition,\Reward,\Discount\rangle$}};
+
+    % Action (down, right side)
+    \draw[rlflow] (agent.east) to[bend left=55]
+        node[midway, right=2pt, font=\scriptsize, teal!55!black] {action $a_t$} (env.east);
+    % State + reward (up, left side)
+    \draw[rlflow] (env.west) to[bend left=55]
+        node[midway, left=2pt, font=\scriptsize, teal!55!black, align=center]
+        {state $s_{t+1}$\\ reward $r_{t+1}$} (agent.west);
+
+    \node[notelabel] at (0.0, -2.55)
+        {Trial-and-error: learn a policy that\\ maximizes expected return $J(\Policy)$};
+
+    \end{tikzpicture}
+    \caption[The reinforcement learning interaction loop]{The reinforcement learning interaction loop. At each time step the agent observes a state, selects an action $a_t$ according to its policy $\Policy_\theta$, and receives from the environment a next state $s_{t+1}$ and a reward $r_{t+1}$. Through repeated trial-and-error interaction with the MDP $\langle\States,\Actions,\Transition,\Reward,\Discount\rangle$, the agent learns a policy that maximizes the expected return $J(\Policy)$.}
+    \label{fig:rl_loop}
+\end{figure}

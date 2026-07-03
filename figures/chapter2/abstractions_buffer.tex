@@ -27,7 +27,7 @@
         flowarrow/.style={->, thick, >=Stealth},
         % --- Labels ---
         collabel/.style={font=\small\bfseries, gray!60!black},
-        chaplabel/.style={font=\scriptsize\itshape, gray!45},
+        chaplabel/.style={font=\scriptsize\itshape, gray!80!black},
         % --- Legend ---
         legendbox/.style={minimum width=0.45cm, minimum height=0.3cm, rounded corners=2pt, thick, inner sep=0pt},
         legendlabel/.style={font=\scriptsize, anchor=west, inner sep=0pt},
@@ -54,7 +54,7 @@
     \draw[flowarrow, red!50!black]   (n2.east) -- (aa.west |- n2);
     \draw[flowarrow, purple!50!black] (aa.east) -- (ad.west);
 
-    \node[chaplabel] at (4.8, -1.6) {Chapter~4};
+    \node[chaplabel] at (4.8, -1.6) {Chapter~\ref{ch:rapid_learn}};
 
     % =========================================================
     %  Separator
@@ -76,7 +76,7 @@
     \draw[flowarrow, blue!50!black]   (v2.east) -- (ia.west |- v2);
     \draw[flowarrow, purple!50!black] (ia.east) -- (ge.west);
 
-    \node[chaplabel] at (4.8, -4.3) {Chapter~5};
+    \node[chaplabel] at (4.8, -4.3) {Chapter~\ref{ch:generalization}};
 
     % =========================================================
     %  Legend (centered, single row)
@@ -96,6 +96,6 @@
     \node[legendlabel] at (3.5, -5.3) {Capability};
 
     \end{tikzpicture}
-    \caption[Structured abstractions mediating agent responses to novelty and variation]{The role of structured abstractions in mediating the agent's response to novelty and variation. \textbf{Top:} When novelty causes changed dynamics or execution failures, action abstractions (the operator--executor decomposition) enable failure localization and targeted learning, supporting efficient adaptation (Chapter~4). \textbf{Bottom:} When variation arises from different objects or embodiments, interaction abstractions (force-space representations) capture task-relevant physical invariants, supporting generalization without retraining (Chapter~5). In both cases, the abstraction structures the agent's response rather than requiring the agent to relearn from scratch.}
+    \caption[Structured abstractions mediating agent responses to novelty and variation]{The role of structured abstractions in mediating the agent's response to novelty and variation. \textbf{Top:} When novelty causes changed dynamics or execution failures, action abstractions (the operator--executor decomposition) enable failure localization and targeted learning, supporting efficient adaptation (Chapter~\ref{ch:rapid_learn}). \textbf{Bottom:} When variation arises from different objects or embodiments, interaction abstractions (force-space representations) capture task-relevant physical invariants, supporting generalization without retraining (Chapter~\ref{ch:generalization}). In both cases, the abstraction structures the agent's response rather than requiring the agent to relearn from scratch.}
     \label{fig:abstractions_buffer}
 \end{figure}

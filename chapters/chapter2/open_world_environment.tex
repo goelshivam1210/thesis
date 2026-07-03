@@ -50,7 +50,7 @@ Now suppose the environment changes while the agent is performing its task. A ne
 \label{sec:state_representations}
 
 % The distinction between what exists in the environment and what the agent can represent is central to the framework.
- An environment state $e \in \EnvStates$ specifies the complete configuration of the world at a given time, including all objects, their properties, spatial arrangements, and dynamic relationships. The agent, however, does not operate over environment states directly. Instead, it constructs representations of the world using its available representational resources.
+An environment state $e \in \EnvStates$ specifies the complete configuration of the world at a given time, including all objects, their properties, spatial arrangements, and dynamic relationships. The agent, however, does not operate over environment states directly. Instead, it constructs representations of the world using its available representational resources.
 
 At the symbolic level, the agent uses a formal language $\Language$, consisting of predicates, variables, constants, and possibly functions, to describe aspects of the environment. A symbolic state description $\SymState \in \SymStates$ is a partial description of an environment state in this language. In planning domains, this description can be instantiated as a set of fluents $\Fluents$---state variables whose values may change over time---or as a set of grounded predicates that are used by the planner. When unlisted predicates are treated as false, this is a closed-world convention of the planning representation rather than a claim that the agent has complete knowledge of the environment.
 

@@ -65,14 +65,14 @@
     \node[levellabel, anchor=west] at (-5.0, -2.35) {Subsymbolic};
     \draw[gray!40, thin, densely dashed] (-5.0, -2.55) -- (5.6, -2.55);
 
-    % Environment states
-    \node[envstate] (e0) at (-3.2, -3.45) {$e_0$};
-    \node[envstate] (e1) at (-0.2, -3.45) {$e_1$};
-    \node[envstate] (e2) at (2.8, -3.45) {$e_2$};
+    % MDP states
+    \node[envstate] (e0) at (-3.2, -3.45) {$s_0$};
+    \node[envstate] (e1) at (-0.2, -3.45) {$s_1$};
+    \node[envstate] (e2) at (2.8, -3.45) {$s_2$};
 
     % Executors (positioned on the arrows)
-    \draw[exflow] (e0) -- (e1) node[midway, below=3pt, exnode] (x1) {$\Executor_{\Operator_1}$};
-    \draw[exflow] (e1) -- (e2) node[midway, below=3pt, exnode] (x2) {$\Executor_{\Operator_2}$};
+    \draw[exflow] (e0) -- (e1) node[midway, below=3pt, exnode] (x1) {$e(\Operator_1)$};
+    \draw[exflow] (e1) -- (e2) node[midway, below=3pt, exnode] (x2) {$e(\Operator_2)$};
 
     % ===== CORRESPONDENCE ARROWS =====
     \draw[corr] (o1.south west) -- (x1.north west)
@@ -93,6 +93,6 @@
     \node[legendlabel] at (2.2, -5.1) {Operator--executor pair};
 
     \end{tikzpicture}
-    \caption[Agent--environment interaction in the hybrid framework]{The two-level structure of the hybrid planning and learning framework. \textbf{Top (symbolic):} The agent generates a plan $\Plan$ as a sequence of operators $\Operator_i$ transitioning between symbolic states $\SymState$. \textbf{Bottom (subsymbolic):} The environment consists of concrete states $e$, and transitions are realized by executors $\Executor_{\Operator_i}$---policies that implement the corresponding operators. The abstraction function $\Abstraction : \States \to \SymStates$ maps environment states to symbolic descriptions. Each operator--executor pair (dashed orange) links a symbolic action to its realization in the environment. Novelty manifests when the executor for an operator no longer achieves the intended symbolic transition.}
+    \caption[Agent--environment interaction in the hybrid framework]{The two-level structure of the hybrid planning and learning framework. \textbf{Top (symbolic):} The agent generates a plan $\Plan$ as a sequence of operators $\Operator_i$ transitioning between symbolic states $\SymState_i \in \SymStates$. \textbf{Bottom (subsymbolic):} Execution occurs in MDP states $s_i \in \States$, and transitions are realized by executors $e(\Operator_i)$---policies that implement the corresponding operators. The abstraction function $\Abstraction : \States \to \SymStates$ maps MDP states to symbolic descriptions. Each operator--executor pair (dashed orange) links a symbolic action to its realization in the MDP. Novelty manifests when $e(\Operator_i)$ no longer achieves the intended symbolic transition despite a valid plan.}
     \label{fig:agent_environment}
 \end{figure}
