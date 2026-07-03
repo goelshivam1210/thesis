@@ -1,0 +1,31 @@
+\begin{table}[htbp]
+    \centering
+    \footnotesize
+    \begin{tabular}{p{0.13\linewidth} p{0.4\linewidth} p{0.38\linewidth}}
+    \toprule
+    \textbf{Category}  & \textbf{Description} & \textbf{Example}\\
+    \midrule
+    \emph{Object} & A new entity in the environment that does not have goal-oriented behavior. & A new block type `fence' is added that obstructs access to trees. \\
+    \midrule
+    \emph{Attribute} & Changes to the properties of previously-known entities in the environment. & A new tree variant `birch' is added that cannot produce rubber with a tree tap. \\
+    \midrule
+    \emph{Representation} & Changes to how previously-known entities are specified in sensory percepts. & Item names are partially scrambled. \\
+    \midrule
+    \emph{Actor} & A new entity in the environment that does have goal-oriented behavior. & A new entity `thief' is added that steals items from the inventory. \\
+    \midrule
+    \emph{Action} & A new goal-oriented behavior of a previously-known environmental agent. & The \textit{pogoist} agent now trades items instead of the \textit{traders}. \\
+    \midrule
+    \emph{Relation} & A new static property of the relationships between multiple entities. & \textit{Traders} now spawn in different areas of the arena. \\
+    \midrule
+    \emph{Interaction} & A new dynamic property of behaviors or actions that impacts multiple entities. & \textit{Traders} are now `busy' sometimes when the player interacts with them. \\
+    \midrule
+    \emph{Environment} & A new element of an open-world space that may impact the entire task space and is independent of a specific entity. & The new element `wind' is present in various regions of the arena and alters player movement. \\
+    \midrule
+    \emph{Goal} & A new objective of goal-oriented behavior for an environmental actor. & The \textit{pogoist} changes the resources it is seeking. \\
+    \midrule
+    \emph{Event} & A new state change or series of state changes that are not each the result of volitional action by an agent/actor. & Trees rot and regrow over time. \\
+    \bottomrule
+    \end{tabular}
+    \caption{\rev{Descriptions of the ten novelty categories with examples, used for the comprehensive evaluation in Polycraft. This categorization is orthogonal to the four-way functional novelty taxonomy of \cref{sec:novelty_typology}; a novelty may belong to one or more of these categories.}}
+    \label{tab:novelty_category}
+\end{table}

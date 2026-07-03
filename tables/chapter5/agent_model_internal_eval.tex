@@ -1,0 +1,17 @@
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{l c c c}
+\toprule
+\multicolumn{2}{c}{\textbf{Tournament-wide}} & \multicolumn{2}{c}{\textbf{Episodic}} \\
+\cmidrule(lr){1-2} \cmidrule(lr){3-4}
+\textbf{Metric} & \textbf{Value} & \textbf{Metric} & \textbf{Value} \\
+\midrule
+CDT\%                    & 64.71\% & F1        & 0.728 \\
+$\text{FN}_\text{CDT}$   & 0.36    & Precision & 0.997 \\
+FP\%                     & 2.94    & Recall    & 0.573 \\
+\bottomrule
+\end{tabular}
+\caption{\rev{Tournament-wide (left) and episodic (right) agent model evaluations using \emph{only} detections from the agent model on actor-related novelties.}}
+\label{tab:agent_model_internal_eval}
+\end{table}

@@ -72,6 +72,8 @@ where the likelihood $p(\xi \mid J)$ models the trajectory as linear motion (pri
 
 % NEW BIB ENTRY NEEDED:
 \input{tables/chapter6/flex_results}
+\input{figures/chapter6/flex_results_bars}
+\input{figures/chapter6/flex_walltime_bars}
 
 
 \subsection{Robot Execution}
@@ -87,6 +89,7 @@ FLEX was evaluated on four articulated object types (cabinets, trashcans, microw
 
 \paragraph{Baselines.} Three baselines were compared: (1) an end-to-end RL baseline using TD3 with a hand-crafted dense reward, (2) CIPS~\citep{rosen2022role}, a hybrid RL and planning method that reduces the task horizon by planning up to the point of object contact, and (3) GAMMA~\citep{yu2024gamma}, a pre-trained visual perception model that infers joint configurations and grasp poses from partial point clouds. All RL baselines were trained on the same objects and ground-truth observations as FLEX.
 \input{tables/chapter6/flex_transfer}
+\input{figures/chapter6/flex_transfer_bars}
 \paragraph{Training efficiency.} FLEX converges substantially faster than baselines. For prismatic objects, FLEX converges in approximately $0.4 \pm 0.26$~million time steps (0.36~hours wall time), compared to $\geq$10~million time steps ($\geq$24~hours) for end-to-end RL and 3~million time steps for CIPS. This advantage arises from two sources: eliminating robot dynamics from the simulation accelerates each time step, and the force-space action representation reduces unnecessary exploration.
 
 \paragraph{Generalization to unseen objects.} \Cref{tab:flex_results} reports success rates on 13 unseen objects evaluated using the Panda robot. FLEX achieves success rates of 91\% (cabinets), 88\% (trashcans), 67\% (microwaves), and 64\% (dishwashers), consistently outperforming all baselines. The end-to-end RL baseline achieves negligible success ($\leq$1\%) even after 10~million training steps, highlighting the difficulty of the task in robot-centric action spaces. CIPS and GAMMA achieve moderate performance but with substantially higher variance.

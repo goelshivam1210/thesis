@@ -1,0 +1,16 @@
+\begin{table}[htbp]
+\centering
+\footnotesize
+\begin{tabular}{l c c c c c}
+\toprule
+\textbf{Agent} & $\text{FN}_\text{CDT}$ $\downarrow$ & CDT\% $\uparrow$ & FP\% $\downarrow$ & NRP\% $\uparrow$ & GA\% $\uparrow$ \\
+\midrule
+Base                  & 0.41 & 83.8 & 3.0 & 76.4 & 67.7 \\
+Base+Agent Model      & 0.43 & 84.6 & 6.7 & 75.4 & 67.0 \\
+Base+Executor Learner & 0.57 & 85.9 & 2.5 & 76.5 & 69.0 \\
+Base+AM+EL            & 0.42 & 88.1 & 1.7 & 72.6 & 65.0 \\
+\bottomrule
+\end{tabular}
+\caption{\rev{Systemic evaluation results across agent configurations on the set of \emph{known} novelties.}}
+\label{tab:known_systemic_results}
+\end{table}
