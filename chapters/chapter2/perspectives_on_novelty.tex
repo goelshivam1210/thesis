@@ -1,0 +1,53 @@
+% ============================================================
+% SECTION for the NEW Chapter 2 (Related Work)
+% Placement: first section of the chapter.
+%   \input{chapters/chapter2/perspectives_on_novelty}
+%
+% Revised from the earlier draft:
+%  - Toned down: no longer bends every paragraph back to the
+%    "novelty as mismatch / structured abstraction" framing.
+%    Reads as a genuine interdisciplinary review with light
+%    forward links only.
+%  - Stronger, verified citations for the novelty/surprise and
+%    schema/predictive-coding points (Barto et al. 2013;
+%    Quent et al. 2021; Sommer et al. 2022).
+%  - Because Related Work now precedes Foundations, novelty is
+%    introduced descriptively here; the formal treatment is
+%    forward-referenced to Chapter 3 (\cref{ch:foundations}).
+%
+% All citations verified against primary sources. New BibTeX
+% keys are in bib_additions_v2.bib.
+% ============================================================
+
+\section{Perspectives on Novelty and Adaptation Across Disciplines}
+\label{sec:novelty_perspectives}
+
+% The problem of acting competently when the world departs from expectation is not unique to artificial intelligence.
+Any adaptive system that builds internal models of its environment---a foraging animal, a developing child, a scientist revising a theory---must eventually confront experience that its models did not anticipate. 
+
+Psychology, neuroscience, and cognitive science have studied this confrontation for over a century, and their findings offer useful conceptual grounding for the computational problem this dissertation addresses. 
+
+This section reviews that work; the following section turns to how artificial intelligence has formalized learning and adaptation under change. Throughout, we use \emph{novelty} in an informal sense---experience that violates an agent's expectations---and defer the formal definition adopted in this dissertation to \cref{ch:foundations}.
+
+\subsection{Novelty in Psychology and Neuroscience}
+\label{sec:novelty_psychology}
+
+Psychologists have long treated novelty as a driver of behavior rather than a mere disturbance. \citet{berlyne1960conflict} identified novelty, surprise, and incongruity among the ``collative variables'' that arouse curiosity and elicit exploration: organisms preferentially attend to and investigate stimuli that deviate from expectation. A recurring theme in later work is that the terms \emph{novelty} and \emph{surprise}, though often used interchangeably, are distinct. \citet{barto2013novelty} draw the distinction sharply: novelty concerns whether a stimulus has been encountered before, whereas surprise concerns the violation of a learned prediction. The two can dissociate---a familiar stimulus in an unexpected context is surprising but not novel---and keeping them apart clarifies which internal mechanism a given behavior implicates. This distinction recurs, in different vocabulary, in the AI methods reviewed later in this chapter and in the taxonomy developed in \cref{ch:foundations}.
+
+At the level of mechanism, novel and unexpected events recruit distinctive neural responses. \citet{ranganath2003neural} review evidence that novelty is detected through interactions among the hippocampus and prefrontal and dopaminergic systems, which together orient attention toward the unexpected input and modulate the plasticity that encodes it. This picture is generalized by predictive-processing accounts of cognition, which hold that the brain continually predicts its sensory input and propagates \emph{prediction error}---the mismatch between expectation and observation---for further processing~\citep{clark2013predictive, friston2010free}. On this view, novelty is closely tied to prediction error, and adaptation is the ongoing effort to reduce it, either by revising internal models or by acting to bring the world into line with predictions.
+
+The relationship between novelty and memory is more nuanced than ``surprising things are better remembered.'' \citet{quent2021predictive} show, within a predictive-coding framework, that novelty can either enhance or impair memory depending on the type of prediction error involved, and that information congruent with an existing knowledge structure can also be encoded efficiently. This connects to a long tradition concerning how new information relates to prior structure. \citet{piaget1952origins} distinguished \emph{assimilation}, in which new experience is absorbed into an existing schema without changing it, from \emph{accommodation}, in which experience resists assimilation and the schema itself must be revised. Contemporary work gives this distinction a neural grounding: \citet{sommer2022assimilation} find that novel information consistent with an activated schema is assimilated and consolidated more efficiently than information that requires restructuring. The broader claim that flexible, human-like learning depends on structured, compositional models---rather than monolithic pattern recognition---has been argued in computational cognitive science~\citep{lake2017building}, and children in particular have been characterized as active experimenters who seek out evidence to revise their models of the world~\citep{gopnik2012scientific}.
+
+The assimilation--accommodation distinction is worth holding onto, because an analogous divide organizes the computational literature reviewed in the next section: some methods absorb change within a fixed model, while others must alter the model's structure. We return to this point in \cref{sec:drift_vs_novelty}.
+
+\subsection{Creative Problem Solving and Insight}
+\label{sec:novelty_cps}
+
+Detecting that the world has changed is only half of the problem; an agent must then produce behavior it has not produced before. The psychology of problem solving speaks directly to this. Gestalt psychologists observed that both humans and animals can resolve impasses by \emph{restructuring} a problem rather than searching harder within its current framing---K{\"o}hler's apes discovered new uses for familiar objects, stacking crates and joining sticks to reach otherwise inaccessible food~\citep{kohler1925mentality}. \citet{duncker1945problem} identified a central obstacle to such restructuring, \emph{functional fixedness}: the tendency to represent an object only in terms of its habitual function, which hides solutions that depend on using it differently. The lesson is representational---whether an impasse can be overcome often depends on how the problem is encoded, and progress may require changing the encoding. \citet{boden2004creative} frames the same idea at the level of conceptual spaces, distinguishing \emph{exploratory} creativity, which searches within a given representational space, from \emph{transformational} creativity, which alters the space itself.
+
+These ideas have begun to be operationalized in artificial agents. \citet{gizzi2022cps} survey computational approaches to creative problem solving, framing it as the situation in which an agent's existing concepts are insufficient for a task, so that new concepts must be generated rather than merely recombined. Related work develops mechanisms for discovering new actions by segmenting and recombining known behaviors when an agent's repertoire proves inadequate~\citep{gizzi2019creative}. This line of research is a natural point of contact for the adaptation methods developed in \cref{ch:rapid_learn}, which address a specific instance of the same challenge: recovering from an execution failure by acquiring a behavior the agent did not previously have.
+
+\subsection{Summary}
+\label{sec:novelty_perspectives_summary}
+
+Across these literatures, two threads are worth carrying forward. First, novelty is consistently treated as \emph{relational}---a mismatch between an agent's expectations and its experience---rather than as an intrinsic property of the world. Second, adaptive systems respond to such mismatch in two broad modes: absorbing new experience within existing structure when possible, and restructuring that representation when necessary. These are recurring findings across disciplines, not this dissertation's inventions. What the remainder of this chapter examines is how artificial intelligence has formalized learning under change, where a strikingly similar divide emerges---and where, as we argue next, a gap remains between the kinds of change most methods handle and the kind that open-world environments impose.
