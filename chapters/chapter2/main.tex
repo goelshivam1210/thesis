@@ -1,48 +1,27 @@
 % ============================================================
-% NEW chapters/chapter2/main.tex  --  RELATED WORK
-% (was chapters/chapter3; refurbished and reordered)
-%
-% The chapter now opens with the interdisciplinary and CS/AI
-% literature (new/rewritten sections), then moves into the
-% open-world autonomy subfield (your existing sections, moved
-% over from the old chapter 3), foundation models, and a
-% positioning/summary close.
-%
-% IMPORTANT dependency: because Related Work now precedes
-% Foundations, any \cref to Foundations labels
-% (sec:novelty, sec:hybrid, sec:abstractions, IPT notation,
-% operator/executor definitions) inside the moved sections
-% (sensing / planning_learning / execution_recovery /
-% foundation_models / integration) must become FORWARD
-% references or be rephrased descriptively. Search those files
-% for \cref{sec:novelty}, \cref{sec:hybrid}, \cref{sec:abstractions},
-% \Abstraction, \Operator, \Executor, IPT, and adjust. The new
-% sections above are already written this way.
+% Chapter 2 — Related Work
+% Six-section, thesis-question structure with worked examples.
+% Retired: sensing.tex / planning_learning.tex /
+% execution_recovery.tex / integration.tex / summary.tex /
+% open_world_landscape.tex / computational_open_world.tex
 % ============================================================
 
-\chapter{Related Work and Perspectives on Open-World Autonomy}
+\chapter{Related Work: Novelty, Change, and Open-World Autonomy}
 \label{ch:related_work}
 \label{ch:perspectives}
 
-Autonomous agents that must operate outside controlled settings face a common difficulty: their models of the world are inevitably incomplete, and the world will, sooner or later, behave in ways those models did not anticipate. This dissertation develops methods for agents that remain effective under such conditions. This chapter situates that goal within the broader research landscape, spanning three levels. It begins with how novelty and adaptation have been understood across psychology, neuroscience, and cognitive science (\cref{sec:novelty_perspectives}), which provides conceptual grounding for the problem. It then reviews how artificial intelligence has formalized learning under change---reinforcement learning, continual and transfer learning, concept-drift adaptation, and intrinsic motivation---and draws the distinction between distributional change and structural novelty that motivates the dissertation (\cref{sec:computational_open_world}). Finally, it turns to the open-world autonomy subfield specifically, reviewing work on sensing, planning and learning, and execution and recovery (\cref{sec:open_world_sensing,sec:open_world_planning_learning,sec:open_world_execution_recovery}), the growing role of foundation models in reshaping the design space (\cref{sec:foundation_models}), and how the contributions of this dissertation relate to and complement these developments (\cref{sec:related_work_positioning}).
+Autonomous agents deployed outside controlled settings face a common difficulty: their world models are inevitably incomplete, and the world will eventually behave in ways those models did not anticipate. This dissertation develops methods for agents that remain effective under such conditions. This chapter situates that goal in the broader literature.
 
-The formal vocabulary used throughout the dissertation---the definition of novelty, the agent framework, and the notion of structured abstraction---is developed in \cref{ch:foundations}; here, related concepts are introduced descriptively and made precise there. The technical chapters (\cref{ch:benchmarks,ch:rapid_learn,ch:generalization}) additionally include focused related-work discussions specific to each contribution; this chapter provides the overarching context that ties them together.
+The chapter proceeds in five steps. It begins with accounts of novelty and adaptation in psychology, neuroscience, and cognitive science (\cref{sec:novelty_perspectives}). It then examines how artificial intelligence formalizes learning under change, emphasizing the distinctions between open-world and open-ended settings and between distributional drift and structural novelty (\cref{sec:landscape_of_change}). Next, it reviews how deployed agents respond to mismatch and where those responses fall short (\cref{sec:capabilities_and_gaps}), assesses foundation models as both a resource and a foil (\cref{sec:foundation_models}), and closes by positioning the dissertation's contributions against the field's current trajectory (\cref{sec:synthesis_positioning}).
 
-% --- Interdisciplinary and computational foundations (new/rewritten) ---
+Throughout, concrete examples distinguish changes that can be absorbed within an existing representation from changes that require the representation itself to be extended. The formal vocabulary---novelty, the agent framework, and structured abstraction---is developed in \cref{ch:foundations}; here, related concepts are introduced descriptively and made precise later. The technical chapters (\cref{ch:benchmarks,ch:rapid_learn,ch:generalization}) each include focused related-work discussions specific to their contributions; this chapter provides the overarching context.
+
 \input{chapters/chapter2/perspectives_on_novelty}
 
-\input{chapters/chapter2/computational_open_world}
+\input{chapters/chapter2/landscape_of_change}
 
-% --- Open-world autonomy subfield (moved from old chapter 3) ---
-\input{chapters/chapter2/sensing}
+\input{chapters/chapter2/capabilities_and_gaps}
 
-\input{chapters/chapter2/planning_learning}
-
-\input{chapters/chapter2/execution_recovery}
-
-% --- Foundation models and positioning (moved from old chapter 3) ---
 \input{chapters/chapter2/foundation_models}
 
-\input{chapters/chapter2/integration}     % consider retitling -> "Positioning" (sec:related_work_positioning)
-
-\input{chapters/chapter2/summary}
+\input{chapters/chapter2/synthesis_positioning}

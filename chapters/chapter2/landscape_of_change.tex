@@ -1,0 +1,51 @@
+% ============================================================
+% §2.2  The Landscape of Change in Learning Agents
+% ============================================================
+
+\section{Learning Under Change: Drift, Openness, and Novelty}
+\label{sec:landscape_of_change}
+\label{sec:computational_open_world}
+
+The previous section described two modes of adaptation: absorbing unexpected experience within existing structure, and restructuring that structure when absorption fails. Artificial intelligence has formalized learning under change in many ways, but much of this work operates in the first mode. It adjusts parameters within a representation whose basic vocabulary remains fixed.
+
+The problem targeted by this dissertation lies in the second mode. We begin with the stationarity assumption of standard reinforcement learning, then draw two distinctions made explicit in recent literature: open-world versus open-ended settings, and distributional drift versus structural novelty. We close with exploratory drives that push an agent toward novelty rather than merely responding to it.
+
+\subsection{Reinforcement Learning and the Stationarity Assumption}
+\label{sec:rl_stationarity}
+
+Reinforcement learning (RL) models an agent that learns to act by interacting with an environment, usually a Markov decision process with fixed state and action spaces, dynamics, and reward. Its strength is that it exploits regularity: a policy optimized against a stationary environment can be highly effective, and its guarantees rest on the assumption that deployment matches training. When that assumption holds, learned behavior succeeds. When it fails, performance can degrade sharply because the formulation does not anticipate that the environment itself might change.
+
+There is reason to expect this mismatch for any capable deployed agent. The \emph{big world hypothesis} holds that a realistic agent is vastly smaller than the world it inhabits, so it can never represent that world exactly and must rely on incomplete, approximate models~\citep{javed2024bigworld}. On this view, reaching the limits of one's model is not an exceptional condition to be engineered away; it is the normal case. The capacity to revise models is therefore central rather than peripheral.
+
+\subsection{Open-World Versus Open-Ended}
+\label{sec:openworld_vs_openended}
+
+Two research programs invoke ``openness'' but mean different things, and separating them sharpens the scope of this dissertation. \emph{Open-ended learning} concerns processes that \emph{generate} novelty over an unbounded horizon and grow a repertoire of skills. \citet{sigaud2023openended} propose that its defining property is exactly this: a process that keeps producing elements novel from an observer's perspective. A paradigm example is POET, which automatically invents an endless progression of increasingly challenging environments while co-optimizing the agents that solve them~\citep{sigaud2023openended}. The openness there is developmental and productive: the agent, or its environment generator, is the \emph{source} of new problems.
+
+\emph{Open-world autonomy}, the setting of this dissertation, is the complementary case. Novelty is \emph{imposed} by a world the agent did not design, and the agent must accommodate it to keep performing. The two programs share an observer-relative notion of novelty and both involve intrinsic motivation and abstraction. Indeed, \citet{sigaud2023openended} note that a leading open-ended framework requires each task to carry its own state and action spaces, which they equate with the necessity of state and action abstraction~\citep{konidaris2019necessity}, a point that connects directly to the abstraction thesis of \cref{ch:foundations}. But their aims differ: open-ended learning is about producing novelty; this dissertation is about surviving and exploiting novelty imposed from outside. We therefore treat open-ended generation as related work rather than as the central problem.
+
+\subsection{Distributional Drift Versus Structural Novelty}
+\label{sec:drift_vs_novelty}
+
+The second distinction is the intellectual core of the chapter. A large body of work addresses learning when conditions are not fixed, and much of it is described as ``novelty handling,'' but the \emph{kind} of change it assumes differs from what open worlds impose.
+
+\emph{Concept drift}, studied in the data-stream and supervised-learning communities, is change in the distribution generating an agent's data over a \emph{fixed} feature space $X$ and label space $Y$: formally, the joint distribution $P_t(X,Y)$ moves with time~\citep{widmer1996learning, gama2014survey}. A standard taxonomy separates \emph{real} drift, a change in $P(Y\mid X)$, from \emph{virtual} drift, a change in $P(X)$ alone~\citep{gama2014survey, lu2019concept}. \citet{gama2014survey} make the distinction concrete with spam filtering: shifting email content and presentation move the input distribution (virtual drift), whereas spammers adapting their messages to defeat the filter change the boundary between spam and legitimate mail (real drift). Crucially, in both cases the vocabulary is fixed. The categories ``spam'' and ``legitimate,'' and the space of email features, do not change; only the statistics over them do. Adaptation therefore means re-estimating or re-weighting a model whose structure is assumed to remain adequate.
+
+The same distinction appears in embodied settings. A mobile robot whose camera sees darker lighting, or whose wheels slip more often on a wet floor, may need to update perceptual or transition probabilities while retaining the same state variables, actions, and task model. A service robot that discovers a door now requires turning an unseen latch before pushing is in a different situation: the relevant precondition, object part, or action may be absent from its representation. In the first case, the existing vocabulary still describes the change; in the second, the agent may lack the vocabulary needed to state the problem.
+
+The same fixed-vocabulary assumption underlies continual and meta-reinforcement learning. Continual and lifelong learning were posed as research programs decades ago~\citep{ring1994continual, thrun1995lifelong}; the deep learning era sharpened attention to their central obstacle, \emph{catastrophic forgetting}, in which sequential training overwrites earlier competencies~\citep{parisi2019continual, hadsell2020embracing, wang2024comprehensive}. Methods such as elastic weight consolidation protect parameters important to prior tasks~\citep{kirkpatrick2017overcoming}.
+
+Continual RL extends these concerns to non-stationary MDPs and task streams, but, as its own reviews note, typically assumes gradual drift or tasks drawn from a common distribution~\citep{khetarpal2022continual}. Meta-RL goes further, learning \emph{how} to adapt so a new task can be solved from little experience, but still assumes that the new task is drawn from the same distribution seen at meta-training time~\citep{finn2017maml, yu2020metaworld}. Across these settings, state and action spaces are held fixed and adaptation adjusts parameters within them. In the vocabulary of \cref{sec:assimilation_accommodation}, this is assimilation: the model's structure is already adequate to describe the change.
+
+Open-world novelty need not respect this assumption. A previously unseen object type may appear, adding a category the agent has no variable for; an action may acquire a new precondition, changing the transition structure qualitatively rather than shifting a probability; the set of relevant entities, relations, or operators may expand. Such changes alter the support and structure of the agent's representation, not merely the distribution over it.
+
+Accommodating these changes requires \emph{extending} the representation---introducing a new symbol, entity, or skill---rather than re-estimating within it. This is accommodation rather than assimilation, and it is not what methods built for distributional change are designed to do. The axe novelty used in later chapters is illustrative: if trees can no longer be broken directly and instead require acquiring and using a tool, the failure is not merely that the old \texttt{break} executor has lower success probability. The agent must represent a new dependency among object, tool, and action, or learn a new executor that restores the operator's intended effect.
+
+Larger drift within a fixed representation remains a different problem from a change the representation cannot express. The cognitive-systems literature draws the same boundary from an independent direction: \citet{wray2025requirements} separate \emph{out-of-distribution} situations, which are quantitatively unusual but still within an agent's design scope, from \emph{out-of-design-scope} situations, which are qualitatively outside the assumptions under which the agent was built. They observe that most reinforcement-learning research targets the former. Their out-of-design-scope case is the structural novelty this dissertation targets.
+
+\subsection{Intrinsic Motivation and the Search for Novelty}
+\label{sec:intrinsic_motivation}
+
+A complementary line of work asks not how an agent responds to change, but what drives it to seek change out. Intrinsic-motivation and artificial-curiosity methods reward agents for prediction error, learning progress, or information gain, giving computational form to the psychological observations in \cref{sec:novelty_perspectives}~\citep{schmidhuber1991curious, oudeyer2007intrinsic, pathak2017curiosity}.
+
+These mechanisms are largely orthogonal to, and complementary with, the present work. This dissertation concerns what an agent should do once novelty has manifested as task-relevant failure; curiosity-style objectives are natural candidates for driving the exploration through which new behavior is discovered in \cref{ch:rapid_learn}. Robustness to such ``unknown unknowns'' has long been named a pillar of robust AI~\citep{dietterich2017steps}. The next section takes up that concern in the specific setting of deployed, embodied agents.
