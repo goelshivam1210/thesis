@@ -1,26 +1,44 @@
 % ============================================================
-% §2.5  Synthesis and Positioning
+% §2.6  Positioning
 % ============================================================
 
-\section{Where This Dissertation Fits}
+\section{Summary and Dissertation Positioning}
 \label{sec:synthesis_positioning}
+\label{sec:positioning}
 \label{sec:open_world_landscape}
 \label{sec:related_work_positioning}
 \label{sec:perspectives_integration}
 \label{sec:ch2_summary}
 
-The threads of this chapter converge on a single claim. Novelty is a relation---a mismatch between an agent's models and its world---and adaptive systems resolve it in two modes: assimilation, which absorbs change within existing structure, and accommodation, which restructures when absorption fails (\cref{sec:novelty_perspectives}).
+The chapter's argument can now be stated compactly.
+Novelty is a mismatch defined relative to an agent's model.
+Agents respond to mismatch either by assimilating it within existing structure or by accommodating it through representational change.
+Open-world autonomy requires accommodation whenever the world invalidates the vocabulary, operators, or abstractions the agent depends on.
+Many mature methods adapt within fixed representations; many methods that revise representations do so slowly, globally, or under assumptions that limit their deployment.
+Foundation models widen the priors available to an agent, but they do not remove the need for structured, localizable representations.
+The missing capability, recurring at each level of the argument, is representational extension that is structural, fast, and localized to the point of failure.
 
-Artificial intelligence has largely automated the first mode. Concept drift, continual learning, and meta-RL adjust parameters within a fixed representational vocabulary, and are powerful precisely there (\cref{sec:landscape_of_change}). The change open worlds impose is often the second kind: structural novelty that alters the vocabulary itself. The same boundary appears independently as the distinction between out-of-distribution and out-of-design-scope situations~\citep{wray2025requirements}, and as the strong form of open-world learning~\citep{kejriwal2024challenges}.
+This dissertation takes a specific step into that gap.
+It does not claim to solve open-world autonomy in full.
+Instead, it provides evidence for a narrower position: structured abstractions make novelty more manageable because they determine where mismatch appears, what must be changed, and what can be reused.
+A monolithic policy may register novelty only as degraded performance.
+A structured agent can sometimes identify the failed operator, executor, object relation, or interaction variable that made the difference.
+Structure is what makes accommodation localizable, and localizability is what can make it fast.
 
-Surveying how deployed agents respond to mismatch (\cref{sec:capabilities_and_gaps}) reveals a consistent trade-off: methods that grow an agent's representation tend to do so slowly and globally, while methods that act quickly tend to leave the representation fixed. Foundation models widen the priors an agent brings to novelty, but they do not by themselves supply the diagnosable structure that recovery needs (\cref{sec:foundation_models}).
+The technical chapters develop this position in three ways.
+\Cref{ch:benchmarks} introduces environments and metrics for studying structural novelty in sequential decision-making.
+\Cref{ch:rapid_learn} studies action abstractions, where symbolic operators and learned executors make it possible to localize an execution failure and turn recovery into a targeted learning problem.
+\Cref{ch:generalization} studies interaction abstractions, where representing skills at the level of object interaction rather than robot-specific control allows behavior to transfer across objects, physical parameters, and embodiments.
 
-The current trajectory of the field reinforces, rather than closes, this gap. Forward-looking assessments of AI and neuroscience name brittleness under novelty and weak physical-world interaction as central unmet challenges~\citep{zador2025neuroai}. They also argue that embodied competence is not captured by language ability alone: an embodied system must process high-rate sensory input and produce high-rate action over long horizons, a capacity language models lack~\citep{tellex2026grounded}. Even mature deep RL for robotics remains bounded by the cost and difficulty of physical interaction~\citep{tang2025deep}. At the field level, \citet{roy2021machine} make the broader point forcefully: embodied intelligence does not follow straightforwardly from standard machine learning because deployed agents must operate under conditions unlike training and adapt readily when those conditions change.
+These abstraction stories are complementary.
+Action abstractions help after novelty has caused failure: they expose where the agent's competence no longer matches the world.
+Interaction abstractions can prevent some variation from becoming novelty in the first place: a better representation makes the new case fall within existing competence.
+Together they support the dissertation's central claim that the structure of an agent's representation is not merely an implementation detail.
+It shapes whether mismatch becomes brittle failure, efficient adaptation, or ordinary generalization.
 
-Against this backdrop, the contribution of this dissertation is specific and foundational. Rather than building a full-stack open-world agent, it studies how \emph{structured abstractions} let an agent respond to structural novelty with fast, localized accommodation.
-
-The dissertation develops this idea in two complementary ways. Action abstractions localize failure and bound what must be relearned (\cref{ch:rapid_learn}); interaction abstractions make entire classes of object and embodiment variation fall within existing competence rather than register as novelty at all (\cref{ch:generalization}); and the benchmarks in \cref{ch:benchmarks} inject structural novelty under controlled conditions so these dynamics can be evaluated.
-
-The two examples illustrate the distinction. In the axe example, the important fact is not simply that performance drops after a change, but that the failed plan step identifies where the agent's executor or model is incomplete. In the manipulation examples of \cref{ch:generalization}, the complementary lesson is that a better abstraction can prevent object and embodiment changes from becoming novel in the first place.
-
-Where DREAM restructures slowly and globally, and drift methods re-estimate within a fixed vocabulary, this dissertation occupies the space between: extending an agent's representation exactly where the world has invalidated it, and no more. The formal apparatus that makes this claim precise---the definition of novelty, the agent framework, and the notion of abstraction that ties them together---is developed in \cref{ch:foundations}.
+This position is also compatible with approaches that learn or propose new structure.
+The dissertation does not argue that all useful abstractions must be hand-designed.
+Continual learning, developmental robotics, computational creativity, and foundation models all point toward agents that can build richer representations over time.
+The claim here is that such emergence needs an interface into which new structure can be placed, tested, and localized.
+Structured abstractions provide that interface.
+The next chapter formalizes the setting, the notion of novelty, the agent framework, and the abstraction concepts used by the rest of the dissertation.

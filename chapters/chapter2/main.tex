@@ -1,24 +1,28 @@
 % ============================================================
-% Chapter 2 — Related Work
-% Six-section, thesis-question structure with worked examples.
-% Retired: sensing.tex / planning_learning.tex /
-% execution_recovery.tex / integration.tex / summary.tex /
-% open_world_landscape.tex / computational_open_world.tex
+% Chapter 2 -- Related Work
 % ============================================================
 
-\chapter{Related Work: Novelty, Change, and Open-World Autonomy}
+\chapter{Background and Related Work: Novelty in Open-World Autonomy}
 \label{ch:related_work}
 \label{ch:perspectives}
 
-Autonomous agents deployed outside controlled settings face a common difficulty: their world models are inevitably incomplete, and the world will eventually behave in ways those models did not anticipate. This dissertation develops methods for agents that remain effective under such conditions. This chapter situates that goal in the broader literature.
+In this chapter, we survey and synthesize how novelty and adaptation have been understood across cognitive science and artificial intelligence.
+We begin by developing the idea of novelty as an agent-relative mismatch, drawing on work on novelty, surprise, predictive processing, and the big world hypothesis to explain why novelty depends on the representations an agent brings to the world.
+Next, we introduce assimilation and accommodation as two modes of response to mismatch, distinguishing changes that can be handled within an existing representation from changes that require representational revision.
 
-The chapter proceeds in five steps. It begins with accounts of novelty and adaptation in psychology, neuroscience, and cognitive science (\cref{sec:novelty_perspectives}). It then examines how artificial intelligence formalizes learning under change, emphasizing the distinctions between open-world and open-ended settings and between distributional drift and structural novelty (\cref{sec:landscape_of_change}). Next, it reviews how deployed agents respond to mismatch and where those responses fall short (\cref{sec:capabilities_and_gaps}), assesses foundation models as both a resource and a foil (\cref{sec:foundation_models}), and closes by positioning the dissertation's contributions against the field's current trajectory (\cref{sec:synthesis_positioning}).
+We then use this distinction to organize related work on concept drift, continual learning, open-set recognition, planning, creative problem solving, open-world AI, and foundation models.
+Collectively, the work reviewed in this chapter positions the dissertation within the broader open-world autonomy literature and motivates the role of structured abstractions in adaptation and generalization.
+The chapter is organized around the following question: what kinds of novelty can an agent handle within its current representation, and what kinds require the representation itself to change?
 
-Throughout, concrete examples distinguish changes that can be absorbed within an existing representation from changes that require the representation itself to be extended. The formal vocabulary---novelty, the agent framework, and structured abstraction---is developed in \cref{ch:foundations}; here, related concepts are introduced descriptively and made precise later. The technical chapters (\cref{ch:benchmarks,ch:rapid_learn,ch:generalization}) each include focused related-work discussions specific to their contributions; this chapter provides the overarching context.
+The formal vocabulary for this argument---novelty, the agent framework, and structured abstraction---is developed in \cref{ch:foundations}.
+Here the same ideas are introduced at the level of related work.
+The technical chapters provide contribution-specific comparisons; this chapter supplies the broader case for why structured abstractions matter when agents face worlds their models do not fully cover.
 
 \input{chapters/chapter2/perspectives_on_novelty}
 
 \input{chapters/chapter2/landscape_of_change}
+
+\input{chapters/chapter2/what_open_world_requires}
 
 \input{chapters/chapter2/capabilities_and_gaps}
 

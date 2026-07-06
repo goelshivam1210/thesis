@@ -1,35 +1,41 @@
 % ============================================================
-% §2.1  Perspectives on Novelty and Adaptation
+% §2.1  Novelty as agent-relative mismatch
 % ============================================================
 
-\section{Perspectives on Novelty and Adaptation}
+\section{Perspectives on Novelty}
+\label{sec:novelty_as_mismatch}
 \label{sec:novelty_perspectives}
 
-Acting competently when the world departs from expectation is not a problem unique to artificial intelligence. Any system that builds internal models of its environment---a foraging animal, a developing child, a scientist revising a theory---will eventually encounter events its models did not anticipate. Psychology, neuroscience, and cognitive science have studied this encounter for more than a century, and their findings motivate the computational stance taken here. We use \emph{novelty} informally in this chapter to mean experience that violates an agent's expectations, deferring the formal definition to \cref{ch:foundations}. Two ideas organize the discussion and recur throughout the dissertation: novelty is a \emph{relation} between an agent and its world rather than a property of the world alone, and adaptive systems respond to it in two complementary modes, either absorbing it within existing structure or restructuring that structure.
+The first step in organizing work on open-world adaptation is to clarify what is meant by novelty.
+Across psychology, neuroscience, and artificial intelligence, novelty is best understood not as an intrinsic property of an object or event, but as a relation between the world and an agent's current memory, expectations, and models.
+The same object, outcome, or environmental change may be routine for one agent and disruptive for another.
+For this dissertation, this agent-relative view is central: novelty matters because it exposes a mismatch between what the world presents and what the agent can currently represent, predict, or do.
 
-\subsection{Novelty and Surprise Are Not the Same Thing}
+A useful starting point is the distinction between novelty and surprise.
+\citet{barto2013novelty} argue that the two terms name different comparisons.
+Novelty concerns whether something has been encountered or represented before; surprise concerns whether an expectation has been violated.
+A familiar door that remains locked after an unlock action is surprising, because the outcome violates a prediction, but the door and lock are not novel categories to an agent that already represents them.
+Conversely, an exploratory agent may encounter an object type it has never represented before without being strongly surprised if unfamiliar objects were expected during exploration.
+The two signals often coincide, but they place different burdens on an agent.
+Surprise calls for better prediction.
+Novelty may require a new representation.
 \label{sec:novelty_surprise}
 
-A first clarification from psychology is that two words often used interchangeably name different phenomena. \citet{barto2013novelty} argue that \emph{novelty} concerns whether something has been encountered before---a question answered by memory---whereas \emph{surprise} concerns the violation of a prediction, measured by comparing an expectation with what occurs. The two can dissociate: a wholly familiar observation can be surprising when the context led one to expect something else. Their example is mundane but precise: finding one's car door locked after believing the key fob had just unlocked it is surprising without being novel. Conversely, novelty and surprise often co-occur, which is why they are easily conflated: an unfamiliar stimulus both fails to match memory and violates whatever was predicted. The distinction matters computationally because the two implicate different machinery. In the authors' summary, novelty draws on memory and drives the \emph{formation of new representations}, while surprise draws on a predictor and drives the \emph{improvement of predictions}. This anticipates both the assimilation/accommodation split developed below and the detection-versus-adaptation split that organizes \cref{sec:capabilities_and_gaps}.
-
-\subsection{Novelty as Prediction Error}
+Neuroscience gives this relational point a more mechanistic form.
+Novel events engage brain systems involved in attention and memory, helping the agent orient toward unexpected information and encode it for later use~\citep{ranganath2003neural}.
+Predictive-processing accounts make a related point: perception depends on predictions, and learning is driven in part by the mismatch between what is expected and what is observed~\citep{clark2013predictive,friston2010free}.
+For this chapter, the important point is that mismatch is not all of one kind.
+An agent may only need to refine a prediction within a representation it already has, or it may need to form a representation for something that was not previously expressible.
 \label{sec:novelty_neuro}
 
-Neuroscience locates this distinction in the brain's response to the unexpected. \citet{ranganath2003neural} review evidence that novel events recruit hippocampal, prefrontal, and dopaminergic systems that orient attention toward the input and gate the plasticity that encodes it; they also distinguish stimulus, contextual, and associative novelty. The contextual case is especially useful here. In oddball paradigms of the kind they review, a familiar stimulus presented in an unexpected serial context can provoke a strong response not because the stimulus itself has never been encountered, but because it was not predicted in that context---an effect of surprise rather than stimulus novelty in the strict sense. Predictive-processing accounts generalize the picture: the brain continually predicts its input and propagates \emph{prediction error}, the mismatch between expectation and observation, for further processing~\citep{clark2013predictive, friston2010free}. On this view, an intelligent agent acts to minimize prediction error either by revising its model or by acting on the world so that its predictions come true. The agent-relative definition of novelty adopted in \cref{ch:foundations} is a discrete, task-oriented analog: novelty exists only relative to the agent's models, and is resolved by revising the model where it failed.
+Artificial intelligence reaches the same view from the problem of bounded agency.
+The big world hypothesis argues that a realistic agent is far smaller than the world it inhabits and therefore cannot maintain a complete model of that world~\citep{javed2024bigworld}.
+If the agent's model is necessarily partial, then encountering its limits is not an exceptional malfunction.
+It is a normal condition of acting in a world whose structure exceeds the agent's representation.
+Novelty handling is therefore not only a robustness add-on; it is part of the basic problem of autonomy.
 
-\subsection{Assimilation and Accommodation}
-\label{sec:assimilation_accommodation}
-
-How new experience relates to prior structure is the subject of a long developmental tradition. \citet{piaget1952origins} distinguished \emph{assimilation}, in which experience is absorbed into an existing schema without changing it, from \emph{accommodation}, in which experience resists the schema and the structure itself must be revised; development is the ongoing equilibration of the two. Contemporary work gives the distinction empirical grounding. \citet{sommer2022assimilation} show that information consistent with an already activated schema is assimilated and consolidated more efficiently than information that forces the schema to be restructured, and \citet{quent2021predictive} show, within a predictive-coding account, that novelty can either help or hurt memory depending on the kind of prediction error and its congruence with existing knowledge. Computational cognitive science makes a parallel claim: flexible, human-like learning rests on structured, compositional models rather than monolithic pattern recognition~\citep{lake2017building}, and children in particular act as experimenters who seek evidence to revise their models~\citep{gopnik2012scientific}. The assimilation/accommodation duality is useful because an analogous divide organizes the computational literature in \cref{sec:landscape_of_change}: some methods absorb change within a fixed model, while others must alter the model's structure.
-
-\subsection{Creative Problem Solving and Representation Change}
-\label{sec:novelty_cps}
-
-Detecting that the world has changed is only half the problem; the agent must then produce behavior it has not produced before. Gestalt psychologists observed that humans and animals often resolve impasses by \emph{restructuring} a problem rather than searching harder within its current framing. K{\"o}hler's apes reached otherwise inaccessible fruit by stacking crates and joining sticks, discovering new uses for familiar objects~\citep{kohler1925mentality}. \citet{duncker1945problem} identified the central obstacle as \emph{functional fixedness}: representing an object only by its habitual function hides solutions that require using it otherwise. In his classic task, participants given a candle, a box of tacks, and matches struggle to see the tack \emph{box} as a candle holder because they encode it only as a container. The lesson is representational: whether an impasse can be overcome often depends on how the problem is encoded. \citet{boden2004creative} frames the same idea at the level of conceptual spaces, distinguishing \emph{exploratory} creativity, which searches within a given space, from \emph{transformational} creativity, which alters the space itself.
-
-These ideas are now being operationalized in artificial agents. \citet{gizzi2022cps} survey computational creative problem solving, framing it as the case where an agent's existing concepts are insufficient and new ones must be generated, not merely recombined. In a concrete example, \citet{gizzi2019creative} give a robot a symbolic knowledge base that is deliberately inadequate for its task. When a plan fails \emph{on execution}, the robot segments and recombines known action primitives to discover a new one---in their Baxter demonstration, learning that pressing and holding a button lowers a barrier so a blocked object can be retrieved---and then refines the failed action's preconditions accordingly. This is precisely the situation that obstructive novelty creates for the methods in \cref{ch:rapid_learn}; the shared framing of execution failure and targeted discovery makes this work a direct precursor to the adaptation problem formalized here.
-
-\subsection{Summary}
-\label{sec:novelty_perspectives_summary}
-
-Two threads carry forward. First, across psychology, neuroscience, and developmental science, novelty is treated as a \emph{relation}---a mismatch between expectation and experience---not as a property of the world alone. Second, adaptive systems respond to mismatch in two modes: absorbing it within existing structure when they can, and restructuring when they must. These are recurring findings, not inventions of this dissertation. The rest of the chapter asks how artificial intelligence has formalized learning under change, where the same divide reappears, and where a gap remains between the change most methods handle and the change open worlds impose.
+The consequence is that novelty cannot be evaluated independently of the agent.
+A heavier object may be a simple parameter update for a controller that already represents mass, but an unrepresentable change for an agent whose state description has no place for that distinction.
+A new object may be immediately meaningful to an agent with the right category and useless to one without it.
+The structure of the agent's knowledge determines what can be absorbed, what must be reconstructed, and where adaptation can be localized.
+The next section develops this difference as a distinction between two modes of response to mismatch: assimilation and accommodation.

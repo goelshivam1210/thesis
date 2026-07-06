@@ -1,12 +1,57 @@
 % ============================================================
-% §2.4  Foundation Models: Breadth and Its Limits
+% §2.5  Foundation models
 % ============================================================
 
-\section{Foundation Models: Breadth and Its Limits}
+\section{Foundation Models for Open-World Autonomy}
 \label{sec:foundation_models}
 
-No account of open-world autonomy today is complete without foundation models: large pre-trained language, vision, and vision--language--action models whose broad priors promise generalization without task-specific engineering. They are both a resource and a foil. Their breadth is real. Recent surveys catalogue rapid uptake across robotic perception, planning, and control, from simulation-driven design to open-world execution~\citep{khan2025foundation}, and vision--language--action models now integrate perception, language, and action in a single system, with dozens of variants appearing in only a few years~\citep{sapkota2025vla}. The same surveys, however, are candid about the limits that matter here: grounding, resilience, embodiment, and trust remain open problems~\citep{khan2025foundation}, and generalization to genuinely unseen tasks and across embodiments is repeatedly identified as unresolved~\citep{sapkota2025vla}. The thesis-relevant point is that breadth is not the same as \emph{diagnosable, generalizable structure}, the property needed for open-world recovery.
+Foundation models deserve separate treatment because they appear, at first, to weaken the need for explicit open-world machinery.
+Large language, vision, and vision--language--action models bring broad semantic priors to problems that previously required extensive task-specific engineering.
+Recent robotics surveys document their use in perception, planning, control, simulation, human--robot interaction, and open-world execution, while also emphasizing persistent challenges in grounding, real-time control, safety, resilience, and deployment cost~\citep{khan2025foundation,sapkota2025vla}.
+The advance is real: foundation models can supply object knowledge, task conventions, commonsense associations, and candidate plans that a narrow task-specific agent would lack.
+Read against \cref{sec:what_is_required}, they can help reduce the amount of task-specific experience needed to respond to a new situation.
 
-Two limitations bear directly on this dissertation's argument. The first is that foundation models do not reliably perform \emph{structured} reasoning even when the structure is explicit. \citet{gobel2026agentic} compare a language model, used both directly and as an agent with a stepwise PDDL simulation engine, against Fast Downward on Blocksworld. The classical planner solves about $85\%$ of instances, while the language-model approaches solve roughly two-thirds ($63.7\%$ direct, $66.7\%$ agentic); the agentic variant adds only a few points at $5.7\times$ the token cost, and produced plans appear more consistent with training-data recall than with generalizable planning. Far from showing that structure rescues language-model planning, the result underscores that broad priors do not substitute for compositional search, supporting the structured representations this dissertation builds on. The second limitation is creative problem solving: generating genuinely new concepts when existing ones do not suffice. \citet{nair2024cps} argue, as a position supported by preliminary experiments, that large language and vision models lack this capacity and propose integrating computational-creativity principles to supply it.
+The more difficult question is whether broad priors are sufficient for open-world accommodation.
+The literature suggests that they are not.
+The grounded Turing test perspective shifts attention from linguistic fluency to situated competence: concepts must be connected to perception, action, and the consequences of acting in the world~\citep{tellex2026grounded}.
+NeuroAI arguments make the limitation more architectural than merely semantic.
+Current foundation-model systems are largely trained from static data, have limited mechanisms for learning after deployment, interact weakly with the physical world, and do not yet combine action-conditioned prediction, multi-timescale learning, and layered control in the way robust embodied agents require~\citep{zador2025neuroai}.
+Cognitive-systems analyses of out-of-design-scope events make the same point in open-world terms: broad prior knowledge, fixed fallback responses, slow deliberation, and novelty-type lookup are each partial strategies, but none by itself satisfies the requirements for recognizing, characterizing, responding to, and improving from unfamiliar situations~\citep{wray2025requirements}.
+For open-world autonomy, the central issue is therefore not whether foundation models contain useful knowledge, but whether that knowledge can be made diagnosable, revisable, and grounded in action.
 
-The most promising direction, and the one closest to this dissertation, is hybrid: use a foundation model's knowledge to \emph{propose} structure, then let symbolic and learning components verify and execute it. \citet{lu2026novelty} instantiate this pattern for novelty adaptation. A language model identifies the operator missing after a novelty, a symbolic planner incorporates it, and the language model writes a reward function that guides reinforcement learning to acquire the corresponding control policy, outperforming prior methods at both operator discovery and operator learning in continuous domains. \citet{lorang2025fewshot} similarly learn symbolic abstractions and diffusion-policy controllers jointly from roughly five demonstrations, with a high-level oracle restricting each controller to a \emph{minimal observation and action space}---an abstraction move central to \cref{ch:generalization}. These systems are the natural point of comparison for \cref{ch:rapid_learn}, which addresses the same executor-discovery problem. They show that a language model can stand in for parts of the recovery pipeline while sharing this dissertation's premise: structured, localizable representations are what make adaptation efficient and interpretable.
+Early language-model agents for embodied tasks illustrate both the promise and the boundary.
+Language models can decompose high-level instructions into plausible action sequences, especially when their outputs are mapped onto admissible actions~\citep{huang2022language}.
+SayCan adds an important grounding step by combining language-model scores with value functions over available robot skills, so that task knowledge is constrained by what the robot can actually do~\citep{ahn2022can}.
+Vision--language--action models such as RT-2 go further by transferring web-scale vision-language knowledge into robotic control, improving generalization to novel objects and instructions~\citep{pmlr-v229-zitkovich23a}.
+These systems satisfy parts of the first, second, and fourth requirements: they broaden perception and task interpretation, make action selection more semantically flexible, and reduce some task-specific data needs.
+Their limitation is that they largely operate over a fixed action interface, a learned policy, or a predefined set of skills.
+When an imposed novelty invalidates the agent's model, the system still needs a way to identify what failed, decide whether the failure is perceptual, symbolic, or motoric, and revise the relevant representation.
+
+Planning makes this limitation visible because the missing structure can be stated precisely.
+\citet{gobel2026agentic} compare direct language-model planning and stepwise PDDL-simulation-guided language-model planning against a classical planner on Blocksworld.
+The classical planner solves a larger fraction of instances, while the language-model variants remain substantially weaker and the agentic version yields only modest gains at much higher token cost.
+This result should not be read as a dismissal of language models.
+It shows a narrower but important point: broad linguistic priors do not replace compositional search, explicit state update, and externally checkable plan structure when reliability matters.
+Creative problem-solving raises a related concern.
+\citet{nair2024cps} argue that large language and vision models still struggle to generate genuinely new concepts when existing ones are insufficient.
+In the terms of this chapter, that is an accommodation problem: the agent must form and test a new representational commitment, not merely produce a fluent continuation of an old one.
+
+Open-ended language-model agents show a different kind of strength.
+Voyager uses a language model to propose goals and write executable code in Minecraft, accumulating a skill library that transfers across worlds~\citep{wang2023voyager}.
+Odyssey similarly develops Minecraft agents around open-world skill libraries and benchmarks for long-horizon planning, dynamic planning, and autonomous exploration~\citep{liu2025odyssey}.
+These systems are important demonstrations of repertoire expansion.
+They also clarify the boundary between open-ended exploration and open-world recovery.
+They grow competence inside rich but comparatively well-specified interfaces; they do not fully address the case in which an ongoing task fails because the agent's model of objects, operators, constraints, or executors has become wrong and must be repaired.
+
+The work closest to the requirements treats foundation models as components in structured adaptation loops.
+\citet{kumar2026openworldtamp} use vision-language models to generate constraints for open-world task and motion planning, allowing a planner to reason about goals and scene properties not fully specified in the original domain model.
+\citet{yang2025skillwrapper} use foundation models for predicate invention, learning human-interpretable symbolic predicates that wrap black-box robot skills into operators suitable for planning.
+\citet{li2026recover} learn recovery skills from robot failures and discover relational concepts that let local recoveries become reusable planning knowledge.
+\citet{lu2026novelty} use a language model to identify missing operators after novelty, a symbolic planner to incorporate them, and language-model-written rewards to guide reinforcement learning for the corresponding control policies.
+\citet{lorang2025fewshot} similarly combine symbolic abstraction with continuous controllers learned from few demonstrations.
+Across these systems, the foundation model is most useful when it proposes candidate constraints, predicates, operators, rewards, or skills into an architecture that can localize failure, test the proposal, and connect it to action.
+
+Foundation models widen the priors available to an agent and make many forms of generalization easier.
+They do not, by themselves, remove the need for open-world mechanisms of characterization, representation revision, verification, and grounded learning.
+The strongest direction is therefore not to replace structured representations with foundation models, but to use foundation models as sources of candidate structure that must still be organized, tested, and revised within an agent architecture.
+In that sense, emergent proposal and structured verification are complementary rather than competing alternatives.
