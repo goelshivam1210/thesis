@@ -48,9 +48,7 @@ The injected novelties alter the shape of the observation and action spaces of t
 In order to allow transferring the model from pre-novelty to post-novelty environments, we pad the observation and action spaces of all environments (pre- and post-novelty) with placeholder elements such that all of them have the same shape. Observation placeholders simply always return zero. When the model chooses to perform a placeholder action, the action actually passed on to the environment is always the \emph{approach treelog}.
 }
 
-\rev{\subsubsection{Hyperparameters}}
-\rev{The RAPid-Learn executor learner uses one neural network with a single hidden layer per learned operator. \Cref{tab:hyper_rapid} lists the hyperparameters used in the standalone and integrated evaluations.}
-\input{tables/chapter5/rapid_hyperparams}
+\rev{Detailed hyperparameters for the RAPid-Learn executor learner are provided in \cref{sec:ch6_hyperparameters}.}
 
 % \include{}
 
@@ -168,17 +166,7 @@ In the axe-to-break hard novelty, RAPid-KGE-UCB adapts in approximately $2.35 \t
     \item \emph{Goal Achieved (GA\%)}: the percentage of post-novelty tasks in a tournament in which the agent achieves the goal.
 \end{itemize}}
 
-\rev{\subsubsection{Agent Implementation}}
-\label{sec:ch5_agent_implementation}
-
-\rev{For all evaluations, a domain-interface component parses the environment's sensory information (Polycraft provides it in JSON) into the first-order predicate form used by the rest of the architecture; the same interface works with NovelGridworlds. The knowledge base $\KB$ is implemented as a set of Prolog facts and rules, queried whenever the truth value of a fact is needed (e.g.,\ when checking preconditions and effects). Operators are written in an Action Script Language (ASL). During planning, the Prolog facts and ASL operators are translated into a PDDL problem and domain and solved with the off-the-shelf MetricFF planner~\citep{hoffmann2003metricff}; only operators with at least one known effect are exported to the planner.}
-
-\rev{The time budget for any one exploration strategy is domain-specific. In Polycraft, where the agent is evaluated against a time-out, phases such as knowledge discovery are given a fixed budget, because they run before the agent even plans for the main goal. The symbolic operator-discovery strategies are similarly bounded; for example, precondition discovery in Polycraft focuses only on variations of the \texttt{holding(self,X)} predicate for novel objects $X$, since this predicate is a prominent state aspect in the domain. Reinforcement-learning-based exploration is the exception: as the final strategy invoked after all others fail, it is allowed to continue until the environment times out.}
-
-\rev{Which strategies are attempted in the total-effect-failure policy also depends on the failed operator. Strategy~1 (update effects and replan) is skipped for movement operators, since deleting their effects could destroy the agent's ability to move; instead, repeated execution (Strategy~2) is preferred, on the assumption that the knowledge base is merely inaccurate. Precondition discovery and operator variation are excluded for operators with more than one parameter to avoid an excessively large search space. These heuristics are effective in Polycraft but are not necessarily portable to other domains.}
-
-\rev{\subsubsection{Simulation and Hardware}}
-\rev{The systemic evaluations were run on the LoneStar6 cluster at the Texas Advanced Computing Center. Neural models in the integrated architecture were trained on a server with four NVIDIA RTX 2080Ti GPUs and an Intel Core i9-9940X processor with 130\,GB of memory. The non-novelty-aware reference agent is a simple PDDL-based planning agent integrated with the Polycraft domain.}
+\rev{Agent implementation details, bounded exploration heuristics, and compute resources for the systemic evaluation are provided in \cref{sec:ch5_agent_implementation,sec:ch6_compute}.}
 
 
 \rev{\subsection{Executor Learner Component Evaluation}}

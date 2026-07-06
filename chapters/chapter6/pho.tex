@@ -94,13 +94,13 @@ After estimating $z$, the remaining state components are computed at each contro
 \paragraph{Complexity.}
 Let $N$ be the maximum number of probing steps and $w$ be the window size.
 Assume the sliding window is maintained in a fixed-size buffer so that appending
-a sample and evicting the oldest are $O(1)$ operations. The
-algorithm performs at most $N$ probing iterations. In each iteration, it updates
-the force estimate, maintains a sliding window of at most $w$ samples, and
-computes the window mean. If the mean is computed directly, each iteration costs
-$O(w)$, giving a total time complexity of $O(Nw)$. If the sliding-window mean is maintained incrementally using a running sum, then
-each iteration takes constant time, and the total time complexity reduces to $O(N)$. The space complexity is
-$O(w)$ since the algorithm stores only the most recent $w$ force samples.}
+a sample and evicting the oldest are $O(1)$ operations. With an incremental
+running sum for the sliding-window mean, each probing iteration takes constant
+time, so the total time complexity is $O(N)$. The space complexity is $O(w)$
+because the algorithm stores only the most recent $w$ force samples. If the
+window mean is recomputed from scratch at each step, the time complexity becomes
+$O(Nw)$. This analysis assumes that each probing step provides a summarized
+force estimate $f_i$ or uses a fixed-size low-level sensing window.}
 
 
 \subsection{Robot Execution}

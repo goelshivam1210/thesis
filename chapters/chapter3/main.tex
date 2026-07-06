@@ -1,18 +1,21 @@
-\chapter[Foundations of Open-World Agent--Environment Interaction]{Foundations of Open-World Agent--Environment Interaction\footnotemark}
-\label{ch:foundations}
-\footnotetext{Portions of this chapter are based on: S.~Goel, P.~Lymperopoulos, R.~Thielstrom, E.~Krause, P.~Feeney, P.~Lorang, S.~Schneider, Y.~Wei, E.~Kildebeck, S.~Goss, M.~C.~Hughes, L.~Liu, J.~Sinapov, and M.~Scheutz, ``A Neurosymbolic Cognitive Architecture Framework for Handling Novelties in Open Worlds,'' \textit{Artificial Intelligence}, vol.~331, p.~104111, 2024.}
+% ============================================================
+% Chapter 3 -- Literature review
+% ============================================================
 
-This chapter develops the formal and conceptual foundations that support the remainder of the dissertation.
-We begin by defining the open-world setting: environments in which an agent's knowledge is necessarily incomplete with respect to the true state of the world (\cref{sec:open_world_environments}). We then formalize the concept of novelty as a mismatch between an agent's internal models and the environment, and introduce a taxonomy that classifies novelties by their impact on task performance (\cref{sec:novelty}). With the setting and the problem defined, we turn to the agent itself: how it represents, reasons about, and acts upon the world, integrating symbolic planning and subsymbolic execution into a unified decision-making framework (\cref{sec:agent_framework}). Finally, we examine the role of structured abstractions in mediating the agent--environment interaction, arguing that the choice of abstraction determines whether novelty-induced mismatch can be handled through efficient adaptation and generalizable behavior (\cref{sec:abstractions}).
+\chapter{Literature Review: Adaptation Under Novelty}
+\label{ch:related_work}
 
-Together, these foundations establish the formal vocabulary and conceptual claims that the subsequent chapters build upon: benchmark environments for evaluating agents under controlled novelty (\cref{ch:benchmarks}), action abstractions that enable efficient adaptation under failure (\cref{ch:rapid_learn}), and interaction abstractions that support generalization across objects and embodiments (\cref{ch:generalization}).
+This chapter situates the dissertation within the broader literature on learning, planning, and adaptation under novelty.
+The previous chapter argued that open-world autonomy requires more than robustness within a fixed representation: agents must sometimes revise the vocabulary, operators, or abstractions through which they understand the world.
+Here we use that distinction to organize existing work.
 
-\input{chapters/chapter3/open_world_environment}
+The chapter first reviews methods that adapt within a fixed representation, including novelty detection, concept drift, continual learning, transfer learning, domain randomization, and plan repair.
+It then turns to approaches that extend an agent's representation in response to failure, including open-world architectures, creative problem solving, action discovery, and symbolic-neural systems.
+Finally, it considers foundation models as a source of broad priors and candidate structure, while arguing that they do not remove the need for localizable, testable, and grounded mechanisms for adaptation.
+The chapter closes by identifying the gap addressed by this dissertation: structural adaptation and generalization mediated by structured abstractions.
 
-\input{chapters/chapter3/novelty}
+\input{chapters/chapter3/capabilities_and_gaps}
 
-\input{chapters/chapter3/agent_framework}
+\input{chapters/chapter3/foundation_models}
 
-\input{chapters/chapter3/abstractions}
-
-\input{chapters/chapter3/summary}
+\input{chapters/chapter3/synthesis_positioning}

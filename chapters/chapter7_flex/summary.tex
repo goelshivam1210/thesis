@@ -1,0 +1,8 @@
+\section{Summary and Future Directions}
+\label{sec:flex_summary}
+
+This chapter presented FLEX, an object-centric force-space framework for articulated object manipulation. FLEX learns force-based policies in simulation without modeling a robot, then transfers those policies to physical robots by estimating object joint parameters and mapping desired forces through an operational space controller. The results demonstrate that representing manipulation in force space enables transfer across unseen articulated objects and across three different robotic platforms without retraining.
+
+FLEX instantiates the interaction abstraction framework developed in \cref{sec:interaction_abstractions}. By defining policies in terms of forces applied to the object rather than robot-specific commands, the learned behavior captures task-relevant physical invariants while abstracting away embodiment-specific details. This supports the broader dissertation claim that structured abstractions can make variation manageable by determining what must be represented, what can be ignored, and what can transfer.
+
+Several directions remain open. FLEX assumes quasi-static articulated interactions and known broad articulation types; extending to dynamic manipulation and more diverse contact modes would require richer interaction descriptors and more flexible control mappings. The framework also treats each articulated interaction as a single skill. Integrating FLEX-style force policies as executors within the hybrid planning--learning framework of \cref{ch:rapid_learn} would allow agents to compose generalizable force-based skills into longer-horizon task plans and invoke targeted adaptation when force-space execution fails.

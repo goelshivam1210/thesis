@@ -1,31 +1,27 @@
 % ============================================================
-% Chapter 2 -- Related Work
+% Chapter 2 -- Novelty and open-world autonomy
 % ============================================================
 
-\chapter{Background and Related Work: Novelty in Open-World Autonomy}
-\label{ch:related_work}
+\chapter{Novelty in Open-World Autonomy}
+\label{ch:novelty_open_world}
 \label{ch:perspectives}
 
-In this chapter, we survey and synthesize how novelty and adaptation have been understood across cognitive science and artificial intelligence.
-We begin by developing the idea of novelty as an agent-relative mismatch, drawing on work on novelty, surprise, predictive processing, and the big world hypothesis to explain why novelty depends on the representations an agent brings to the world.
-Next, we introduce assimilation and accommodation as two modes of response to mismatch, distinguishing changes that can be handled within an existing representation from changes that require representational revision.
+This chapter defines the open-world problem setting that motivates the dissertation.
+We begin by contrasting closed-world assumptions with open-world autonomy, where an agent's knowledge and representational vocabulary are necessarily incomplete with respect to the environment.
+We then develop the idea of novelty as an agent-relative mismatch, drawing on work on novelty, surprise, predictive processing, and the big world hypothesis to explain why novelty depends on the representations an agent brings to the world.
 
-We then use this distinction to organize related work on concept drift, continual learning, open-set recognition, planning, creative problem solving, open-world AI, and foundation models.
-Collectively, the work reviewed in this chapter positions the dissertation within the broader open-world autonomy literature and motivates the role of structured abstractions in adaptation and generalization.
-The chapter is organized around the following question: what kinds of novelty can an agent handle within its current representation, and what kinds require the representation itself to change?
+With this conceptual view in place, we introduce a taxonomy of novelty by task impact and by domain element.
+Finally, we use the distinction between assimilation and accommodation to explain why some changes can be handled within an existing representation while others require representational revision.
+The chapter closes by identifying the requirements that open-world agents must satisfy: detecting and characterizing mismatch, adapting from limited experience, revising representations when needed, and integrating perception, reasoning, learning, and action.
 
-The formal vocabulary for this argument---novelty, the agent framework, and structured abstraction---is developed in \cref{ch:foundations}.
-Here the same ideas are introduced at the level of related work.
-The technical chapters provide contribution-specific comparisons; this chapter supplies the broader case for why structured abstractions matter when agents face worlds their models do not fully cover.
+\input{chapters/chapter2/open_world_autonomy}
 
 \input{chapters/chapter2/perspectives_on_novelty}
+
+\input{chapters/chapter2/novelty}
 
 \input{chapters/chapter2/landscape_of_change}
 
 \input{chapters/chapter2/what_open_world_requires}
 
-\input{chapters/chapter2/capabilities_and_gaps}
-
-\input{chapters/chapter2/foundation_models}
-
-\input{chapters/chapter2/synthesis_positioning}
+\input{chapters/chapter2/summary}

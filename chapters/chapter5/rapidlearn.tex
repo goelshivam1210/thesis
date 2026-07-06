@@ -52,41 +52,19 @@ executor, and $C_{\text{disc}}$ the cost of one call to
 \textsc{Discover-Executor}. Assume that $\Executors$ is implemented as a hash
 set, so membership checks and insertions are $O(1)$ on average.
 
-The algorithm first calls the planner once, which costs $C_{\text{plan}}$.
-It then constructs the initial executor set by mapping each operator in the plan
-to its executor, which costs $O(|\Plan|)$. The main loop executes each operator
-once, giving $O(|\Plan| \cdot C_{\text{exec}})$ execution cost. For each failed
-operator, the algorithm either executes an already discovered executor or calls
-\textsc{Discover-Executor} and then executes the returned executor. Therefore,
-the total cost is
-
+The algorithm calls the planner once, constructs the executor set with one pass
+over the plan, and then executes the plan operator by operator. Each failed
+operator may trigger one call to \textsc{Discover-Executor}. Thus, excluding the
+internal cost of planning and executor discovery, the top-level bookkeeping is
+linear in the plan length, and the total time is
 \[
-O\!\left(
-C_{\text{plan}}
-+
-|\Plan|
-+
-|\Plan| C_{\text{exec}}
-+
-F(C_{\text{disc}} + C_{\text{exec}})
-\right).
+O\!\left(C_{\text{plan}} + |\Plan|C_{\text{exec}} + F C_{\text{disc}}\right).
 \]
-
-Since $F \leq |\Plan|$, the worst-case time complexity is $O\!\left(
-C_{\text{plan}}
-+
-|\Plan|
-+
-|\Plan| C_{\text{exec}}
-+
-|\Plan|(C_{\text{disc}} + C_{\text{exec}})
-\right)$,
-which simplifies to $O\!\left(
-C_{\text{plan}} + |\Plan|(C_{\text{disc}} + C_{\text{exec}}) \right)$.
-
+Since $F \leq |\Plan|$, the worst case is
+$O\!\left(C_{\text{plan}} + |\Plan|(C_{\text{exec}}+C_{\text{disc}})\right)$.
 
 The space required by the top-level algorithm is dominated by the plan and the
-executor set. Thus, excluding the internal memory used by the planner and
+executor set. Excluding the internal memory used by the planner and
 \textsc{Discover-Executor}, the space complexity is $O(|\Plan|)$.
 
 }
@@ -152,14 +130,14 @@ $\omega_{o_i}$ once after the loop costs $O(\omega_{\max})$.
 
 \begin{itemize}
   \item \textbf{Time:} $O(|\mathcal{P}|(\psi_{\max}+\omega_{\max}))$. In
-  bounded-arity domains, this reduces to $O(|\mathcal{P}|)$.
+  domains where each operator has a bounded number of preconditions and effects,
+  this reduces to $O(|\mathcal{P}|)$.
   \item \textbf{Space:} $O(|\mathcal{P}|\psi_{\max}+\omega_{\max})$, reducing
-  to $O(|\mathcal{P}|)$ in bounded-arity domains.
+  to $O(|\mathcal{P}|)$ under the same bounded-operator-size assumption.
 \end{itemize}
-A \emph{bounded-arity domain} is one in which every predicate and operator takes
-at most a fixed constant number of arguments (as in standard planning
-benchmarks), so $\psi_{\max}$ and $\omega_{\max}$ are constants independent of
-the plan length and the number of objects in the problem.}
+In typical planning domains, operator schemas have a small fixed number of
+preconditions and effects, so $\psi_{\max}$ and $\omega_{\max}$ are constants
+with respect to the plan length.}
 
 % We describe the algorithm which generates the set of plannable states. 
 % The agent accumulates the set of preconditions $\Psi$ and effects $\Omega$ of all known operators, using the  pre-novelty domain knowledge. Using that, it generates a set of plannable states $\mathcal{S}_r$, which contains: 1) the states that satisfy the effects  $\omega_{o_i}$ of the failed operator $o_i$ and 2) the states that satisfy the effects of all subsequent operators $\hat{o}\in\hat{\mathcal{O}}$ in the plan $\mathcal{P}$ (($d(\tilde{s}) \supseteq \omega_{\hat{o}}) \forall \hat{o} \in \hat{\mathcal{O}} $), where the preconditions of $\hat{o}$ contain the effects of $o$ ($\psi_{\hat{o}} \supseteq \omega_o$)

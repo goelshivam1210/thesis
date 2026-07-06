@@ -1,0 +1,18 @@
+\section{Closed Worlds and Open Worlds}
+\label{sec:closed_worlds_open_worlds}
+
+Autonomous agents operate in environments that they must perceive, reason about, and act upon in order to achieve their goals.
+In closed-world settings, the agent's representational vocabulary and task model are treated as fixed and sufficient for the situations the agent may encounter.
+The relevant objects, predicates, observations, actions, rewards, dynamics, and action effects are assumed to fall within the agent's predefined modeling framework.
+This assumption has been productive: it underlies classical planning, standard reinforcement learning formulations, and many supervised approaches to perception.
+Under these assumptions, the primary challenge is computational---finding good plans, learning effective policies, or achieving accurate classification within a fixed representational space.
+
+Open-world environments violate this assumption.
+The environment may contain objects, dynamics, relationships, or task constraints that the agent's models do not represent.
+New objects may appear that do not correspond to any known category, actions may produce effects that differ from what the agent predicts, and task structure may change in ways that invalidate previously successful strategies.
+These changes need not be adversarial or extreme: routine variation in everyday environments can fall outside the scope of models designed under closed-world assumptions.
+
+This gap between the agent's knowledge and the true state of the world is not merely a quantitative shortcoming that can be solved by training on more data or enumerating more cases.
+It is a qualitative property of the agent--environment relationship: the world may contain structure that is not derivable from, or even expressible within, the agent's current representational framework.
+That gap creates the space in which novelty arises.
+The remainder of this chapter develops the conceptual vocabulary needed to describe that gap and the requirements it imposes on open-world agents.

@@ -1,0 +1,8 @@
+\section{Introduction}
+\label{sec:pho_motivation}
+
+\Cref{ch:flex} showed that object-centric force-space representations can support generalization across articulated objects and robot embodiments. This chapter extends the same interaction-abstraction principle to a different class of sustained-contact manipulation: transporting rigid objects along desired paths under unknown mass and friction.
+
+The pushing-heavy-objects problem highlights a complementary form of generalization. Instead of transferring across articulated mechanisms and robot arms, the agent must apply forces to a rigid object whose physical interaction regime is not fully known at deployment. A policy that is tightly coupled to a particular robot, object mass, or friction coefficient may succeed in one setting but fail when the same task is performed with a heavier payload, a different floor condition, or a different mobile manipulator. As in \cref{ch:flex}, this brittleness reflects a representational problem: the policy must separate the task-relevant structure of the object interaction from contingent details of the robot and environment.
+
+The approach in this chapter learns object-centric force policies for rigid body transport. A policy is trained in simulation to output planar boundary forces conditioned on a normalized contact-resistance descriptor, with domain randomization over object mass and friction. At deployment, a lightweight impedance-based probing routine estimates the interaction regime, allowing the policy to adapt its force commands without retraining. Experiments on a Boston Dynamics Spot mobile manipulator demonstrate zero-shot sim-to-real transfer for transporting heavy payloads along curved trajectories.

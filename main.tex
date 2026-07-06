@@ -238,11 +238,13 @@ Finally finally, I wanted a blank page between the title and abstract. So I defi
 % Other chapters become blank but keep correct page numbers & cross-refs.
 % Comment out all lines for a full build (e.g. before submitting).
 % \includeonly{chapters/chapter1/main}  % Introduction
-% \includeonly{chapters/chapter2/main}  % Related Work / Perspectives on Novelty
-% \includeonly{chapters/chapter3/main}  % Foundations (preliminaries)
+% \includeonly{chapters/chapter2/main}  % Novelty in Open-World Autonomy
+% \includeonly{chapters/chapter3/main}  % Literature Review: Adaptation Under Novelty
+% \includeonly{chapters/chapter4_preliminaries/main}  % Formal Preliminaries and Structured Abstractions
 % \includeonly{chapters/chapter4/main}  % Benchmark Environments (NovelGridworlds + NovelGym)
 % \includeonly{chapters/chapter5/main}  % Adaptive Planning and Learning (AIJ + RAPid-Learn)
-% \includeonly{chapters/chapter6/main}  % Generalization (FLEX + PHO)
+% \includeonly{chapters/chapter7_flex/main}  % FLEX
+% \includeonly{chapters/chapter8_pho/main}  % Pushing Heavy Objects
 % \includeonly{chapters/chapter7/main}  % Conclusion
 
 \begin{document}
@@ -269,16 +271,25 @@ Finally finally, I wanted a blank page between the title and abstract. So I defi
 \pagenumbering{arabic}
 
 %Chapters (use include/includeonly for fast focus builds)
+\input{frontmatter/preface}
 \include{chapters/chapter1/main}
-% \include{chapters/chapter2/background/main}
+
+\part{Introduction and Preliminaries}
 \include{chapters/chapter2/main}
 \include{chapters/chapter3/main}
+\include{chapters/chapter4_preliminaries/main}
+
+\part{Benchmarking Environments for Open Worlds}
 \include{chapters/chapter4/main}
 
+\part{Adaptation}
 \include{chapters/chapter5/main}
 
-\include{chapters/chapter6/main}
+\part{Generalization}
+\include{chapters/chapter7_flex/main}
+\include{chapters/chapter8_pho/main}
 
+\part{Conclusion and Future Directions}
 \include{chapters/chapter7/main}
 
 \end{doublespace}

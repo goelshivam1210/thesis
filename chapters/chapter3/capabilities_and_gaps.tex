@@ -6,7 +6,7 @@
 \label{sec:what_field_does}
 \label{sec:capabilities_and_gaps}
 
-Measured against the requirements above, existing methods fall into a useful pattern.
+Measured against the requirements identified in \cref{sec:what_is_required}, existing methods fall into a useful pattern.
 The most mature approaches support detection, re-estimation, robustness, replanning, or rapid adaptation, but often do so while keeping the agent's representational vocabulary fixed.
 A smaller body of work extends the agent's representation in response to failure, but usually pays for that capacity in speed, scope, or reliance on strong structure supplied in advance.
 This section organizes existing work around that trade-off.
@@ -76,7 +76,7 @@ Replanning can rearrange known operators, and undirected exploration can discove
 
 Third, the field needs representations that reduce unnecessary novelty by generalizing across object and embodiment variation.
 Some changes look novel only because the agent's representation is too tightly tied to a particular object, robot, or control space.
-\Cref{ch:generalization} studies interaction abstractions that make such variation fall within existing competence rather than requiring full retraining.
+\Cref{ch:flex,ch:pho} study interaction abstractions that make such variation fall within existing competence rather than requiring full retraining.
 
 These gaps also mark the dissertation's boundaries.
 The thesis does not solve open-world perception; it assumes access to task-relevant state in the main technical contributions.
