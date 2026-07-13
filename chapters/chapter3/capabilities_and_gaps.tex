@@ -10,17 +10,30 @@ Measured against the requirements identified in \cref{sec:what_is_required}, exi
 The most mature approaches support detection, re-estimation, robustness, replanning, or rapid adaptation, but often do so while keeping the agent's representational vocabulary fixed.
 A smaller body of work extends the agent's representation in response to failure, but usually pays for that capacity in speed, scope, or reliance on strong structure supplied in advance.
 This section organizes existing work around that trade-off.
+\Cref{fig:requirements_coverage} previews the resulting picture: each method family is measured against the four requirements from \cref{sec:what_is_required}, and the survey below follows the same organization.
+
+% Requirements coverage matrix
+\input{figures/chapter3/requirements_coverage}
 
 \subsection{Fixed-Representation Adaptation}
 \label{sec:fixed_representation_methods}
 
-Detection methods address the first step of the open-world lifecycle.
-Open-set and open-world recognition aim to identify inputs or classes absent from training~\citep{boult2021towards}.
-This is necessary for open-world autonomy, but it is not sufficient.
+Detection methods address the first step of the open-world lifecycle (Requirement 1).
+Open-set recognition formalized the problem of classification when test inputs may belong to classes absent from training, framing recognition as managing the risk of the unknown rather than discriminating among a closed label set~\citep{scheirer2013toward}.
+Later work brought this capability to deep networks: OpenMax calibrates a network's activation patterns so that inputs far from all known classes can be rejected~\citep{bendale2016towards}, and \citet{hendrycks2017baseline} showed that even the maximum softmax probability provides a usable baseline signal for detecting misclassified and out-of-distribution examples.
+These threads---anomaly detection, novelty detection, open-set recognition, and out-of-distribution detection---developed largely in isolation, and \citet{yang2024generalized} unify them under a single generalized framework, which is a useful map of the perceptual side of Requirement 1.
+Open-world recognition extends the setting further by requiring that rejected unknowns eventually be incorporated as new classes~\citep{boult2021towards}.
+This body of work is necessary for open-world autonomy, but it is not sufficient.
 A classifier that rejects an unknown object, or an execution monitor that flags an unexpected outcome, has identified a mismatch.
 It has not characterized the mismatch in a form that tells the agent how to recover, and it has not repaired behavior.
 
-Re-estimation methods address a different part of the problem.
+A related but distinct use of novelty appears in reinforcement learning as an exploration signal.
+Curiosity-driven methods reward the agent for visiting states its predictive model handles poorly: the intrinsic curiosity module derives a reward from prediction error in a learned feature space~\citep{pathak2017curiosity}, and random network distillation derives one from the error of predicting the output of a fixed, randomly initialized target network~\citep{burda2019exploration}.
+These methods use novelty the agent \emph{seeks} to drive exploration within a fixed observation and action space.
+The setting of this dissertation is the complement: novelty is \emph{imposed} by the environment, and the question is not how to find unfamiliar states but how to recover competence when familiar ones stop behaving as modeled.
+Intrinsic novelty signals can nevertheless serve Requirement 1, since the same prediction-error machinery that drives exploration can flag where an agent's model has been invalidated.
+
+Re-estimation methods address a different part of the problem (Requirement 2).
 Concept-drift methods, continual learning, transfer learning, and meta-learning can update a model as data or tasks change~\citep{gama2014survey,parisi2019continual,taylor2009transfer,finn2017maml,khetarpal2022continual}.
 These methods can be powerful when the agent's representation remains adequate and only its parameters, beliefs, or policy need revision.
 Their limitation is that competence is usually defined over a fixed feature, label, state, or action space.
@@ -30,6 +43,8 @@ The agent may lack a category, relation, precondition, or behavior needed to exp
 Robotics often uses a related strategy: absorb anticipated variation before deployment.
 Domain randomization trains across many simulated appearances or dynamics so that real-world variation falls inside the training envelope~\citep{tobin2017domain,peng2018sim}.
 This can be highly effective for quantitative variation such as lighting, texture, mass, or friction.
+Rapid motor adaptation extends the idea to online operation: a base policy is paired with an adaptation module that estimates a latent description of the current environment from recent state--action history, allowing a legged robot trained entirely in simulation to adjust to changing terrain and payloads in fractions of a second~\citep{kumar2021rma}.
+This line of work shows how far Requirement 2 can be pushed when the space of variation is parameterized in advance.
 It is still an assimilation strategy.
 It makes more of the world look familiar, but it does not by itself introduce representational structure the designer did not anticipate.
 
@@ -43,8 +58,17 @@ If novelty invalidates the action model itself, the agent needs more than a new 
 \subsection{Representational Extension}
 \label{sec:extend_representation_methods}
 
-Several lines of work confront representational extension more directly.
-Integrated open-world architectures combine monitoring, diagnosis, symbolic reasoning, and learning to detect and accommodate novelty~\citep{muhammad2021novelty,goel2024neurosymbolic}.
+Several lines of work confront representational extension more directly (Requirement 3), often while also integrating perception, reasoning, learning, and action (Requirement 4).
+An early precursor is goal-driven autonomy, in which an executing agent monitors for discrepancies between expectations and observations, generates explanations for them, and manages its own goals in response; the ARTUE agent demonstrated this detect--explain--respond loop in a Navy strategy simulation with hierarchical task network planning~\citep{molineaux2010gda}.
+Goal-driven autonomy anticipated the structure of the SAIL-ON detect--characterize--accommodate framing, although its responses operate primarily at the level of goals rather than the representational vocabulary itself.
+More recent open-world architectures revise the model directly: HYDRA uses model-based diagnosis over a symbolic planning model to localize which parts of the model a novelty has invalidated and to repair them, providing a domain-independent architecture for adaptive operation in evolving open worlds~\citep{mohan2024domain}.
+Integrated neurosymbolic architectures similarly combine monitoring, diagnosis, symbolic reasoning, and learning to detect and accommodate novelty~\citep{muhammad2021novelty,goel2024neurosymbolic}.
+
+A complementary line of work asks where symbolic vocabularies come from in the first place.
+Action-model learning induces planning operators from experience: ARMS learns STRIPS-style action models from example plans by compiling constraints into a weighted MAX-SAT problem~\citep{yang2007arms}, LOCM induces domain models from action traces alone, without access to intermediate states~\citep{cresswell2013locm}, and later work learns action models under minimal observability by compiling the learning problem itself into classical planning~\citep{aineto2019learning}.
+At the interface between control and symbols, \citet{konidaris2018skills} show that symbols representing the preconditions and effects of an agent's skills are both necessary and sufficient for high-level planning, which in principle lets an agent construct its own symbolic representation rather than receiving one from a designer.
+This result matters for open-world autonomy because it implies the symbolic layer is not fixed in principle: if operators and their symbols can be learned, they can also be re-learned when the world invalidates them.
+The options framework provides the underlying formalism for such temporally extended, learnable units of behavior~\citep{sutton1999options}.
 SPOTTER couples symbolic planning with reinforcement learning so that an agent can learn a new operator when planning reaches an impasse~\citep{sarathy2021spotter}.
 Creative problem-solving systems similarly treat execution failure as evidence that the current action model is incomplete and must be revised~\citep{gizzi2019creative,gizzi2022cps}.
 These systems establish the capability this dissertation builds on: an agent can respond to failure by extending its competence rather than only by reordering known behavior.

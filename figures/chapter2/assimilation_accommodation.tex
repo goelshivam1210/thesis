@@ -1,0 +1,39 @@
+\begin{figure}[t]
+    \centering
+    \resizebox{0.95\textwidth}{!}{%
+    \begin{tikzpicture}[
+        node distance=1.1cm and 1.4cm,
+        base/.style={align=center, font=\small, inner sep=6pt},
+        event/.style={base, draw, rounded corners=2pt, minimum width=3.4cm, minimum height=1.0cm, fill=gray!10},
+        decision/.style={base, draw, diamond, aspect=2.2, inner sep=1pt, fill=yellow!15},
+        assim/.style={base, draw, rounded corners=2pt, minimum width=4.2cm, minimum height=1.2cm, fill=blue!10},
+        accom/.style={base, draw, rounded corners=2pt, minimum width=4.2cm, minimum height=1.2cm, fill=red!10},
+        outcome/.style={base, font=\small\itshape},
+        arrow/.style={-{Stealth[length=2.5mm]}, thick},
+        lbl/.style={font=\small\bfseries, midway},
+    ]
+
+    % ===== Nodes =====
+    \node[event] (mismatch) {Mismatch detected\\ \footnotesize (observation, outcome, or failure\\ inconsistent with the agent's models)};
+
+    \node[decision, below=of mismatch] (vocab) {Can the agent's current\\ vocabulary express\\ what changed?};
+
+    \node[assim, below left=1.3cm and 0.4cm of vocab] (assimilate) {\textbf{Assimilation}\\ \footnotesize update within existing structure:\\ re-estimate parameters, revise\\ predictions, adapt policy, replan};
+
+    \node[accom, below right=1.3cm and 0.4cm of vocab] (accommodate) {\textbf{Accommodation}\\ \footnotesize revise the representation:\\ add a category, relation, precondition,\\ operator, executor, or abstraction};
+
+    \node[outcome, below=0.6cm of assimilate] (ex1) {e.g., concept drift, continual learning,\\ domain randomization, plan repair};
+    \node[outcome, below=0.6cm of accommodate] (ex2) {e.g., operator discovery, executor learning,\\ predicate invention, model repair};
+
+    % ===== Arrows =====
+    \draw[arrow] (mismatch) -- (vocab);
+    \draw[arrow] (vocab) -| node[lbl, above, pos=0.25] {yes} (assimilate);
+    \draw[arrow] (vocab) -| node[lbl, above, pos=0.25] {no} (accommodate);
+    \draw[arrow, dashed] (assimilate.south) -- (ex1.north);
+    \draw[arrow, dashed] (accommodate.south) -- (ex2.north);
+
+    \end{tikzpicture}%
+    }
+    \caption[Assimilation versus accommodation in response to mismatch]{Two modes of response to novelty-induced mismatch. When the agent's current representational vocabulary can express the change, adaptation proceeds by \emph{assimilation}: updating parameters, predictions, or policies within existing structure. When the vocabulary itself is insufficient, \emph{accommodation} is required: the representation must be extended or revised before the situation can be described at all. The boundary between the two modes is agent-relative and depends on how the agent's knowledge is structured (\cref{sec:assimilation_accommodation}).}
+    \label{fig:assimilation_accommodation}
+\end{figure}

@@ -28,7 +28,8 @@ Their limitation is that they largely operate over a fixed action interface, a l
 When an imposed novelty invalidates the agent's model, the system still needs a way to identify what failed, decide whether the failure is perceptual, symbolic, or motoric, and revise the relevant representation.
 
 Planning makes this limitation visible because the missing structure can be stated precisely.
-\citet{gobel2026agentic} compare direct language-model planning and stepwise PDDL-simulation-guided language-model planning against a classical planner on Blocksworld.
+\citet{valmeekam2023planning} evaluate large language models on plan generation in domains modeled on International Planning Competition benchmarks and find that autonomous plan generation is weak---the best model in their study, GPT-4, solves roughly 12\% of instances on average---while the models are more useful as a source of heuristic guidance for external planners.
+\citet{gobel2026agentic} reach a consistent conclusion, comparing direct language-model planning and stepwise PDDL-simulation-guided language-model planning against a classical planner on Blocksworld.
 The classical planner solves a larger fraction of instances, while the language-model variants remain substantially weaker and the agentic version yields only modest gains at much higher token cost.
 This result should not be read as a dismissal of language models.
 It shows a narrower but important point: broad linguistic priors do not replace compositional search, explicit state update, and externally checkable plan structure when reliability matters.
@@ -37,7 +38,9 @@ Creative problem-solving raises a related concern.
 In the terms of this chapter, that is an accommodation problem: the agent must form and test a new representational commitment, not merely produce a fluent continuation of an old one.
 
 Open-ended language-model agents show a different kind of strength.
+MineDojo established the infrastructure for this line of work, pairing a Minecraft-based benchmark of thousands of open-ended tasks with an internet-scale knowledge base of videos, wiki pages, and forum discussions from which agents can draw priors~\citep{fan2022minedojo}.
 Voyager uses a language model to propose goals and write executable code in Minecraft, accumulating a skill library that transfers across worlds~\citep{wang2023voyager}.
+DECKARD makes the proposal-verification structure explicit: a language model hypothesizes an abstract world model of subgoals and their dependencies, and the agent verifies or corrects the hypothesized model against grounded experience, improving sample efficiency by an order of magnitude while remaining robust to errors in the language model's knowledge~\citep{nottingham2023deckard}.
 Odyssey similarly develops Minecraft agents around open-world skill libraries and benchmarks for long-horizon planning, dynamic planning, and autonomous exploration~\citep{liu2025odyssey}.
 These systems are important demonstrations of repertoire expansion.
 They also clarify the boundary between open-ended exploration and open-world recovery.

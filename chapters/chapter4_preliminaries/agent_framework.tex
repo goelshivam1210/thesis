@@ -1,8 +1,8 @@
 \section{A Framework for Open-World Agents}
 \label{sec:agent_framework}
 
-Having defined the environment and the nature of novelty, we now turn to the structure of the agent itself. The agents studied in this dissertation operate by combining symbolic reasoning at the level of task planning with subsymbolic execution at the level of environment interaction.
-This section formalizes the components of this framework: symbolic planning, reinforcement learning, and their integration into a hybrid architecture. More specifically, it provides the definitions that will be used throughout the dissertation.
+Having defined the environment and the crafting running example, we now turn to the structure of the agent itself. The agents studied in this dissertation operate by combining symbolic reasoning at the level of task planning with subsymbolic execution at the level of environment interaction.
+This section formalizes the components of this framework: symbolic planning, reinforcement learning, and their integration into a hybrid architecture. More specifically, it provides the definitions that will be used throughout the dissertation, including in the formal treatment of novelty that follows.
 % Rather than presenting these as independent formalisms, we develop them as complementary components of a single agent that must reason, act, and adapt under novelty.
 
 \subsection{Symbolic Planning}
@@ -126,18 +126,4 @@ In other words, if the symbolic planner says that $\Operator$ is applicable beca
 A \emph{planning solution} to $\IPT$ is a valid plan $\Plan = [\Operator_1, \dots, \Operator_n]$ for $\PlanningTask$. The plan induces the executor sequence $[e(\Operator_1), \dots, e(\Operator_n)]$, executed sequentially in $M$: after $e(\Operator_i)$ terminates, the detector is used to evaluate the symbolic state before dispatching $e(\Operator_{i+1})$. An \emph{execution solution} is such an induced executor sequence that, when run from an MDP state $s_0$ satisfying $\Abstraction(s_0) = \SymState_0$, terminates in some state $s'$ with $\Abstraction(s') \models \Goal$. The IPT is \emph{plannable} if a planning solution exists and \emph{solvable} if an execution solution exists. In a well-formed closed-world IPT whose executors terminate successfully in finite time, plannability implies solvability: the symbolic plan can be grounded into the corresponding sequence of executors.
 For the pogostick task, a symbolic plan might include steps such as \texttt{approach\_tree}, \texttt{break\_tree}, \texttt{approach\_crafting\_table}, \texttt{craft\_planks}, \texttt{craft\_sticks}, and \texttt{craft\_pogostick}. At execution time, the agent follows the corresponding executor sequence in the bottom row of \cref{fig:agent_environment}, using $\Abstraction$ after each executor terminates to confirm that the expected symbolic transition has occurred before continuing.
 
-
-\subsection{Novelty in Hybrid Systems}
-\label{sec:novelty_hybrid}
-
-The IPT formalism makes explicit where novelty can manifest and how it propagates through the agent's decision-making. Because planning and execution are coupled through the detector $\Abstraction$ and the executor mapping $e$, novelty can break the IPT at two distinct points.
-
-At the \emph{planning level}, novelty may render the symbolic model incomplete: new fluents, new operators, or changed preconditions and effects may mean that no valid plan exists within the agent's current model. The IPT is then not plannable. This corresponds to prohibitive novelty (\cref{def:prohibitive}) and requires symbolic model revision---discovering new operators, fluents, or task structure---before execution can proceed.
-
-At the \emph{execution level}, novelty may cause an executor to fail while the symbolic plan remains valid: the environment dynamics have changed such that $e(\Operator)$ no longer achieves $\Eff_{\Operator}$, even though $\Pre_{\Operator}$ is satisfied under $\Abstraction$. The IPT remains plannable but is no longer solvable, yielding the kind of problem later formalized as a stretch-IPT (\cref{def:stretch_ipt}). This corresponds to obstructive novelty (\cref{def:obstructive}) and manifests as a discrepancy between expected and observed symbolic states after an operator is dispatched for execution.
-
-This distinction is operationally significant. Prohibitive novelties demand changes to $\PlanningDomain$ or $\Operators$; obstructive novelties demand changes to the executor mapping $e$---learning or replacing executors for operators whose symbolic specifications remain valid. \Cref{ch:rapid_learn} develops a neurosymbolic architecture that addresses both failure modes through a cascading recovery pipeline, and formalizes obstructive failures as an \emph{executor discovery problem} in which the agent learns new executors for failed operators while preserving the existing symbolic plan structure.
-
-In either case, the hybrid decomposition localizes failure. When an executor fails, the agent knows \emph{which} operator was being executed and can compare $\Eff_{\Operator}$ against $\Abstraction(s')$ for the post-execution state $s'$. This converts what would otherwise be a global performance degradation into a targeted adaptation problem. Without this structure, a failure in the environment would be an undifferentiated signal with no indication of what specifically went wrong.
-
-This observation motivates the central claim of the dissertation: that structured abstractions over actions and interactions determine whether novelty-induced mismatch can be resolved efficiently and whether learned behaviors can generalize across variations. The next section develops this argument formally.
+The IPT distinguishes planning success (plannability) from execution success (solvability). The next section uses that distinction to formalize novelty and to locate where novelty can break the correspondence between operators and executors.

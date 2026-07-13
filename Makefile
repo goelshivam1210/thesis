@@ -12,6 +12,7 @@ LATEXMK = latexmk -pdf -interaction=nonstopmode -bibtex -outdir=build
 # Main target — latexmk only re-runs pdflatex/bibtex when sources change
 all:
 	$(LATEXMK) main.tex
+	cp build/main.pdf main.pdf
 
 # Auto-compile on save (continuous preview mode)
 watch:

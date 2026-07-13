@@ -1,18 +1,21 @@
-\chapter[Formal Preliminaries and Structured Abstractions]{Formal Preliminaries and Structured Abstractions\footnotemark}
+\chapter[Formalisms for Open Worlds]{Formalisms for Open Worlds\footnotemark}
 \label{ch:foundations}
 \footnotetext{Portions of this chapter are based on: S.~Goel, P.~Lymperopoulos, R.~Thielstrom, E.~Krause, P.~Feeney, P.~Lorang, S.~Schneider, Y.~Wei, E.~Kildebeck, S.~Goss, M.~C.~Hughes, L.~Liu, J.~Sinapov, and M.~Scheutz, ``A Neurosymbolic Cognitive Architecture Framework for Handling Novelties in Open Worlds,'' \textit{Artificial Intelligence}, vol.~331, p.~104111, 2024.}
 
 This chapter develops the formal vocabulary used by the technical contributions.
 \Cref{ch:novelty_open_world} introduced novelty as agent-relative mismatch and identified the requirements imposed by open-world autonomy; \cref{ch:related_work} positioned those requirements within the broader literature.
-We now define the agent--environment framework, symbolic and subsymbolic representations, hybrid planning and learning, and the structured abstractions that connect the dissertation's contributions.
+We now define the agent--environment framework, formalize novelty and its taxonomies, and introduce the structured abstractions that connect the dissertation's contributions.
 
-We begin by formalizing open-world environments and the relationship between environment states and agent representations (\cref{sec:open_world_environments}).
-We then define the planning and learning machinery used throughout the dissertation, including symbolic planning, reinforcement learning, and integrated planning tasks (\cref{sec:agent_framework}).
+We begin by formalizing open-world environments, the agent, and the crafting running example used throughout the dissertation (\cref{sec:open_world_environments}).
+We then define the planning and learning machinery used throughout, including symbolic planning, reinforcement learning, and integrated planning tasks (\cref{sec:agent_framework}).
+Next, we formalize novelty as agent-relative mismatch and present the task-impact and domain-element taxonomies (\cref{sec:novelty}).
 Finally, we introduce structured abstractions as the mechanism through which agents can localize mismatch, preserve reusable knowledge, and generalize across variation (\cref{sec:abstractions}).
 
 \input{chapters/chapter4_preliminaries/open_world_environment}
 
 \input{chapters/chapter4_preliminaries/agent_framework}
+
+\input{chapters/chapter4_preliminaries/novelty}
 
 \input{chapters/chapter4_preliminaries/abstractions}
 

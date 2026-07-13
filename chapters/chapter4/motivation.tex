@@ -1,7 +1,7 @@
 \section{Introduction}
 \label{sec:benchmarks_motivation}
 
-\Cref{ch:novelty_open_world,ch:foundations} defined open-world environments as settings in which an agent's internal models are incomplete with respect to the environment, and formalized novelty as a mismatch between those models and observed outcomes. In such settings, the central question is not only how agents should adapt, but how their ability to detect, localize, and recover from mismatch can be evaluated in a principled and systematic manner.
+\Cref{ch:novelty_open_world} characterized open-world environments as settings in which an agent's internal models are incomplete with respect to the environment; \cref{ch:foundations} formalized novelty as a mismatch between those models and observed outcomes. In such settings, the central question is not only how agents should adapt, but how their ability to detect, localize, and recover from mismatch can be evaluated in a principled and systematic manner.
 
 Evaluating agents under mismatch presents challenges that do not arise in closed-world settings. In standard benchmarks, the environment is fixed and fully specified, and performance can be measured with respect to a known objective. In contrast, open-world environments are characterized by the possibility of unanticipated changes: objects may appear or disappear, action effects may change, and task structure may evolve. These changes induce mismatch between the agent's expectations and the environment, but the space of possible mismatches is unbounded. As a result, evaluation cannot rely on a fixed set of scenarios, but must instead provide mechanisms for generating controlled and interpretable variations in the environment.
 
