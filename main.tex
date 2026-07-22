@@ -97,7 +97,12 @@ Finally finally, I wanted a blank page between the title and abstract. So I defi
 \usepackage{multicol}
 \usepackage{tabularx}
 \usepackage{array}
+\usepackage{etoolbox}
 \newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+% Give tables a more open, readable vertical rhythm.  Applying this at the
+% float level avoids changing the spacing of matrices and other math arrays.
+\AtBeginEnvironment{table}{\renewcommand{\arraystretch}{1.22}}
+\AtBeginEnvironment{table*}{\renewcommand{\arraystretch}{1.22}}
 \usepackage{colortbl}
 \usepackage{listings}
 \lstset{
@@ -110,6 +115,71 @@ Finally finally, I wanted a blank page between the title and abstract. So I defi
   tabsize=2,
   columns=fullflexible,
   keepspaces=true,
+}
+
+\lstdefinelanguage{YAML}{
+  sensitive=false,
+  alsoletter={_-},
+  morekeywords={
+    actions,action_sets,object_types,map_size,rooms,objects,entities,recipes,
+    trades,auto_pickup_agents,novelties,module,direction,step_cost,quantity,
+    room,chunked,agent,name,type,entity,action_set,inventory,input,output,
+    busy_ratio,true,false,null
+  },
+  morecomment=[l]{\#},
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstdefinelanguage{JSON}{
+  sensitive=true,
+  morekeywords={true,false,null},
+  morestring=[b]"
+}
+
+\lstdefinestyle{codeblockstyle}{
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{codeKeyword}\bfseries,
+  commentstyle=\color{codeComment}\itshape,
+  stringstyle=\color{codeString},
+  backgroundcolor=\color{codeBackground},
+  numbers=left,
+  numberstyle=\scriptsize\color{codeLineNumber},
+  stepnumber=1,
+  numbersep=10pt,
+  showstringspaces=false,
+  breaklines=true,
+  breakatwhitespace=false,
+  breakindent=1.5em,
+  columns=fullflexible,
+  keepspaces=true,
+  tabsize=2,
+  frame=lines,
+  rulecolor=\color{codeRule},
+  framerule=0.5pt,
+  framesep=7pt,
+  xleftmargin=3em,
+  xrightmargin=0.75em,
+  framexleftmargin=2.5em,
+  aboveskip=1.25em,
+  belowskip=1.25em,
+  lineskip=1pt,
+  captionpos=t
+}
+
+\lstdefinestyle{yamlstyle}{
+  style=codeblockstyle,
+  language=YAML
+}
+
+\lstdefinestyle{jsonstyle}{
+  style=codeblockstyle,
+  language=JSON
+}
+
+\lstdefinestyle{pythonstyle}{
+  style=codeblockstyle,
+  language=Python
 }
 \usepackage{siunitx}
 \sisetup{
@@ -128,38 +198,75 @@ Finally finally, I wanted a blank page between the title and abstract. So I defi
 \usepackage{listings}
 
 \lstdefinelanguage{PDDL}{
-  morekeywords={
-    define,domain,problem,:requirements,:typing,:strips,:fluents,
-    :types,:predicates,:functions,:action,:parameters,
-    :precondition,:effect,and,or,not,forall,exists,when,
-    increase,decrease
-  },
   sensitive=false,
+  alsoletter={:?-},
+  morekeywords=[1]{
+    define,domain,problem,and,or,not,forall,exists,when,
+    increase,decrease,assign,scale-up,scale-down
+  },
+  morekeywords=[2]{
+    :requirements,:typing,:strips,:fluents,:negative-preconditions,:equality,
+    :types,:constants,:predicates,:functions,:action,:parameters,
+    :precondition,:effect,:objects,:init,:goal,:metric
+  },
   morecomment=[l]{;},
   morestring=[b]"
 }
 
 \lstdefinestyle{pddlstyle}{
   language=PDDL,
-  basicstyle=\ttfamily\footnotesize,
-  keywordstyle=\bfseries,
-  commentstyle=\itshape,
-  numbers=none,
-  numberstyle=\tiny,
+  basicstyle=\ttfamily\small,
+  keywordstyle=[1]\color{pddlKeyword}\bfseries,
+  keywordstyle=[2]\color{pddlSection}\bfseries,
+  commentstyle=\color{pddlComment}\itshape,
+  stringstyle=\color{pddlString},
+  backgroundcolor=\color{pddlBackground},
+  numbers=left,
+  numberstyle=\scriptsize\color{pddlLineNumber},
   stepnumber=1,
-  numbersep=8pt,
+  numbersep=10pt,
   showstringspaces=false,
   breaklines=true,
   breakatwhitespace=false,
+  breakindent=1.5em,
   columns=fullflexible,
   keepspaces=true,
   tabsize=2,
-  frame=single,
-  captionpos=b
+  frame=lines,
+  rulecolor=\color{pddlRule},
+  framerule=0.5pt,
+  framesep=7pt,
+  xleftmargin=3em,
+  xrightmargin=0.75em,
+  framexleftmargin=2.5em,
+  aboveskip=1.25em,
+  belowskip=1.25em,
+  lineskip=1pt,
+  captionpos=t
 }
 
 
 \definecolor{taupegray}{RGB}{139,133,137}
+\definecolor{pddlKeyword}{RGB}{32,76,135}
+\definecolor{pddlSection}{RGB}{112,55,128}
+\definecolor{pddlComment}{RGB}{92,105,112}
+\definecolor{pddlString}{RGB}{35,110,92}
+\definecolor{pddlBackground}{RGB}{248,249,251}
+\definecolor{pddlRule}{RGB}{176,184,195}
+\definecolor{pddlLineNumber}{RGB}{126,134,145}
+\definecolor{codeKeyword}{RGB}{32,76,135}
+\definecolor{codeComment}{RGB}{92,105,112}
+\definecolor{codeString}{RGB}{35,110,92}
+\definecolor{codeBackground}{RGB}{248,249,251}
+\definecolor{codeRule}{RGB}{176,184,195}
+\definecolor{codeLineNumber}{RGB}{126,134,145}
+\definecolor{citationRed}{RGB}{128,24,24}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=citationRed,
+  urlcolor=black
+}
 \newif\ifrevs
 \revstrue   % ← set \revsfalse to hide all revision markup
 
@@ -210,6 +317,12 @@ Finally finally, I wanted a blank page between the title and abstract. So I defi
 \numberwithin{remark}{section}
 \numberwithin{example}{section}
 
+% Named contributions introduced in this dissertation.
+\DeclareRobustCommand{\RAPidLearn}{\textnormal{\textsc{RAPid-Learn}}}
+\DeclareRobustCommand{\FLEX}{\textnormal{\textsc{FLEX}}}
+\DeclareRobustCommand{\NovelGym}{\textnormal{\textsc{NovelGym}}}
+\DeclareRobustCommand{\NovelGridworlds}{\textnormal{\textsc{NovelGridworlds}}}
+
 \newcommand{\blank}{
 \clearpage 
 \begingroup
@@ -241,9 +354,9 @@ Finally finally, I wanted a blank page between the title and abstract. So I defi
 % \includeonly{chapters/chapter2/main}  % Novelty in Open-World Autonomy
 % \includeonly{chapters/chapter3/main}  % Literature Review: Adaptation Under Novelty
 % \includeonly{chapters/chapter4_preliminaries/main}  % Formalisms for Open Worlds
-% \includeonly{chapters/chapter4/main}  % Benchmark Environments (NovelGridworlds + NovelGym)
-% \includeonly{chapters/chapter5/main}  % Adaptive Planning and Learning (AIJ + RAPid-Learn)
-% \includeonly{chapters/chapter7_flex/main}  % FLEX
+% \includeonly{chapters/chapter4/main}  % Benchmark Environments (\NovelGridworlds{} + \NovelGym{})
+% \includeonly{chapters/chapter5/main}  % Adaptive Planning and Learning (AIJ + \RAPidLearn{})
+% \includeonly{chapters/chapter7_flex/main}  % \FLEX{}
 % \includeonly{chapters/chapter8_pho/main}  % Pushing Heavy Objects
 % \includeonly{chapters/chapter7/main}  % Conclusion
 
@@ -253,6 +366,7 @@ Finally finally, I wanted a blank page between the title and abstract. So I defi
 
 \input{macros/notation}
 \input{frontmatter/titlepage}
+\input{frontmatter/dedication}
 
 % after title page, begin double spacing
 \begin{doublespace}

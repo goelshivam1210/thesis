@@ -1,20 +1,61 @@
 \begin{table}[t]
 \centering
-\caption[Coverage of open-world approaches across novelty types]{Coverage of major approach families across the novelty taxonomy of \cref{sec:novelty_taxonomy}. \textbf{D} = can detect this novelty type; \textbf{A} = can adapt to or accommodate it; \textbf{--} = not addressed. The final two rows correspond to the contributions of this dissertation.}
+\caption[Comparison of related problem formulations]{Comparison of common problem formulations in the literatures reviewed in this chapter. The entries identify typical assumptions and objectives; individual methods may depart from these patterns.}
 \label{tab:landscape}
-\small
-\begin{tabularx}{\textwidth}{l *{4}{>{\centering\arraybackslash}X}}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.22}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.17\textwidth} *{4}{>{\raggedright\arraybackslash}X}}
 \toprule
-\textbf{Approach} & \textbf{Prohibitive} & \textbf{Obstructive} & \textbf{Beneficial} & \textbf{Nuisance} \\
+\textbf{Literature} & \textbf{What changes} & \textbf{What is usually held fixed} & \textbf{Information after change} & \textbf{Typical response} \\
 \midrule
-Open-set perception & D & D & D & D \\
-Classical planning & D & -- & -- & -- \\
-Standard RL & -- & A & A & -- \\
-LLM-as-planner & D & -- & -- & -- \\
-VLA / generalist policy & -- & A & -- & -- \\
-\midrule
-Action abstractions (\cref{ch:rapid_learn}) & D, A & D, A & -- & D \\
-Interaction abstractions (\cref{ch:generalization}) & -- & A & -- & -- \\
+Open-set and OOD detection
+& Support under the reference distribution; test inputs may be unknown
+& Learned representation, scoring function, and output interface
+& Test samples and model scores
+& Detect, score, or reject unsupported inputs \\
+
+Concept drift and non-stationary learning
+& Data distributions, rewards, dynamics, or observations over time
+& Often the feature, state, action, or output vocabulary
+& A data stream or continued interaction
+& Detect and track change; update a predictor or policy \\
+
+Continual learning
+& The sequence of data, tasks, or environments
+& Often the model interface or a shared task family
+& Sequential experience, sometimes with task-boundary information
+& Acquire and retain knowledge while limiting forgetting \\
+
+Transfer and meta-learning
+& The target task or domain within an assumed source--target relation or task distribution
+& Transferable structure and the adaptation interface
+& Target-domain data or limited task-specific experience
+& Reuse prior knowledge or adapt rapidly \\
+
+Domain randomization and online motor adaptation
+& Parameterized appearance, dynamics, terrain, or payload
+& The dimensions of variation and policy interface
+& Simulated variation and, for online adaptation, recent interaction history
+& Maintain performance through robustness or latent-context adaptation \\
+
+Replanning and plan repair
+& The current state, action availability, or validity of a plan
+& Commonly the planning vocabulary and available operators
+& Execution monitoring and updated state information
+& Find or repair a plan over known structure \\
+
+Model and representation revision
+& Model elements, predicates, operators, skills, or their grounding
+& Architectural commitments and available learning mechanisms
+& Failure traces, observations, demonstrations, or experiments
+& Diagnose, extend, or revise the structure used for action \\
+
+Foundation-model agents
+& Instructions, scenes, goals, or tasks beyond narrow task-specific training
+& Often the pretrained model and an action, skill, or tool interface
+& Prompts, percepts, tool feedback, and sometimes grounded experience
+& Propose, ground, execute, or verify candidate plans and structure \\
 \bottomrule
 \end{tabularx}
 \end{table}

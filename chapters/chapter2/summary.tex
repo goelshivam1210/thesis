@@ -1,14 +1,23 @@
 \section{Summary}
 \label{sec:ch2_summary}
 
-This chapter introduced the conceptual problem setting for the dissertation.
-Open-world autonomy differs from closed-world decision making because an agent's models, categories, actions, and assumptions may be incomplete with respect to the environment in which it acts.
-Novelty was characterized as an agent-relative mismatch between the world and the agent's current memory, expectations, models, or representational vocabulary.
-This view explains why the same change may be routine for one agent and disruptive for another.
+This chapter established the conceptual perspective on novelty and open-world autonomy used throughout the dissertation.
+An open world is a setting in which an agent cannot assume that its initial knowledge and representational vocabulary will remain sufficient for every task-relevant situation it encounters.
+Novelty is agent-relative: what is novel depends on the prior experience, memory, knowledge, and representational resources of the agent.
+Developmental and cognitive research illustrates this dependence through habituation, curiosity, and schema change, while neuroscience relates novelty to detection, attention, and subsequent memory.
+
+These perspectives also clarify that novelty is not synonymous with surprise, anomaly, or out-of-distribution status.
+Each makes a different comparison: with prior knowledge, with an expectation, with an established regularity, or with a reference distribution.
+The signals can coincide, but they need not do so, and they can imply different responses for an autonomous agent.
+Task relevance introduces a further distinction because unfamiliar information need not affect the agent's goals or behavior.
 
 The chapter also distinguished assimilation from accommodation.
 Some changes can be absorbed by updating parameters, predictions, or policies within an existing representation.
-Other changes require representational revision: adding a category, relation, precondition, action, executor, or abstraction that was previously missing.
+Other changes require accommodation through structural revision: adding a category, relation, precondition, action, executor, or abstraction that was previously missing.
 This distinction leads to four requirements for open-world autonomy: agents must detect and characterize mismatch, adapt from limited experience, revise representations when needed, and integrate perception, reasoning, learning, and action.
-The next chapter uses these requirements as a lens for organizing related work and identifying the gap addressed by the dissertation.
-The formal definition of novelty, its taxonomies by task impact and domain element, and the crafting running example appear in \cref{ch:foundations}.
+
+The assimilation--accommodation distinction also motivates the representational hypothesis taken forward by the dissertation.
+Structured abstractions can support assimilation by encoding invariances that allow an existing policy or behavior to generalize across environmental variation.
+When existing knowledge or behavior is insufficient, structured abstractions can support accommodation by exposing the component that must be revised or extended.
+Thus, the structure of an agent's abstractions helps determine both which changes can be handled without structural revision and how locally the agent can respond when revision becomes necessary.
+The next chapter uses this perspective to compare neighboring computational literatures according to what changes, what remains fixed, what information is available, and what response each formulation is designed to produce.

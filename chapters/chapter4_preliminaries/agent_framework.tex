@@ -50,20 +50,32 @@ Operators within a plan may depend on one another through shared literals. Opera
 
 Classical planning assumes deterministic transitions and complete, correct domain models. Planning domains and problems are commonly specified using the Planning Domain Definition Language (PDDL) \citep{mcdermott1998pddl}, and solved using domain-independent heuristic search algorithms such as Fast Downward \citep{helmert2006fast} or Metric-FF \citep{hoffmann2003metricff}.
 
-In the context of this dissertation, symbolic planning provides the agent with the ability to decompose long-horizon tasks into sequences of abstract actions, as illustrated in \cref{fig:symbolic_planning}. This decomposition is valuable precisely because it creates structure that can be exploited when novelty occurs: if an operator fails, the agent can identify \emph{which} step of the plan was affected and reason about what must change.
+Symbolic planning provides the agent with the ability to decompose long-horizon tasks into sequences of abstract actions, as illustrated in \cref{fig:symbolic_planning}. This decomposition is useful as it creates structure that can be exploited when novelty occurs: if an operator fails, the agent can identify \emph{which} step of the plan was affected and reason about what must change.
 
 
 \subsection{Reinforcement Learning}
 \label{sec:rl}
 
-While symbolic planning reasons over abstract state descriptions, the agent must ultimately execute actions in the environment, where internal state representations may be high-dimensional, observations partial, and dynamics stochastic. Reinforcement learning provides the framework for learning effective behaviors through direct interaction~\citep{sutton2018reinforcement}, in which the agent repeatedly selects actions and observes the resulting states and rewards (\cref{fig:rl_loop}). At the execution level, $\States$ denotes the agent's internal state representation---which may consist of sensor readings, learned features, or structured numerical descriptions---rather than the full environment state $e \in \EnvStates$ (\cref{sec:state_representations}).
+% While symbolic planning reasons over abstract state descriptions, the agent must ultimately execute actions in the environment, where internal state representations may be high-dimensional, observations partial, and dynamics stochastic.
+ Reinforcement learning provides the framework for learning effective behaviors through direct interaction~\citep{sutton2018reinforcement}, in which the agent repeatedly selects actions and observes the resulting states and rewards (\cref{fig:rl_loop}). At the execution level, $\States$ denotes the agent's internal state representation---which may consist of sensor readings, learned features, or structured numerical descriptions---rather than the full environment state $e \in \EnvStates$ (\cref{sec:state_representations}).
 
 % Reinforcement learning interaction loop figure
 \input{figures/chapter2/rl_loop}
 
 
 \paragraph{Markov decision processes.}
-The agent's interaction with the environment at the primitive level is modeled as a Markov Decision Process (MDP), defined as $M = \langle \States, \Actions, \Transition, \Reward, \Discount \rangle$, where $\States$ is the set of states, $\Actions$ is the set of primitive actions, $\Transition(s' \mid s, a)$ defines the probability of transitioning to state $s'$ after taking action $a$ in state $s$, $\Reward(s, a, s')$ is the immediate reward received upon this transition, and $\Discount \in [0, 1)$ is the discount factor. The transition dynamics and reward satisfy the \emph{Markov property}: the distribution over next states and rewards depends only on the current state and action, not on prior history. When transitions are deterministic, $\Transition(s' \mid s, a) = 1$ for a unique next state $s'$ and $0$ otherwise; deterministic transition functions, as used in gridworld domains (\cref{ch:benchmarks}), are a special case of this formulation. At each time step $t$, the agent observes state $s_t \in \States$, selects action $a_t \in \Actions$, transitions to $s_{t+1}$ according to $\Transition(\cdot \mid s_t, a_t)$, and receives reward $r_{t+1} = \Reward(s_t, a_t, s_{t+1})$.
+A reinforcement learning problem is formally modeled as a Markov Decision Process (MDP). An MDP is defined as $M = \langle \States, \Actions, \Transition, \Reward, \Discount \rangle$, where $\States$ is the set of states, $\Actions$ is the set of primitive actions, $\Transition(s' \mid s, a)$ defines the probability of transitioning to state $s'$ after taking action $a$ in state $s$, $\Reward(s, a, s')$ is the immediate reward received upon this transition, and $\Discount \in [0, 1)$ is the discount factor.
+ The transition dynamics and reward satisfy the \emph{Markov property}: the distribution over next states and rewards depends only on the current state and action, not on prior history. 
+ A deterministic transition function $f : \States \times \Actions \rightarrow \States$ is a special case of these probabilistic dynamics. For every state--action pair $(s,a)$,
+\[
+\Transition(s' \mid s,a) =
+\begin{cases}
+1 & \text{if } s' = f(s,a), \\
+0 & \text{otherwise}.
+\end{cases}
+\]
+The gridworld environments considered in this dissertation generally use deterministic transitions, except where stochastic dynamics are introduced explicitly.
+ At each time step $t$, the agent observes state $s_t \in \States$, selects action $a_t \in \Actions$, transitions to $s_{t+1}$ according to $\Transition(\cdot \mid s_t, a_t)$, and receives reward $r_{t+1} = \Reward(s_t, a_t, s_{t+1})$.
 
 \paragraph{Policies.}
 A policy $\Policy(a \mid s)$ specifies the agent's behavior by defining a probability distribution over actions given a state; deterministic policies are the special case where $\Policy(a \mid s) \in \{0, 1\}$ for each $(s, a)$ pair. The agent's objective is to find a policy that maximizes expected cumulative discounted reward. The \emph{return} from time step $t$ is $G_t = \sum_{k=0}^{\infty} \Discount^k r_{t+k+1}$, the performance objective is $J(\Policy) = \Expect_\Policy[G_0 \mid s_0]$, and an \emph{optimal policy} satisfies $\Policy^* = \arg\max_\Policy J(\Policy)$. The state-value function is $\Value^\Policy(s) = \Expect_\Policy[G_t \mid s_t = s]$, and the action-value function is $\QValue^\Policy(s,a) = \Expect_\Policy[G_t \mid s_t = s, a_t = a]$. These satisfy the Bellman expectation equations:
@@ -80,7 +92,7 @@ Long-horizon tasks require decisions at multiple levels of temporal granularity.
 \label{sec:hybrid}
 
 We now formalize the integration of symbolic planning (\cref{sec:symbolic_planning}) with reinforcement learning (\cref{sec:rl}) following the integrated planning task formulation introduced by \citet{sarathy2021spotter}.
-The central object is the \emph{integrated planning task} (IPT), which couples a symbolic planning task with subsymbolic execution in a base MDP through a detector and an executor mapping. In this section we state the closed-world base case: the symbolic model is assumed to be correct, every operator has a corresponding executor, and the detector supplies the symbolic state descriptions used to monitor execution. Later chapters relax this correspondence to characterize novelty-induced executor failures in RAPid-Learn~\citep{goel2022rapidlearn}.
+The central object is the \emph{integrated planning task} (IPT), which couples a symbolic planning task with subsymbolic execution in a base MDP through a detector and an executor mapping. In this section we state the closed-world base case: the symbolic model is assumed to be correct, every operator has a corresponding executor, and the detector supplies the symbolic state descriptions used to monitor execution. Later chapters relax this correspondence to characterize novelty-induced executor failures in \RAPidLearn{}~\citep{goel2022rapidlearn}.
 
 \paragraph{Integrated planning tasks.}
 An \emph{integrated planning task} (IPT) is a tuple

@@ -1,12 +1,12 @@
-\section{NovelGridworlds}
+\section{\NovelGridworlds{}}
 \label{sec:novelgridworlds}
 
-NovelGridworlds\footnote{The open-source NovelGridworlds repository is available at \url{https://github.com/gtatiya/gym-novel-gridworlds}. Additional implementation details, including environment wrappers, observation space configurations, and trajectory recording utilities, are described in~\citet{goel2021novelgridworlds}.} is an OpenAI Gym-based benchmark environment designed for developing and evaluating AI agents that can detect and adapt to novelties in open worlds. The environment provides four crafting tasks of increasing complexity, a taxonomy of twelve novelties per task, cross-platform support through a socket interface, and evaluation metrics for both planning and reinforcement learning agents.
+\NovelGridworlds{}\footnote{The open-source \NovelGridworlds{} repository is available at \url{https://github.com/gtatiya/gym-novel-gridworlds}. Additional implementation details, including environment wrappers, observation space configurations, and trajectory recording utilities, are described in~\citet{goel2021novelgridworlds}.} is an OpenAI Gym-based benchmark environment designed for developing and evaluating AI agents that can detect and adapt to novelties in open worlds. The environment provides four crafting tasks of increasing complexity, a taxonomy of twelve novelties per task, cross-platform support through a socket interface, and evaluation metrics for both planning and reinforcement learning agents.
 
 \subsection{Environment Design}
 \label{sec:ngw_environment}
 
-Each NovelGridworlds environment is a discrete gridworld of configurable size. The arena is enclosed by unbreakable walls and contains a crafting table, an agent, free space (air blocks), and task-specific objects. At each time step, the agent selects from a discrete set of actions and maintains an inventory of collected items. The environment returns an action cost for each action taken, enabling plan-cost-based evaluation. All environments share a common set of primitive actions: \texttt{move-forward}, \texttt{turn-left}, \texttt{turn-right}, and \texttt{break}. Task-specific actions extend this set to support crafting and resource extraction.
+Each \NovelGridworlds{} environment is a discrete gridworld of configurable size. The arena is enclosed by unbreakable walls and contains a crafting table, an agent, free space (air blocks), and task-specific objects. At each time step, the agent selects from a discrete set of actions and maintains an inventory of collected items. The environment returns an action cost for each action taken, enabling plan-cost-based evaluation. All environments share a common set of primitive actions: \texttt{move-forward}, \texttt{turn-left}, \texttt{turn-right}, and \texttt{break}. Task-specific actions extend this set to support crafting and resource extraction.
 
 \begin{figure}[t]
     \centering
@@ -33,7 +33,7 @@ The environment communicates with agents through a socket interface, enabling ag
 \subsection{Novelty Taxonomy}
 \label{sec:ngw_novelty_taxonomy}
 
-A central contribution of NovelGridworlds is a structured taxonomy for classifying novelties along two dimensions. The first dimension categorizes novelties by which component of the agent's model they affect. The second dimension characterizes the impact of the novelty on task performance.
+A central contribution of \NovelGridworlds{} is a structured taxonomy for classifying novelties along two dimensions. The first dimension categorizes novelties by which component of the agent's model they affect. The second dimension characterizes the impact of the novelty on task performance.
 
 \paragraph{Novelty classes.} Using the formalism from \cref{sec:symbolic_planning,sec:rl}, novelties are classified into three classes based on the component they alter:
 \begin{itemize}[leftmargin=*]
@@ -71,7 +71,7 @@ A central contribution of NovelGridworlds is a structured taxonomy for classifyi
         \caption{Fire wall (object/attribute, detrimental)}
         \label{fig:ngw_novelty_firewall}
     \end{subfigure}
-    \caption{Representative NovelGridworlds novelty scenarios discussed in the evaluation (fence, axe, and fire wall). Each panel shows how the grid layout and entities change under the corresponding novelty.}
+    \caption{Representative \NovelGridworlds{} novelty scenarios discussed in the evaluation (fence, axe, and fire wall). Each panel shows how the grid layout and entities change under the corresponding novelty.}
     \label{fig:ngw_novelty_examples}
 \end{figure}
 
@@ -82,7 +82,7 @@ A central contribution of NovelGridworlds is a structured taxonomy for classifyi
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.75\textwidth]{figures/chapter4/venn_diag_4.png}
-    \caption{Venn diagram classifying all twelve novelties implemented in NovelGridworlds by the novelty class they affect. Novelties in overlapping regions span multiple classes simultaneously.}
+    \caption{Venn diagram classifying all twelve novelties implemented in \NovelGridworlds{} by the novelty class they affect. Novelties in overlapping regions span multiple classes simultaneously.}
     \label{fig:ngw_venn_diag}
 \end{figure}
 
@@ -114,7 +114,7 @@ A central contribution of NovelGridworlds is a structured taxonomy for classifyi
 \subsection{Evaluation Metrics}
 \label{sec:ngw_metrics}
 
-NovelGridworlds introduces three evaluation metrics designed to capture different aspects of an agent's response to novelty:
+\NovelGridworlds{} introduces three evaluation metrics designed to capture different aspects of an agent's response to novelty:
 \begin{itemize}[leftmargin=*]
     \item \textbf{Metric M1 (Reaction Performance)}: The ratio of cumulative action cost in the post-novelty scenario to the cost in the pre-novelty scenario. A ratio greater than 1 indicates degraded performance, less than 1 indicates improvement, and equal to 1 indicates no change.
     \item \textbf{Metric M2 (Steps)}: The number of steps the agent takes to complete the task in the post-novelty scenario.
@@ -148,4 +148,4 @@ Two types of agents were evaluated: a symbolic planning agent implemented using 
 \subsection{Key Insights}
 \label{sec:ngw_insights}
 
-The NovelGridworlds experiments reveal a fundamental tension between the two dominant paradigms for sequential decision-making. Planning agents, equipped with explicit models of the environment, excel at detecting novelties through discrepancies between expected and observed states. However, they lack mechanisms for adapting their models in response to detected novelties, and their performance degrades gracefully but without recovery. Reinforcement learning agents, in contrast, can potentially adapt through continued interaction but suffer from high sample complexity and are brittle when novelties alter the observation space or introduce lethal states. Neither paradigm alone is sufficient for robust open-world operation. These observations directly motivate the development of hybrid approaches, as well as a more flexible evaluation ecosystem, which we present in the next section.
+The \NovelGridworlds{} experiments reveal a fundamental tension between the two dominant paradigms for sequential decision-making. Planning agents, equipped with explicit models of the environment, excel at detecting novelties through discrepancies between expected and observed states. However, they lack mechanisms for adapting their models in response to detected novelties, and their performance degrades gracefully but without recovery. Reinforcement learning agents, in contrast, can potentially adapt through continued interaction but suffer from high sample complexity and are brittle when novelties alter the observation space or introduce lethal states. Neither paradigm alone is sufficient for robust open-world operation. These observations directly motivate the development of hybrid approaches, as well as a more flexible evaluation ecosystem, which we present in the next section.

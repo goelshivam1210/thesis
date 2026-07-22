@@ -2,20 +2,27 @@
 % Chapter 3 -- Literature review
 % ============================================================
 
+\rev{
 \chapter{Literature Review: Adaptation Under Novelty}
 \label{ch:related_work}
 
-This chapter situates the dissertation within the broader literature on learning, planning, and adaptation under novelty.
-The previous chapter argued that open-world autonomy requires more than robustness within a fixed representation: agents must sometimes revise the vocabulary, operators, or abstractions through which they understand the world.
-Here we use that distinction to organize existing work.
+This chapter situates the dissertation within the computational literature on learning and acting under change.
+Open-set recognition, concept drift, non-stationary learning, continual learning, transfer, meta-learning, robustness, online adaptation, planning, and foundation-model agents all address some departure from training conditions or prior knowledge.
+They should not, however, be collapsed into a single formulation.
+They differ in what is allowed to change, what the agent is assumed to know, and what constitutes a successful response.
 
-The chapter first reviews methods that adapt within a fixed representation, including novelty detection, concept drift, continual learning, transfer learning, domain randomization, and plan repair.
-It then turns to approaches that extend an agent's representation in response to failure, including open-world architectures, creative problem solving, action discovery, and symbolic-neural systems.
-Finally, it considers foundation models as a source of broad priors and candidate structure, while arguing that they do not remove the need for localizable, testable, and grounded mechanisms for adaptation.
-The chapter closes by identifying the gap addressed by this dissertation: structural adaptation and generalization mediated by structured abstractions.
+The conceptual perspective developed in the previous chapter provides a basis for making these distinctions.
+The review asks four questions of each literature: what aspect of the environment, task, or data-generating process changes; which features, labels, states, actions, models, or task families remain fixed; what observations, feedback, and interaction are available after the change; and whether success means detection, prediction, retention, rapid adaptation, continued task performance, or revision of the agent's representation.
+These questions locate the open-world problem without denying the substantial capabilities developed in neighboring areas.
+
+The chapter first examines methods that detect unfamiliar inputs or adapt within a fixed representation, including novelty and out-of-distribution detection, concept drift, non-stationary and continual learning, transfer and meta-learning, domain randomization, and plan repair.
+It then considers approaches that can extend models or behavioral structure, including open-world architectures, creative problem solving, action-model learning, and neurosymbolic systems.
+Foundation models receive separate treatment because broad pretrained knowledge changes how much can be handled without task-specific learning while leaving questions of grounding, verification, and post-deployment revision unresolved.
+The final synthesis uses this landscape to position the dissertation's contributions to evaluation, localized adaptation after failure, and generalization through structured abstractions.
 
 \input{chapters/chapter3/capabilities_and_gaps}
 
 \input{chapters/chapter3/foundation_models}
 
 \input{chapters/chapter3/synthesis_positioning}
+}

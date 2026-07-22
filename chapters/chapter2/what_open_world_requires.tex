@@ -1,46 +1,44 @@
 % ============================================================
-% §2.3  Requirements for open-world autonomy
+% §2.4  Requirements for open-world autonomy
 % ============================================================
 
 \section{Requirements for Open-World Autonomy}
 \label{sec:what_is_required}
 
-The assimilation--accommodation distinction gives us a way to read the open-world AI literature.
-If open-world autonomy only required agents to adjust within a fixed vocabulary, then detection, re-estimation, and policy adaptation would be enough.
-The literature sets a higher bar.
-Across SAIL-ON, open-world learning, cognitive systems, robotics, and embodied AI, four recurring requirements define the broader problem.
-These requirements are larger than what this dissertation claims to solve, but they are useful because they show which parts of the problem existing methods address and which parts remain open.
+The preceding sections provide a way to interpret the literature on learning and acting under change.
+If open-world autonomy required only parameter adjustment within a fixed vocabulary, then detection, re-estimation, and policy adaptation would be sufficient.
+The broader problem also includes cases in which the agent must determine what has become inadequate and whether its current representation can express an appropriate response.
+Across open-world learning, cognitive systems, robotics, and embodied AI, four recurring requirements characterize this broader problem.
+They extend beyond what this dissertation claims to solve, but provide a useful basis for identifying which parts of open-world autonomy existing methods address and which remain open.
 
-\paragraph{Requirement 1: detect and characterize mismatch.}
+\paragraph{Requirement 1: Detect and Characterize Mismatch.}
 An agent must first notice when its assumptions no longer hold.
-The SAIL-ON program placed novelty detection, characterization, and accommodation at the center of open-world AI~\citep{senator2019science}, and \citet{holder2025introduction} present the same detect--characterize--accommodate sequence as a central framing for the field.
-Formal accounts of novelty similarly emphasize that an agent must reason about cases not covered by its prior model~\citep{boult2021towards,langley2020open}.
-\citet{kejriwal2024challenges} describe a useful progression: weak open-world learning detects novelty, semi-strong open-world learning characterizes it, and strong open-world learning adapts to it.
-This progression matters because detection alone does not specify a response.
-An agent that flags an unknown object, failed action, or unlikely transition still needs to determine what kind of mismatch it faces and what part of its behavior should change.
+Research on open-world learning consistently distinguishes noticing that prior assumptions have failed from determining what has changed and how that change matters~\citep{senator2019science,langley2020open,boult2021towards,kejriwal2024challenges}.
+An agent that flags an unknown object, failed action, or unlikely transition has not yet determined whether the mismatch is perceptual, dynamical, task-level, or behavioral.
+Nor has it established whether the mismatch is relevant to its current goal.
+Characterization is necessary because different explanations can support different actions: replanning around a known obstacle is not the same problem as learning an action whose expected effect no longer occurs.
 
-\paragraph{Requirement 2: adapt from limited experience.}
+\paragraph{Requirement 2: Adapt from Limited Experience.}
 Open-world agents cannot assume a large offline retraining phase each time the world changes.
-This constraint is especially important for embodied systems, where interaction is costly, slow, and often times safety-bearing.
+This constraint is especially important for embodied systems, where interaction is costly, slow, and often safety-critical.
 Robotics researchers have made this point at the level of the field: embodied agents often operate under conditions unlike those seen during training and must adapt readily when those conditions change~\citep{roy2021machine}.
 Deep reinforcement learning has achieved important robotic successes, but real-world interaction remains expensive, making sample efficiency a central requirement rather than a convenience~\citep{tang2025deep}.
 
-\paragraph{Requirement 3: revise representations when needed.}
+\paragraph{Requirement 3: Revise Representations When Needed.}
 This requirement is the open-world version of accommodation.
 If an agent's model is necessarily incomplete, then it cannot rely forever on a fixed designer-provided ontology.
 The big world hypothesis makes this unavoidable: the agent is smaller than its world, and so its representations must remain revisable as experience exposes their limits~\citep{javed2024bigworld}.
 The agent may need to add a predicate, split a category, revise an operator, learn a new executor, or choose a different abstraction under which the same variation is no longer disruptive.
 The important point is not that all structure must be learned from scratch.
-It is that the agent's vocabulary must be able to change when the world invalidates it.
+Agents can begin with substantial designer-provided knowledge while retaining the capacity to revise their representations and behaviors when experience exposes their limits.
 
-\paragraph{Requirement 4: integrate perception, reasoning, learning, and action.}
-Open-world autonomy is not solved by perception, planning, learning, or control in isolation.
+\paragraph{Requirement 4: Integrate Perception, Reasoning, Learning, and Action.}
+Open-world autonomy requires perception, planning, learning, and control to operate as an integrated system.
 Sequential decision-making agents must detect mismatch, reason about its source, explore to gather evidence, replan when possible, and learn when existing operators are not enough.
 Interactive settings also give the agent a capability that purely perceptual settings lack: the agent can act in order to probe what has changed.
-Recent embodied-AI and NeuroAI discussions make the same point at the level of architecture: situated competence requires connecting language and concepts to perception, action, consequence, continual learning, and physically grounded control~\citep{tellex2026grounded,zador2025neuroai}.
+Research on symbol grounding, embodied language, and NeuroAI makes the same point at the level of architecture: grounded behavior requires connecting concepts to perception, action, physical consequences, continual learning, and control~\citep{harnad1990symbol,bisk2020experience,zador2025neuroai}.
 Open-world autonomy is therefore an architectural problem as much as an algorithmic one.
 
-The next chapter uses these requirements as a diagnostic lens.
-Many mature methods satisfy parts of the first two requirements: they detect change, estimate new parameters, or adapt policies within a fixed representation.
-The harder requirement for this dissertation is the third one: revising or extending the representation when the agent lacks the terms needed to describe the changed world.
-The literature review asks how existing approaches divide across that boundary.
+The next chapter uses these requirements as one diagnostic lens rather than as a claim that neighboring research areas solve the same problem.
+It asks what each literature treats as changing, which assumptions remain fixed, what information is available to the learner, and what form of response counts as success.
+These questions make it possible to distinguish open-world autonomy from detection, concept drift, non-stationary learning, continual learning, transfer, meta-learning, and robustness while also identifying the capabilities that these areas contribute.

@@ -1,7 +1,7 @@
-\section{NovelGym}
+\section{\NovelGym{}}
 \label{sec:novelgym}
 
-NovelGym\footnote{The project website and codebase are available at \url{https://github.com/tufts-ai-robotics-group/NovelGym}.} extends and generalizes the ideas introduced in NovelGridworlds into a flexible ecosystem for developing and benchmarking open-world agents. While NovelGridworlds provides a fixed set of tasks and novelties suitable for initial evaluation, NovelGym introduces a formal framework for defining environments and their transformations, a modular software architecture for rapid development of tasks, novelties, and agent systems, and a comprehensive evaluation protocol with adaptation-focused metrics. The ecosystem supports single-agent and multi-agent scenarios, accommodates symbolic planning agents, reinforcement learning agents, and hybrid architectures, and enables composable novelty injection. The environment representation introduced in \cref{sec:ng_environment} serves as the basis for the formalism presented below.
+\NovelGym{}\footnote{The project website and codebase are available at \url{https://github.com/tufts-ai-robotics-group/NovelGym}.} extends and generalizes the ideas introduced in \NovelGridworlds{} into a flexible ecosystem for developing and benchmarking open-world agents. While \NovelGridworlds{} provides a fixed set of tasks and novelties suitable for initial evaluation, \NovelGym{} introduces a formal framework for defining environments and their transformations, a modular software architecture for rapid development of tasks, novelties, and agent systems, and a comprehensive evaluation protocol with adaptation-focused metrics. The ecosystem supports single-agent and multi-agent scenarios, accommodates symbolic planning agents, reinforcement learning agents, and hybrid architectures, and enables composable novelty injection. The environment representation introduced in \cref{sec:ng_environment} serves as the basis for the formalism presented below.
 
 \subsection{Environment Formalism}
 \label{sec:ng_environment}
@@ -27,12 +27,12 @@ where the tuple $(\Actions_{e_1}, \ldots, \Actions_{e_m})$ captures the actions 
 
 An agent is defined as $\mathcal{A} = \langle Sen, Act, \mathcal{K}, \Pi \rangle$, where $Sen$ denotes the agent's sensors that generate observations $O$ of the world, $Act$ denotes actuators that can affect the world, $\mathcal{K}$ is a knowledge repository that may be initially empty and accumulate knowledge over time, and $\Pi : O \rightarrow \Actions$ maps observations to actions.
 
-Observations can take multiple forms depending on the agent's sensor configuration. NovelGym supports LiDAR-like sensors that return distances to entities at angular increments, image-based local view representations using one-hot vector encodings of entity types on a grid around the agent, and symbolic state descriptions expressed in PDDL. This flexibility allows the same environment to interface with planning agents, reinforcement learning agents, and hybrid systems without modification.
+Observations can take multiple forms depending on the agent's sensor configuration. \NovelGym{} supports LiDAR-like sensors that return distances to entities at angular increments, image-based local view representations using one-hot vector encodings of entity types on a grid around the agent, and symbolic state descriptions expressed in PDDL. This flexibility allows the same environment to interface with planning agents, reinforcement learning agents, and hybrid systems without modification.
 
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.7\textwidth]{figures/chapter4/sensor_rep.png}
-    \caption{Illustration of the agent's sensor representations in NovelGym. (Left) A LiDAR-like representation emitting beams at angular increments. (Right) An image-based local view representation using one-hot vector encodings.}
+    \caption{Illustration of the agent's sensor representations in \NovelGym{}. (Left) A LiDAR-like representation emitting beams at angular increments. (Right) An image-based local view representation using one-hot vector encodings.}
     \label{fig:ng_sensors}
 \end{figure}
 
@@ -42,7 +42,7 @@ The agent's behavior function $\Pi$ can be implemented using symbolic planning, 
 \subsection{Novelty as Environment Transformation}
 \label{sec:ng_novelty}
 
-NovelGym formalizes novelty through the concept of environment transformations. A transformation is a function $\nu : E \rightarrow E'$ that modifies one or more components of the environment. This formalism complements the class-based taxonomy introduced in \cref{sec:ngw_novelty_taxonomy}: while the taxonomy categorizes novelties by which aspect of the agent's model they affect, the transformation formalism specifies precisely which components of the environment are modified and how. Six categories of transformation are supported:
+\NovelGym{} formalizes novelty through the concept of environment transformations. A transformation is a function $\nu : E \rightarrow E'$ that modifies one or more components of the environment. This formalism complements the class-based taxonomy introduced in \cref{sec:ngw_novelty_taxonomy}: while the taxonomy categorizes novelties by which aspect of the agent's model they affect, the transformation formalism specifies precisely which components of the environment are modified and how. Six categories of transformation are supported:
 \begin{itemize}[leftmargin=*]
     \item \textbf{Layout changes}: The grid $G$ is modified such that $G \neq G'$, altering the spatial structure of the environment.
     \item \textbf{Entity alterations}: The set of entities $\mathcal{E}$ changes such that $\mathcal{E} \neq \mathcal{E}'$, introducing new entities or modifying existing ones.
@@ -58,12 +58,12 @@ Critically, these transformations are \emph{composable}. Multiple transformation
 \subsection{Architecture and Implementation}
 \label{sec:ng_architecture}
 
-The NovelGym ecosystem is composed of two main components: the environment and the agent training architecture. A novelty injector module transforms the environment based on specified configurations.
+The \NovelGym{} ecosystem is composed of two main components: the environment and the agent training architecture. A novelty injector module transforms the environment based on specified configurations.
 
 \begin{figure}[t]
     \centering
     \includegraphics[width=\textwidth]{figures/chapter4/novelgym_architecture.pdf}
-    \caption{System design of the NovelGym ecosystem. Blue highlights the environment modules and purple highlights the agent modules. The novelty injector (red) transforms the environment based on specified configurations.}
+    \caption{System design of the \NovelGym{} ecosystem. Blue highlights the environment modules and purple highlights the agent modules. The novelty injector (red) transforms the environment based on specified configurations.}
     \label{fig:ng_architecture}
 \end{figure}
 
@@ -83,13 +83,13 @@ The NovelGym ecosystem is composed of two main components: the environment and t
     \item A \emph{reward-shaping wrapper} that uses the integrated planner to generate subgoals from the symbolic plan and shapes rewards by monitoring whether subgoals are achieved during learning. This wrapper enables sophisticated routines for novelty handling that combine planning and learning.
 \end{itemize}
 
-The architecture also integrates a modular reinforcement learning framework (Tianshou~\citep{weng2022tianshou}), enabling users to experiment with various learning algorithms. The modularity of the system played a crucial role in enabling the implementation of complex hybrid agent architectures evaluated in this chapter and developed further in the RapidLearn line of work~\citep{goel2022rapidlearn}.
+The architecture also integrates a modular reinforcement learning framework (Tianshou~\citep{weng2022tianshou}), enabling users to experiment with various learning algorithms. The modularity of the system played a crucial role in enabling the implementation of complex hybrid agent architectures evaluated in this chapter and developed further in the \RAPidLearn{} line of work~\citep{goel2022rapidlearn}.
 
 
 \subsection{Evaluation Protocol and Metrics}
 \label{sec:ng_evaluation}
 
-NovelGym introduces an evaluation protocol consisting of four phases, illustrated in~\cref{fig:ng_metrics}:
+\NovelGym{} introduces an evaluation protocol consisting of four phases, illustrated in~\cref{fig:ng_metrics}:
 \begin{enumerate}[leftmargin=*]
     \item \textbf{Initial training}: The agent is trained in a controlled, novelty-free environment until its knowledge base or policy is sufficient to solve the task.
     \item \textbf{Novelty injection}: A transformation is applied to the environment. The agent's performance is monitored immediately to assess the impact.
@@ -165,7 +165,7 @@ NovelGym introduces an evaluation protocol consisting of four phases, illustrate
         \draw[measure, brown!70!black] (10.9,0) -- (10.9,\ypost);
         \node[annot, brown!70!black, anchor=south, align=center] at (10.9,\ypost) {$S_{\text{post}}$};
     \end{tikzpicture}
-    \caption{Illustration of the NovelGym evaluation protocol and performance over time: the learning agent's success rate (black) as training progresses, with novelty injection (red) dividing the pre- and post-novelty regimes. At initialization the agent's policy is effectively random, so the curve begins at the random-action baseline (blue) and learning lifts it above this chance-level reference. Novelty injection collapses performance back to the chance-level baseline; the post-novelty learning curve then restarts from this baseline point and adaptation gradually recovers performance to $S_{\text{post}}$. The annotated regions correspond to the metrics in \cref{sec:ng_evaluation}: pre-novelty asymptotic performance ($S_{\text{pre}}$), novelty impact ($I_{\text{novelty}}$), time to adapt ($T_{\text{adapt}}$), and post-novelty asymptotic performance ($S_{\text{post}}$).}
+    \caption{Illustration of the \NovelGym{} evaluation protocol and performance over time: the learning agent's success rate (black) as training progresses, with novelty injection (red) dividing the pre- and post-novelty regimes. At initialization the agent's policy is effectively random, so the curve begins at the random-action baseline (blue) and learning lifts it above this chance-level reference. Novelty injection collapses performance back to the chance-level baseline; the post-novelty learning curve then restarts from this baseline point and adaptation gradually recovers performance to $S_{\text{post}}$. The annotated regions correspond to the metrics in \cref{sec:ng_evaluation}: pre-novelty asymptotic performance ($S_{\text{pre}}$), novelty impact ($I_{\text{novelty}}$), time to adapt ($T_{\text{adapt}}$), and post-novelty asymptotic performance ($S_{\text{post}}$).}
     \label{fig:ng_metrics}
 \end{figure}
 
@@ -178,18 +178,18 @@ Five evaluation metrics are defined to capture different aspects of an agent's b
     \item \textbf{Post-adaptation efficiency} ($\Delta t$): The difference in average task completion time before and after novelty, defined as $\Delta t = t_\text{pre} - t_\text{post}$. A positive value indicates that the novelty ultimately allowed the agent to find a more efficient solution.
 \end{enumerate}
 
-These metrics extend the M1, M2, and M3 metrics of NovelGridworlds by explicitly capturing adaptation dynamics. While the earlier metrics focus on cost and detection, the NovelGym metrics additionally measure the speed of adaptation, the severity of the initial performance drop, and whether the agent can exploit beneficial novelties.
+These metrics extend the M1, M2, and M3 metrics of \NovelGridworlds{} by explicitly capturing adaptation dynamics. While the earlier metrics focus on cost and detection, the \NovelGym{} metrics additionally measure the speed of adaptation, the severity of the initial performance drop, and whether the agent can exploit beneficial novelties.
 
 
 \subsection{Benchmark Task and Novelties}
 \label{sec:ng_task}
 
-The benchmark task in NovelGym is a Minecraft-inspired pogostick crafting task. The agent operates in a two-room gridworld environment containing resources (oak trees, diamond ore, platinum blocks), a crafting table, and a trader (see \cref{fig:ng_novelties}\rev{, \cref{fig:ngw2_screenshot}}). The agent must collect resources, craft intermediary items, trade with the trader, and ultimately craft a pogostick. A simplified version of the task was used to make it tractable for reinforcement learning agents while preserving the sequential, multi-step nature of the crafting challenge.
+The benchmark task in \NovelGym{} is a Minecraft-inspired pogostick crafting task. The agent operates in a two-room gridworld environment containing resources (oak trees, diamond ore, platinum blocks), a crafting table, and a trader (see \cref{fig:ng_novelties}\rev{, \cref{fig:ngw2_screenshot}}). The agent must collect resources, craft intermediary items, trade with the trader, and ultimately craft a pogostick. A simplified version of the task was used to make it tractable for reinforcement learning agents while preserving the sequential, multi-step nature of the crafting challenge.
 
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.75\textwidth]{figures/chapter4/ngw-screenshot.png}
-    \caption{\rev{Screenshot of the NovelGym environment running the pogostick crafting task. The agent (blue arrow) navigates a grid containing oak logs (brown), diamond ore (teal), platinum blocks (silver), a crafting table, and a trader (green face). The right panel displays the current episode, step count, agent facing direction, selected action, total cost, and inventory contents.}}
+    \caption{\rev{Screenshot of the \NovelGym{} environment running the pogostick crafting task. The agent (blue arrow) navigates a grid containing oak logs (brown), diamond ore (teal), platinum blocks (silver), a crafting table, and a trader (green face). The right panel displays the current episode, step count, agent facing direction, selected action, total cost, and inventory contents.}}
     \label{fig:ngw2_screenshot}
 \end{figure}
 
@@ -217,8 +217,8 @@ Twelve transformations are implemented in total, including additional novelties 
 
 Four agent architectures were benchmarked, spanning hybrid and transfer learning approaches:
 \begin{itemize}[leftmargin=*]
-    \item \textbf{RapidLearn$^+$ (PPO+ICM)}: A hybrid planning and learning architecture that uses symbolic planning for the pre-novelty task and instantiates a reinforcement learning problem when plan execution fails due to novelty. The RL component uses PPO~\citep{schulman2017proximal} augmented with the Intrinsic Curiosity Module (ICM)~\citep{pathak2017curiosity} for exploration. This architecture is a direct implementation of the method introduced in~\citet{goel2022rapidlearn}.
-    \item \textbf{RapidLearn (PPO)}: The same hybrid architecture without ICM.
+    \item \textbf{\RAPidLearn{}$^+$ (PPO+ICM)}: A hybrid planning and learning architecture that uses symbolic planning for the pre-novelty task and instantiates a reinforcement learning problem when plan execution fails due to novelty. The RL component uses PPO~\citep{schulman2017proximal} augmented with the Intrinsic Curiosity Module (ICM)~\citep{pathak2017curiosity} for exploration. This architecture is a direct implementation of the method introduced in~\citet{goel2022rapidlearn}.
+    \item \textbf{\RAPidLearn{} (PPO)}: The same hybrid architecture without ICM.
     \item \textbf{Transfer RL (PPO)+ICM}: A pure reinforcement learning approach that pre-trains on the base task and transfers weights to the post-novelty task, with automatic expansion of observation and action spaces, augmented with ICM.
     \item \textbf{Transfer RL (PPO)}: The same transfer approach without ICM.
 \end{itemize}
@@ -229,7 +229,7 @@ All agents used a LiDAR-like observation space with beams emitted at $\frac{\pi}
 \subsection{Experimental Results}
 \label{sec:ng_results}
 
-All agents achieved perfect pre-novelty performance ($S_\text{pre} = 1.0$), with the RL agents requiring 4 million training time steps to reach this level. Results are organized across two tables. \Cref{tab:ng_performance} reports performance metrics---pre-novelty success rate, novelty impact, and post-adaptation success rate---which capture how severely each novelty degrades the agent and whether the agent ultimately recovers. \Cref{tab:ng_efficiency} reports efficiency metrics---adaptation time and post-adaptation efficiency---which capture how quickly the agent adapts and whether the adapted strategy is more or less costly than the original. Together, these tables provide a comprehensive picture of agent behavior under novelty; see~\citet{goel2024novelgym} for additional results and analysis\footnote{All results are averaged across 10 random seeds. A convergence criterion based on success rate and reward thresholds was used to determine when adaptation was complete; see \cref{sec:ng_convergence} for the precise convergence criteria and \cref{sec:ng_hyperparameters} for hyperparameter settings.}. The hybrid agents (RapidLearn and RapidLearn$^+$) are instances of the planning-learning architecture that is formalized and extended in \cref{ch:rapid_learn}.
+All agents achieved perfect pre-novelty performance ($S_\text{pre} = 1.0$), with the RL agents requiring 4 million training time steps to reach this level. Results are organized across two tables. \Cref{tab:ng_performance} reports performance metrics---pre-novelty success rate, novelty impact, and post-adaptation success rate---which capture how severely each novelty degrades the agent and whether the agent ultimately recovers. \Cref{tab:ng_efficiency} reports efficiency metrics---adaptation time and post-adaptation efficiency---which capture how quickly the agent adapts and whether the adapted strategy is more or less costly than the original. Together, these tables provide a comprehensive picture of agent behavior under novelty; see~\citet{goel2024novelgym} for additional results and analysis\footnote{All results are averaged across 10 random seeds. A convergence criterion based on success rate and reward thresholds was used to determine when adaptation was complete; see \cref{sec:ng_convergence} for the precise convergence criteria and \cref{sec:ng_hyperparameters} for hyperparameter settings.}. The hybrid agents (\RAPidLearn{} and \RAPidLearn{}$^+$) are instances of the planning-learning architecture that is formalized and extended in \cref{ch:rapid_learn}.
 
 \input{tables/chapter4/ng_performance}
 

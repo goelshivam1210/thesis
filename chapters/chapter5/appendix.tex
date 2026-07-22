@@ -1,16 +1,16 @@
 \section{Technical Appendix}
 \label{sec:ch5_appendix}
 
-\subsection{RAPid-Learn Hyperparameters}
+\subsection{\RAPidLearn{} Hyperparameters}
 \label{sec:ch6_hyperparameters}
 
-\rev{The RAPid-Learn executor learner uses one neural network with a single hidden layer per learned operator. \Cref{tab:hyper_rapid} lists the hyperparameters used in the standalone and integrated evaluations.}
+\rev{The \RAPidLearn{} executor learner uses one neural network with a single hidden layer per learned operator. \Cref{tab:hyper_rapid} lists the hyperparameters used in the standalone and integrated evaluations.}
 \input{tables/chapter5/rapid_hyperparams}
 
 \subsection{Agent Implementation}
 \label{sec:ch5_agent_implementation}
 
-\rev{For all evaluations, a domain-interface component parses the environment's sensory information (Polycraft provides it in JSON) into the first-order predicate form used by the rest of the architecture; the same interface works with NovelGridworlds. The knowledge base $\KB$ is implemented as a set of Prolog facts and rules, queried whenever the truth value of a fact is needed (e.g.,\ when checking preconditions and effects). Operators are written in an Action Script Language (ASL). During planning, the Prolog facts and ASL operators are translated into a PDDL problem and domain and solved with the off-the-shelf MetricFF planner~\citep{hoffmann2003metricff}; only operators with at least one known effect are exported to the planner.}
+\rev{For all evaluations, a domain-interface component parses the environment's sensory information (Polycraft provides it in JSON) into the first-order predicate form used by the rest of the architecture; the same interface works with \NovelGridworlds{}. The knowledge base $\KB$ is implemented as a set of Prolog facts and rules, queried whenever the truth value of a fact is needed (e.g.,\ when checking preconditions and effects). Operators are written in an Action Script Language (ASL). During planning, the Prolog facts and ASL operators are translated into a PDDL problem and domain and solved with the off-the-shelf MetricFF planner~\citep{hoffmann2003metricff}; only operators with at least one known effect are exported to the planner.}
 
 \rev{The time budget for any one exploration strategy is domain-specific. In Polycraft, where the agent is evaluated against a time-out, phases such as knowledge discovery are given a fixed budget, because they run before the agent even plans for the main goal. The symbolic operator-discovery strategies are similarly bounded; for example, precondition discovery in Polycraft focuses only on variations of the \texttt{holding(self,X)} predicate for novel objects $X$, since this predicate is a prominent state aspect in the domain. Reinforcement-learning-based exploration is the exception: as the final strategy invoked after all others fail, it is allowed to continue until the environment times out.}
 
@@ -24,7 +24,7 @@
 \subsection{Domain PDDL}
 \label{sec:ch6_domain_pddl}
 
-\rev{Below is the original PDDL domain given to RAPid-Learn for the pogostick-crafting task inspired by Minecraft in NovelGridworlds.}
+\rev{Below is the original PDDL domain given to \RAPidLearn{} for the pogostick-crafting task inspired by Minecraft in \NovelGridworlds{}.}
 
 \begin{lstlisting}[
   style=pddlstyle,

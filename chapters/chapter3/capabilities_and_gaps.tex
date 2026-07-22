@@ -1,53 +1,68 @@
 % ============================================================
-% §2.4  Existing approaches: fixed representations and representational change
+% §3.1  Existing approaches: fixed representations and representational change
 % ============================================================
 
-\section{Related Work in Learning and Planning Under Novelty}
+\section{Learning and Planning Under Change}
 \label{sec:what_field_does}
 \label{sec:capabilities_and_gaps}
 
-Measured against the requirements identified in \cref{sec:what_is_required}, existing methods fall into a useful pattern.
-The most mature approaches support detection, re-estimation, robustness, replanning, or rapid adaptation, but often do so while keeping the agent's representational vocabulary fixed.
-A smaller body of work extends the agent's representation in response to failure, but usually pays for that capacity in speed, scope, or reliance on strong structure supplied in advance.
-This section organizes existing work around that trade-off.
-\Cref{fig:requirements_coverage} previews the resulting picture: each method family is measured against the four requirements from \cref{sec:what_is_required}, and the survey below follows the same organization.
+The neighboring literatures reviewed here are best understood as solving related but non-identical problems.
+Some detect a departure from training data, some track a changing distribution, some preserve knowledge across a sequence of tasks, and some revise a model after execution failure.
+The relevant boundary is not whether a method ``handles novelty'' in the abstract.
+It is whether the assumptions that define the method remain adequate for the change the agent encounters.
 
-% Requirements coverage matrix
-\input{figures/chapter3/requirements_coverage}
+The discussion therefore compares method families along the dimensions introduced above: the object of change, the structure held fixed, the information available after change, and the intended response.
+A recurring pattern is that detection, re-estimation, robustness, replanning, and rapid adaptation are comparatively mature when the representation remains adequate.
+Methods that revise the representation confront a broader class of change, but often require stronger prior structure, more interaction, or a more restricted domain.
 
-\subsection{Fixed-Representation Adaptation}
+\subsection{Adaptation Within an Existing Representation}
 \label{sec:fixed_representation_methods}
 
-Detection methods address the first step of the open-world lifecycle (Requirement 1).
+\paragraph{Detection and rejection.}
 Open-set recognition formalized the problem of classification when test inputs may belong to classes absent from training, framing recognition as managing the risk of the unknown rather than discriminating among a closed label set~\citep{scheirer2013toward}.
 Later work brought this capability to deep networks: OpenMax calibrates a network's activation patterns so that inputs far from all known classes can be rejected~\citep{bendale2016towards}, and \citet{hendrycks2017baseline} showed that even the maximum softmax probability provides a usable baseline signal for detecting misclassified and out-of-distribution examples.
-These threads---anomaly detection, novelty detection, open-set recognition, and out-of-distribution detection---developed largely in isolation, and \citet{yang2024generalized} unify them under a single generalized framework, which is a useful map of the perceptual side of Requirement 1.
+These threads---anomaly detection, novelty detection, open-set recognition, and out-of-distribution detection---developed with different assumptions, and \citet{yang2024generalized} provide a generalized framework for relating them.
 Open-world recognition extends the setting further by requiring that rejected unknowns eventually be incorporated as new classes~\citep{boult2021towards}.
-This body of work is necessary for open-world autonomy, but it is not sufficient.
-A classifier that rejects an unknown object, or an execution monitor that flags an unexpected outcome, has identified a mismatch.
-It has not characterized the mismatch in a form that tells the agent how to recover, and it has not repaired behavior.
+These methods provide important mechanisms for identifying when an input is not well supported by a reference model.
+Their primary output is nevertheless a detection or rejection decision.
+A classifier that rejects an unknown object has not thereby determined the object's task relevance, incorporated a new category, or selected a behavior that restores an interrupted task.
 
+\paragraph{Novelty as an exploration signal.}
 A related but distinct use of novelty appears in reinforcement learning as an exploration signal.
 Curiosity-driven methods reward the agent for visiting states its predictive model handles poorly: the intrinsic curiosity module derives a reward from prediction error in a learned feature space~\citep{pathak2017curiosity}, and random network distillation derives one from the error of predicting the output of a fixed, randomly initialized target network~\citep{burda2019exploration}.
 These methods use novelty the agent \emph{seeks} to drive exploration within a fixed observation and action space.
-The setting of this dissertation is the complement: novelty is \emph{imposed} by the environment, and the question is not how to find unfamiliar states but how to recover competence when familiar ones stop behaving as modeled.
-Intrinsic novelty signals can nevertheless serve Requirement 1, since the same prediction-error machinery that drives exploration can flag where an agent's model has been invalidated.
+The objective in this setting is to seek informative or unfamiliar states within an interaction space available to the agent.
+Open-world autonomy instead concerns novelty encountered while an agent pursues an ongoing task and asks whether the agent can continue performing that task.
+Intrinsic novelty signals may help identify informative discrepancies, but the exploration objective does not by itself specify how an externally imposed change should be represented or addressed.
 
-Re-estimation methods address a different part of the problem (Requirement 2).
-Concept-drift methods, continual learning, transfer learning, and meta-learning can update a model as data or tasks change~\citep{gama2014survey,parisi2019continual,taylor2009transfer,finn2017maml,khetarpal2022continual}.
-These methods can be powerful when the agent's representation remains adequate and only its parameters, beliefs, or policy need revision.
-Their limitation is that competence is usually defined over a fixed feature, label, state, or action space.
-Under structural novelty, the issue is not only that an existing probability is wrong.
-The agent may lack a category, relation, precondition, or behavior needed to express the new situation.
+\paragraph{Concept drift and non-stationarity.}
+Concept-drift research studies a data-generating process that changes over time, commonly represented as change in a distribution such as \(P_t(X,Y)\) over an established feature space and prediction target~\citep{widmer1996learning,gama2014survey,lu2019concept}.
+The central problems are detecting drift, forgetting obsolete information, and updating a predictor quickly enough to track the new distribution.
+In reinforcement learning, non-stationarity commonly appears as change in rewards, transition dynamics, observations, or other components of the decision process~\citep{khetarpal2022continual,feng2022fans}.
+These formulations are directly relevant to open-world agents because many environmental novelties appear first as distributional or dynamical change.
+The distinction is that many commonly studied formulations retain a state, action, feature, or output representation in which both the old and new processes can be expressed.
+Open-world change can also invalidate that shared vocabulary.
 
+\paragraph{Continual, transfer, and meta-learning.}
+Continual learning asks how a learner can acquire knowledge from a sequence of data or tasks while retaining and reusing what was learned previously~\citep{ring1994continual,thrun1995lifelong,parisi2019continual,hadsell2020embracing,khetarpal2022continual}.
+Its characteristic problems include stability and plasticity, catastrophic forgetting, transfer across tasks, and the treatment of task boundaries.
+An open-world agent requires these capabilities, but a continual-learning sequence need not contain novelty relative to the learner's representation: the tasks may be known in advance or drawn from a common family with fixed inputs and outputs.
+
+Transfer learning starts from a source--target relation and asks how knowledge from the source can improve learning or performance in the target~\citep{taylor2009transfer}.
+Meta-learning instead learns an adaptation procedure across a distribution of training tasks so that a new task can be learned from limited data~\citep{finn2017maml}.
+Both provide mechanisms that are valuable under novelty, especially for Requirement~2.
+Their problem formulations and evaluations are usually defined relative to specified source and target domains or to a meta-training distribution.
+An open-world encounter may fall outside those anticipated relations or require a distinction absent from the shared representation.
+
+\paragraph{Robustness and online adaptation.}
 Robotics often uses a related strategy: absorb anticipated variation before deployment.
 Domain randomization trains across many simulated appearances or dynamics so that real-world variation falls inside the training envelope~\citep{tobin2017domain,peng2018sim}.
 This can be highly effective for quantitative variation such as lighting, texture, mass, or friction.
 Rapid motor adaptation extends the idea to online operation: a base policy is paired with an adaptation module that estimates a latent description of the current environment from recent state--action history, allowing a legged robot trained entirely in simulation to adjust to changing terrain and payloads in fractions of a second~\citep{kumar2021rma}.
-This line of work shows how far Requirement 2 can be pushed when the space of variation is parameterized in advance.
-It is still an assimilation strategy.
-It makes more of the world look familiar, but it does not by itself introduce representational structure the designer did not anticipate.
+This line of work shows how far adaptation can be pushed when the dimensions of variation are parameterized in advance.
+It expands the range over which an existing policy remains valid, but it does not by itself introduce a variable, relation, or action outside the interface used during training.
 
+\paragraph{Replanning and plan repair.}
 Replanning and plan repair exploit explicit structure more directly.
 When execution fails, a planner can search for a different sequence of known operators~\citep{fox2006plan,fritz2007monitoring}.
 This is powerful when the current operator set contains an alternative path.
@@ -55,12 +70,12 @@ A blocked route can be bypassed; an unavailable object can sometimes be substitu
 But replanning cannot use an operator the agent does not have.
 If novelty invalidates the action model itself, the agent needs more than a new plan over the same vocabulary.
 
-\subsection{Representational Extension}
+\subsection{Model and Representation Revision}
 \label{sec:extend_representation_methods}
 
-Several lines of work confront representational extension more directly (Requirement 3), often while also integrating perception, reasoning, learning, and action (Requirement 4).
+Several lines of work confront representational extension more directly, often while integrating perception, reasoning, learning, and action.
 An early precursor is goal-driven autonomy, in which an executing agent monitors for discrepancies between expectations and observations, generates explanations for them, and manages its own goals in response; the ARTUE agent demonstrated this detect--explain--respond loop in a Navy strategy simulation with hierarchical task network planning~\citep{molineaux2010gda}.
-Goal-driven autonomy anticipated the structure of the SAIL-ON detect--characterize--accommodate framing, although its responses operate primarily at the level of goals rather than the representational vocabulary itself.
+Its responses operate primarily at the level of goals, but the architecture illustrates how expectation failure can be connected to reasoning and continued action rather than treated only as a statistical detection problem.
 More recent open-world architectures revise the model directly: HYDRA uses model-based diagnosis over a symbolic planning model to localize which parts of the model a novelty has invalidated and to repair them, providing a domain-independent architecture for adaptive operation in evolving open worlds~\citep{mohan2024domain}.
 Integrated neurosymbolic architectures similarly combine monitoring, diagnosis, symbolic reasoning, and learning to detect and accommodate novelty~\citep{muhammad2021novelty,goel2024neurosymbolic}.
 
@@ -70,42 +85,16 @@ At the interface between control and symbols, \citet{konidaris2018skills} show t
 This result matters for open-world autonomy because it implies the symbolic layer is not fixed in principle: if operators and their symbols can be learned, they can also be re-learned when the world invalidates them.
 The options framework provides the underlying formalism for such temporally extended, learnable units of behavior~\citep{sutton1999options}.
 SPOTTER couples symbolic planning with reinforcement learning so that an agent can learn a new operator when planning reaches an impasse~\citep{sarathy2021spotter}.
+\RAPidLearn{} builds on this operator--executor view by converting execution failure into a focused recovery learning problem~\citep{goel2022rapidlearn}.
+A subsequent neurosymbolic goal-conditioned framework extends the same hybrid line to continual open-world settings: the planner proposes symbolic goals that condition RL, and previously learned policies transfer across sequential novelty injections in continuous control domains~\citep{lorang2024goalconditioned}.
+Complementary work addresses a prerequisite of such hybrid planners: Act-to-Ground learns models that ground symbolic planning predicates in percepts from weak supervision obtained through interaction or demonstrations, rather than from large annotated state--symbol datasets~\citep{lymperopoulos2025acttoground}.
 Creative problem-solving systems similarly treat execution failure as evidence that the current action model is incomplete and must be revised~\citep{gizzi2019creative,gizzi2022cps}.
-These systems establish the capability this dissertation builds on: an agent can respond to failure by extending its competence rather than only by reordering known behavior.
+BIPLEX pushes this further by treating creativity as planning for experimentation: when search alone cannot resolve an impasse, the agent generates property-based substitution hypotheses, executes informative tests, and revises its model from observed outcomes~\citep{sarathy2022biplex}.
+On the perceptual side, related cognitive-architecture work expands an agent's object repertoire online from natural-language descriptions: language-specified prototypes supervise a geometric encoder so that new categories can be recognized without extensive hand-labeled perception data~\citep{schneider2025instruction}.
+Together, these lines of work demonstrate that agents can respond to failure by extending their representations and behavioral repertoires, and that the supporting symbolic and perceptual interfaces can themselves be learned or expanded rather than remaining fixed.
 
 The limitation is that representation growth is often expensive or broad.
 DREAM makes representational redescription explicit, but as a developmental process operating on a slower timescale than ordinary policy learning~\citep{doncieux2020dream}.
 WorldCloner shows the opposite trade-off: it adapts quickly to injected novelty by using a learned symbolic transition model, but the observation and action vocabularies remain fixed~\citep{balloch2023neuro}.
 In one direction, agents can grow structure but slowly and globally; in the other, they can adapt quickly but mainly within a fixed structure.
 The recurring pattern is therefore a trade-off rather than a settled solution.
-
-This dissertation targets the space between those poles: structural adaptation that is fast and localized to the point where the world has invalidated the agent's model.
-The motivating case in later chapters is an execution failure at a specific operator.
-If a symbolic plan fails at \texttt{break\_tree}, the failure can identify the behavior that must be repaired.
-The agent need not relearn the whole task; it can focus learning on the executor or model component whose expected effect no longer holds.
-Structure matters here because it can localize the failure.
-
-\subsection{Evaluation Gaps and Dissertation Scope}
-\label{sec:ow_gaps}
-
-Three gaps follow from this diagnosis.
-First, the field needs systematic evaluation of structural novelty in sequential decision-making.
-Existing SAIL-ON-inspired environments and open-world benchmarks have made novelty injection measurable~\citep{senator2019science,holder2025introduction,balloch2022novgrid,goss2023polycraft,feeney2022novelcraft}.
-What remains important is evaluation that isolates how structural novelty affects performance over time: how sharply performance degrades, how quickly it recovers, and whether recovery reflects adaptation rather than accidental robustness.
-\Cref{ch:benchmarks} contributes test beds and metrics for this purpose.
-
-Second, the field needs mechanisms for failure localization and targeted skill acquisition.
-Replanning can rearrange known operators, and undirected exploration can discover behavior in principle, but neither by itself identifies the exact missing competence after an execution failure.
-\Cref{ch:rapid_learn} uses the structure of a failed plan to localize the problem and instantiate a focused learning task.
-
-Third, the field needs representations that reduce unnecessary novelty by generalizing across object and embodiment variation.
-Some changes look novel only because the agent's representation is too tightly tied to a particular object, robot, or control space.
-\Cref{ch:flex,ch:pho} study interaction abstractions that make such variation fall within existing competence rather than requiring full retraining.
-
-These gaps also mark the dissertation's boundaries.
-The thesis does not solve open-world perception; it assumes access to task-relevant state in the main technical contributions.
-It does not address safety-critical continual adaptation, where constraint violations during learning may be unacceptable~\citep{coursey2026safe}.
-It also does not address the normative conflicts that arise when agents act among people and must resolve novel clashes among goals, rules, and constraints~\citep{jones2026oamncc}.
-Nor does it treat novelty primarily as opportunity rather than obstacle; the methods here are failure-driven.
-Those are genuine parts of open-world autonomy.
-The slice addressed here is narrower: how structured abstractions support adaptation and generalization when the agent's existing model is no longer enough. However, this presents an opportunity to explore the field in a more focused way, and to develop methods that can be combined with other approaches to address the broader problem.

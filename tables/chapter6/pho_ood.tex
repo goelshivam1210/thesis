@@ -1,7 +1,7 @@
-\begin{table}[t]
-\footnotesize
+\begin{table}[htbp]
+\small
 \centering
-\begin{tabular}{l c c}
+\begin{tabular*}{0.78\textwidth}{@{\extracolsep{\fill}}l c c@{}}
 \toprule
 Parameter & OOD Low RMSE (cm) & OOD High RMSE (cm) \\
 \midrule
@@ -10,7 +10,7 @@ Friction  & $3.3 \pm 0.8$ & $2.8 \pm 0.3$ \\
 Path radius & $2.7 \pm 0.3$ & $3.1 \pm 0.4$ \\
 Box dimensions & $3.1 \pm 0.6$ & $2.8 \pm 0.2$ \\
 \bottomrule
-\end{tabular}
+\end{tabular*}
 \caption{Parameter generalization for pushing heavy objects. Centroid-to-path RMSE (cm) under single-parameter out-of-distribution shifts. The in-distribution baseline achieves $2.9 \pm 0.4$~cm. Performance remains stable across all OOD conditions.}
 \label{tab:pho_ood}
 \end{table}

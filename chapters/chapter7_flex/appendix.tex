@@ -8,7 +8,7 @@ Our experiments are performed in three simulation environments:
 \begin{itemize}
     \item \textbf{TrainingEnv:} This environment excludes the robot and focuses on force-based interactions with objects. Random objects from the training set are selected and placed at \([-1, 0]\) with randomized rotations around the Z-axis. Force application points are randomly sampled, and actions are applied using the simulator. 
     \item \textbf{BaselineTrainingEnv:} Includes both a Panda robot and objects. The objects are placed on a partial circle around the robot to ensure reachability. Object orientations are randomized for evaluation consistency.
-    \item \textbf{EvalEnv:} Both FLEX and baseline methods are evaluated in this environment with consistent settings.
+    \item \textbf{EvalEnv:} Both \FLEX{} and baseline methods are evaluated in this environment with consistent settings.
 \end{itemize}
 
 \subsection{Learning Process}

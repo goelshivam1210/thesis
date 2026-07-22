@@ -59,7 +59,7 @@
 \subsection{Novelty Implementations}
 \label{sec:ng_novelty_implementations}
 
-\rev{For a list of the environment transformations currently implemented in the NovelGym environment, see Table~\ref{tab:rl_systemic_examples}. The components of a novelty being integrated into the system are as follows.}
+\rev{For a list of the environment transformations currently implemented in the \NovelGym{} environment, see Table~\ref{tab:rl_systemic_examples}. The components of a novelty being integrated into the system are as follows.}
 \begin{itemize}
     \item \rev{\textbf{YAML config file}: This config file serves as an add-on to the existing YAML config file that configures the environment. Anything included in the new config expands on the settings in the environment config, and anything included under the key ``novelties'' overrides any chosen component of the original settings. Common entries to the config add or modify actions, action sets, action preconditions and effects, entities, entity properties, and the grid world layout. A novelty can be created through a YAML config file alone when it does not involve adding or modifying any modules, an example of which are the \textit{Multi-room} and \textit{Distance} novelties in Table~\ref{tab:rl_systemic_examples}. This is possible when no new source Python module is required for the novelty to function.}
     \item \rev{\textbf{Python source file(s)}: In the case that a novelty requires the addition or modification of an entity or action module, it is necessary to include the Python source code for this adjustment. All the novelties specified in Table~\ref{tab:rl_systemic_examples} except for \textit{Multi-room} and \textit{Distance} involve the addition of one or more modules. Note that changing the details of an existing module can be accomplished by changing the source Python code for the module in the novelty config file.}
@@ -111,7 +111,11 @@
 \label{sec:ng_sample_config}
 
 \rev{Here we provide a sample configuration file, which generates trees in the world, allows the user to move around in the world, break the trees, and craft planks from the trees:}
-\begin{lstlisting}
+\begin{lstlisting}[
+  style=yamlstyle,
+  caption={NovelGym configuration for a simple resource-collection and crafting task.},
+  label={lst:ng-sample-config}
+]
 ---
 actions:
   break_block:
@@ -289,7 +293,11 @@ auto_pickup_agents:
 \subsubsection{Configuration File}
 
 \rev{This is the content of the novelty configuration YAML file. It specifies that the novelty needs to be injected at episode 0, and updates the action module associated with the \texttt{trade} action to be the new \texttt{BusyTrade} module. It also supplies the parameter of the new trade module, the percentage of time when the traders are busy.}
-\begin{lstlisting}
+\begin{lstlisting}[
+  style=yamlstyle,
+  caption={YAML configuration for the busy-trader novelty.},
+  label={lst:ng-busy-trader-config}
+]
 ---
 novelties:
   '0':
@@ -302,7 +310,11 @@ novelties:
 \subsubsection{Modified Trade Action Module}
 
 \rev{This is the content of the modified \texttt{Trade} action module, which inherits from the default module. The new module raises an error when the internally generated random number is below the 50\% threshold, and gives the error message saying that it is busy.}
-\begin{lstlisting}[language=Python]
+\begin{lstlisting}[
+  style=pythonstyle,
+  caption={Python implementation of the busy-trader action.},
+  label={lst:ng-busy-trader-python}
+]
 from gym_novel_gridworlds2.actions.action import PreconditionNotMetError
 from gym_novel_gridworlds2.contrib.polycraft.actions import Trade
 
@@ -323,4 +335,4 @@ class BusyTrade(Trade):
             agent_entity, target_type, target_object, **kwargs)
 \end{lstlisting}
 
-\rev{More examples of novelty implementations can be found in the NovelGym repository\footnote{\url{https://github.com/tufts-ai-robotics-group/NovelGym}}.}
+\rev{More examples of novelty implementations can be found in the \NovelGym{} repository\footnote{\url{https://github.com/tufts-ai-robotics-group/NovelGym}}.}

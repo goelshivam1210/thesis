@@ -1,17 +1,17 @@
 % ============================================================
-% §2.2  Assimilation and accommodation
+% §2.3  Assimilation and accommodation
 % ============================================================
 
-\section{Adaptation and Representational Change}
+\section{Two Modes of Adaptation: Assimilation and Accommodation}
 \label{sec:assimilation_accommodation}
 \label{sec:landscape_of_change}
 \label{sec:computational_open_world}
 
-If novelty is mismatch relative to an agent's models, the next question is how an agent can respond.
-Developmental psychology provides a useful distinction.
-\citet{piaget1952origins} used assimilation to describe cases in which experience is absorbed into an existing schema, and accommodation to describe cases in which the schema itself must change.
-For this dissertation, the distinction is not about whether an update is small or large.
-It is about whether the agent's current representational vocabulary is sufficient for the situation it faces.
+If novelty is defined relative to an agent's knowledge, the next question is how the agent can respond when that knowledge proves inadequate.
+The developmental distinction introduced in the preceding section provides a useful vocabulary for describing two broad possibilities.
+\citet{piaget1952origins} used assimilation to describe the interpretation of experience through existing cognitive structures and accommodation to describe the adjustment of those structures in response to experience.
+Adapting this distinction to artificial agents, this dissertation uses \emph{assimilation} for changes that can be absorbed within the agent's existing representational and behavioral structure, and \emph{accommodation} for changes that require that structure to be revised or extended, for example by introducing a concept, relation, operator, executor, or abstraction.
+The distinction is therefore not about whether an update is small or large, but about whether the agent's current structure is sufficient for the situation it faces.
 
 \Cref{fig:assimilation_accommodation} summarizes the distinction.
 Assimilation is possible when the agent already has the terms needed to describe what changed.
@@ -26,7 +26,7 @@ Information that fits an active schema is integrated more efficiently than infor
 Much of machine learning under change is best understood as assimilation.
 Concept drift is the clearest case.
 In data-stream learning, drift is usually formalized as a change in the distribution generating examples over a fixed feature space and label space~\citep{widmer1996learning,gama2014survey,lu2019concept}.
-The spam-filtering example commonly used in the drift literature makes this assumption concrete: legitimate emails may change in style, and spam messages may adapt to evade a classifier, but the underlying categories and input representation remain fixed.~\citep{gama2014survey}.
+The spam-filtering example commonly used in the drift literature makes this assumption concrete: legitimate emails may change in style, and spam messages may adapt to evade a classifier, but the underlying categories and input representation remain fixed~\citep{gama2014survey}.
 Adaptation means re-estimating a model whose basic vocabulary is still assumed to fit.
 
 Continual learning, lifelong learning, transfer, and meta-reinforcement learning address related forms of adaptation.
@@ -39,9 +39,9 @@ In the language of this chapter, these methods are powerful assimilation mechani
 Open-world novelty can violate the fixed-vocabulary assumption that makes assimilation possible.
 A previously unseen object type may appear; an action may acquire a new precondition; a relation among objects may become task relevant; a familiar operator may require a new executor.
 Such changes alter what the agent must be able to express, not merely the distribution over expressions it already has.
-The SAIL-ON program made this range explicit by treating novelty as structural change in objects, agents, actions, relations, interactions, environment rules, goals, or events~\citep{senator2019science,holder2025introduction}.
+Open-world research has consequently examined change not only in objects and observations, but also in agents, actions, relations, interactions, environment rules, goals, and events~\citep{senator2019science,holder2025introduction}.
 The same boundary appears in cognitive-systems work as the distinction between out-of-distribution cases and out-of-design-scope cases: the former are unusual but still within the system's assumptions, while the latter violate those assumptions~\citep{wray2025requirements}.
-This dissertation is concerned primarily with the second regime.
+This dissertation studies both regimes and emphasizes how representational structure determines the boundary between them: which changes can be assimilated within existing competence and which require accommodation through revision or extension.
 
 Accommodation becomes especially important when mismatch blocks action.
 Research on creative problem solving has long emphasized that some impasses are not solved by searching longer within the same problem framing; they require the problem to be represented differently.
@@ -50,14 +50,15 @@ Computational creative problem solving brings the same idea into artificial agen
 In robotics, \citet{gizzi2019creative} operationalize this idea by giving a robot an initially inadequate symbolic knowledge base; when execution fails, the robot explores, segments behavior into new action primitives, and updates its action model.
 
 One nearby research area uses similar language for a different goal.
-Open-ended learning studies processes that generate an unbounded stream of new goals, skills, or environments, as in systems that produce their own curricula over time~\citep{sigaud2023openended}.
-In that setting, novelty is produced by the agent or environment generator.
-Open-world autonomy, as used in this dissertation, is different: novelty is imposed by a world the agent does not control, and the agent must accommodate it in order to keep acting.
+Open-ended learning studies processes that continue to produce new observations, goals, skills, environments, or other elements over an indefinite horizon~\citep{sigaud2023openended}.
+In that setting, producing an expanding repertoire is itself part of the objective.
+Open-world autonomy, as used in this dissertation, addresses a different problem: the agent must adapt when its previously adequate knowledge or behavior no longer supports continued task performance, sometimes by accommodating changes that exceed its existing structure.
 The two areas share an agent-relative notion of novelty and both depend on abstraction, but they address different problems.
 \label{sec:openworld_vs_openended}
 
-The section's central claim is that the boundary between assimilation and accommodation is agent-relative.
+The section's central claim is that the boundary between assimilation and accommodation is agent-relative and representation-dependent.
 Whether a change can be absorbed or requires representational revision depends on how the agent's knowledge is structured.
-An agent whose knowledge is encoded as a single monolithic mapping from observations to actions has fewer places to attach a new distinction.
-An agent whose knowledge is organized into explicit, composable structure has interfaces where mismatch can be detected, localized, and repaired through extensions~\cite{sarathy2021spotter}.
-This is the comparative hypothesis the dissertation ultimately tests: structured abstractions make open worlds more amenable because they determine what can be represented, where failure appears, and how narrowly recovery can be induced.
+An abstraction that captures task-relevant invariances can allow an existing policy or behavior to apply across variation in objects, dynamics, or embodiment, thereby expanding the range of changes that can be assimilated through generalization.
+When existing knowledge or behavior is insufficient, an abstraction that decomposes them into explicit, composable components provides interfaces where mismatch can be detected, localized, and repaired through extensions~\cite{sarathy2021spotter}.
+By contrast, an agent whose knowledge is encoded as a monolithic mapping from observations to actions has fewer places to attach a new distinction or isolate what must change.
+This yields the comparative hypothesis developed throughout the dissertation: structured abstractions make open-world autonomy more tractable in two complementary ways---by enabling assimilation through invariance and generalization, and by making accommodation localized and targeted when structural revision is required.

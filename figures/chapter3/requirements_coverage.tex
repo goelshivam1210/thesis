@@ -3,7 +3,7 @@
     \resizebox{0.98\textwidth}{!}{%
     \begin{tikzpicture}[
         rowlabel/.style={anchor=east, align=right, font=\small},
-        collabel/.style={anchor=south, align=center, font=\small\bfseries, text width=2.6cm},
+        collabel/.style={anchor=south, align=center, font=\small\bfseries, text width=2.8cm},
         full/.style={circle, draw, fill=black, minimum size=0.32cm, inner sep=0pt},
         half/.style={circle, draw, minimum size=0.32cm, inner sep=0pt, path picture={\fill (path picture bounding box.south west) rectangle (path picture bounding box.north);}},
         none/.style={circle, draw, minimum size=0.32cm, inner sep=0pt},
@@ -63,6 +63,6 @@
 
     \end{tikzpicture}%
     }
-    \caption[Method families measured against the requirements for open-world autonomy]{Method families surveyed in this chapter, measured against the four requirements for open-world autonomy identified in \cref{sec:what_is_required}: detecting and characterizing mismatch (R1), adapting from limited experience (R2), revising representations when needed (R3), and integrating perception, reasoning, learning, and action (R4). The assignments reflect the typical emphasis of each family as discussed in the text, not the capabilities of every individual system. The most mature families adapt within fixed representations (R2), while approaches that address representational revision (R3) tend to trade away speed, scope, or generality. This dissertation targets structural adaptation that is fast and localized, using structured abstractions.}
+    \caption[Method families measured against the requirements for open-world autonomy]{Method families surveyed in this chapter, measured against the four requirements for open-world autonomy identified in \cref{sec:what_is_required}: detecting and characterizing mismatch (R1), adapting from limited experience (R2), revising representations (R3), and integrating perception, reasoning, learning, and action (R4). The assignments summarize the typical emphasis of each family rather than the capabilities of every individual system. The figure is therefore a comparative overview, not a claim that all methods within a family make identical assumptions.}
     \label{fig:requirements_coverage}
 \end{figure}

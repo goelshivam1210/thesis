@@ -1,42 +1,42 @@
 % ============================================================
-% §2.1  Novelty as agent-relative mismatch
+% Perspectives on novelty
 % ============================================================
-\rev{
 \section{Perspectives on Novelty}
 \label{sec:novelty_as_mismatch}
 \label{sec:novelty_perspectives}
 
-The first step in organizing work on open-world adaptation is to clarify what is meant by novelty.
-Across psychology, neuroscience, and artificial intelligence, novelty is best understood not as an intrinsic property of an object or event, but as a relation between the world and an agent's current memory, expectations, and models.
-The same object, outcome, or environmental change may be routine for one agent and disruptive for another.
-For this dissertation, this agent-relative view is central: novelty matters because it exposes a mismatch between what the world presents and what the agent can currently represent, predict, or do.
+Research in developmental psychology, cognitive science, neuroscience, and artificial intelligence uses novelty at different levels of analysis and for different explanatory purposes.
+Developmental research relates responses to novelty to prior exposure and memory.
+In a visual-habituation study, for example, \citet{fantz1964visual} found that infants progressively attended less to a repeatedly presented pattern relative to comparable novel stimuli.
+Cognitive accounts associate novelty with arousal, curiosity, and exploratory behavior~\citep{berlyne1960conflict}.
+Neuroscience examines how novel events engage processes involved in detection, attention, and subsequent memory~\citep{ranganath2003neural}, whereas predictive-processing accounts emphasize comparisons between incoming sensory information and top-down predictions~\citep{clark2013predictive,friston2010free}.
+These perspectives study different phenomena, but each evaluates present experience relative to information already available to the organism or agent.
 
-A useful starting point is the distinction between novelty and surprise.
-\citet{barto2013novelty} argue that the two terms name different comparisons.
-Novelty concerns whether something has been encountered or represented before; surprise concerns whether an expectation has been violated.
-A familiar door that remains locked after an unlock action is surprising, because the outcome violates a prediction, but the door and lock are not novel categories to an agent that already represents them.
-Conversely, an exploratory agent may encounter an object type it has never represented before without being strongly surprised if unfamiliar objects were expected during exploration.
-The two signals often coincide, but they place different burdens on an agent.
-Surprise calls for better prediction.
-Novelty may require a new representation.
+This dissertation adopts an agent-relative perspective.
+An aspect of an encounter is novel for an agent when the agent can neither retrieve an adequate representation of it from prior experience nor derive one from available knowledge.
+The same entity or event may therefore be familiar to one agent and novel to another, and an encounter that is novel initially may cease to be so once the agent has represented or learned enough to recognize it.
+Novelty is not an intrinsic label attached to an object or event; it is an epistemic relation among an encounter, an agent, and the knowledge and representational resources available to that agent.
+
+The intersection example makes this relativity concrete.
+A vehicle trained to recognize traffic-control gestures may identify the controller's signal as an unusual but familiar instruction.
+For a vehicle whose model includes people only as pedestrians, the same observation may expose several missing distinctions: the person's functional role, the gesture as a communicative action, its intended meaning, and its authority relative to the traffic signal.
+What is novel is therefore not necessarily the visible presence of a person or a moving hand.
+It may instead be the role, relation, or rule required to interpret those familiar perceptual elements in the current context.
+
+Novelty must also be distinguished from surprise.
 \label{sec:novelty_surprise}
+\citet{barto2013novelty} characterize novelty in terms of comparison with prior experience or memory and surprise in terms of discrepancy between an expectation and an observed outcome.
+The failure of a traffic light may be surprising to a vehicle that expected a valid signal but not novel if signal failures are already represented in its model.
+Conversely, the traffic controller's gesture may be novel without its occurrence being strongly surprising if the vehicle already expects that unfamiliar situations can arise.
+Novelty and surprise can coincide, but neither implies the other.
 
-Neuroscience gives this relational point a more mechanistic form.
-Novel events engage brain systems involved in attention and memory, helping the agent orient toward unexpected information and encode it for later use~\citep{ranganath2003neural}.
-Predictive-processing accounts make a related point: perception depends on predictions, and learning is driven in part by the mismatch between what is expected and what is observed~\citep{clark2013predictive,friston2010free}.
-For this chapter, the important point is that mismatch is not all of one kind.
-An agent may only need to refine a prediction within a representation it already has, or it may need to form a representation for something that was not previously expressible.
-\label{sec:novelty_neuro}
+Anomaly and out-of-distribution detection provide additional, related evidence of mismatch.
+Their judgments depend on how normality or the in-distribution is defined for a particular model, dataset, and task~\citep{yang2024generalized}.
+A perception system might flag the controller's pose as out of distribution, while an execution monitor might detect that the intersection no longer evolves as predicted.
+Neither signal, by itself, determines that the person is directing traffic, establishes what a gesture means, or identifies the rule needed to act on it.
+Prediction error, anomaly, and out-of-distribution status can therefore reveal that some assumption has failed without characterizing the failure or prescribing a response.
 
-Artificial intelligence reaches the same view from the problem of bounded agency.
-The big world hypothesis argues that a realistic agent is far smaller than the world it inhabits and therefore cannot maintain a complete model of that world~\citep{javed2024bigworld}.
-If the agent's model is necessarily partial, then encountering its limits is not an exceptional malfunction.
-It is a normal condition of acting in a world whose structure exceeds the agent's representation.
-Novelty handling is therefore not only a robustness add-on; it is part of the basic problem of autonomy.
-
-The consequence is that novelty cannot be evaluated independently of the agent.
-A heavier object may be a simple parameter update for a controller that already represents mass, but an unrepresentable change for an agent whose state description has no place for that distinction.
-A new object may be immediately meaningful to an agent with the right category and useless to one without it.
-The structure of the agent's knowledge determines what can be absorbed, what must be reconstructed, and where adaptation can be localized.
-This distinction underlies the next section's account of assimilation and accommodation as two modes of response to mismatch, and the formal novelty taxonomies developed later in \cref{ch:foundations}.
-}
+The consequences of novelty depend on the structure of the agent's knowledge.
+If the vehicle already represents communicative gestures and right-of-way overrides, it may be able to interpret the controller by recognizing the gesture and updating its current beliefs within that structure.
+If those concepts and relations are absent, continued autonomous action may require the agent to revise its representation or behavioral repertoire.
+The developmental distinction between assimilation and accommodation provides a useful vocabulary for these two possibilities and motivates the account of adaptation developed in the next section.

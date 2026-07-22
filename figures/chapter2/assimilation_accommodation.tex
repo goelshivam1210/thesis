@@ -16,7 +16,7 @@
     % ===== Nodes =====
     \node[event] (mismatch) {Mismatch detected\\ \footnotesize (observation, outcome, or failure\\ inconsistent with the agent's models)};
 
-    \node[decision, below=of mismatch] (vocab) {Can the agent's current\\ vocabulary express\\ what changed?};
+    \node[decision, below=of mismatch] (vocab) {Can the agent's current\\ structure absorb\\ what changed?};
 
     \node[assim, below left=1.3cm and 0.4cm of vocab] (assimilate) {\textbf{Assimilation}\\ \footnotesize update within existing structure:\\ re-estimate parameters, revise\\ predictions, adapt policy, replan};
 
@@ -34,6 +34,6 @@
 
     \end{tikzpicture}%
     }
-    \caption[Assimilation versus accommodation in response to mismatch]{Two modes of response to novelty-induced mismatch. When the agent's current representational vocabulary can express the change, adaptation proceeds by \emph{assimilation}: updating parameters, predictions, or policies within existing structure. When the vocabulary itself is insufficient, \emph{accommodation} is required: the representation must be extended or revised before the situation can be described at all. The boundary between the two modes is agent-relative and depends on how the agent's knowledge is structured (\cref{sec:assimilation_accommodation}).}
+    \caption[Assimilation versus accommodation in response to mismatch]{Two modes of response to novelty-induced mismatch. When the agent's current representational and behavioral structure can absorb the change, adaptation proceeds by \emph{assimilation}: updating parameters, predictions, or policies within that structure. When the existing structure is insufficient, \emph{accommodation} is required: the agent must extend or revise its concepts, relations, operators, executors, or abstractions. The boundary between the two modes is agent-relative and depends on how the agent's knowledge and competence are structured (\cref{sec:assimilation_accommodation}).}
     \label{fig:assimilation_accommodation}
 \end{figure}

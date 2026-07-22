@@ -16,7 +16,7 @@
         tick label style={font=\small},
         label style={font=\small},
     ]
-    % FLEX
+    % \FLEX{}
     \addplot+[draw=red!60!black, fill=red!25] coordinates {
         (Cabinet,0.91) +- (0,0.08) (Trashcan,0.88) +- (0,0.10)
         (Microwave,0.67) +- (0,0.14) (Dishwasher,0.64) +- (0,0.11) };
@@ -31,9 +31,9 @@
     \addplot+[draw=teal!60!black, fill=teal!25] coordinates {
         (Cabinet,0.49) +- (0,0.29) (Trashcan,0.22) +- (0,0.18)
         (Microwave,0.49) +- (0,0.18) (Dishwasher,0.47) +- (0,0.38) };
-    \legend{FLEX, End-to-end RL, CIPS, GAMMA}
+    \legend{\FLEX{}, End-to-end RL, CIPS, GAMMA}
     \end{axis}
     \end{tikzpicture}
-    \caption{Bar-chart visualization of the FLEX success rates reported in \cref{tab:flex_results}, evaluated on novel object instances with the Panda robot. Error bars denote one standard deviation. Cabinets and trashcans are prismatic joints; microwaves and dishwashers are revolute joints. FLEX achieves the highest success rate on every object type while requiring substantially less training than all reinforcement learning baselines (end-to-end RL fails to exceed a $1\%$ success rate within $\geq$10~M time steps).}
+    \caption{Bar-chart visualization of the \FLEX{} success rates reported in \cref{tab:flex_results}, evaluated on novel object instances with the Panda robot. Error bars denote one standard deviation. Cabinets and trashcans are prismatic joints; microwaves and dishwashers are revolute joints. \FLEX{} achieves the highest success rate on every object type while requiring substantially less training than all reinforcement learning baselines (end-to-end RL fails to exceed a $1\%$ success rate within $\geq$10~M time steps).}
     \label{fig:flex_results_bars}
 \end{figure}

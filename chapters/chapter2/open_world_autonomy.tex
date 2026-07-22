@@ -1,18 +1,32 @@
 \section{Closed Worlds and Open Worlds}
 \label{sec:closed_worlds_open_worlds}
 
-Autonomous agents operate in environments that they must perceive, reason about, and act upon in order to achieve their goals.
-In closed-world settings, the agent's representational vocabulary and task model are treated as fixed and sufficient for the situations the agent may encounter.
-The relevant objects, predicates, observations, actions, rewards, dynamics, and action effects are assumed to fall within the agent's predefined modeling framework.
-This assumption has been productive: it underlies classical planning, standard reinforcement learning formulations, and many supervised approaches to perception.
-Under these assumptions, the primary challenge is computational---finding good plans, learning effective policies, or achieving accurate classification within a fixed representational space.
+Autonomous agents perceive their environment, reason with available knowledge, and act in pursuit of their goals.
+Their success depends not only on the accuracy of what they know, but also on whether their representations and task models are adequate for the situations they encounter.
+In this chapter, a \emph{closed-world setting} refers to a problem formulation that treats the agent's predefined modeling framework as fixed and sufficient.
+The relevant objects, predicates, observations, actions, rewards, dynamics, and action effects are assumed to fall within that framework.
+Classical planning, standard reinforcement-learning formulations, and many supervised approaches to perception and action make this assumption: the principal challenge is to plan, learn, or predict effectively within a specified representational space.
 
-Open-world environments violate this assumption.
-The environment may contain objects, dynamics, relationships, or task constraints that the agent's models do not represent.
-New objects may appear that do not correspond to any known category, actions may produce effects that differ from what the agent predicts, and task structure may change in ways that invalidate previously successful strategies.
-These changes need not be adversarial or extreme: routine variation in everyday environments can fall outside the scope of models designed under closed-world assumptions.
+Consider an autonomous vehicle approaching a signalized intersection.
+Its model may represent the states of the traffic light, the locations and motion of vehicles and pedestrians, the relevant right-of-way rules, and actions such as stopping, yielding, and proceeding.
+As long as the situations it encounters can be interpreted using these entities and relations, the model provides a sufficient vocabulary for decision-making.
+The environment may remain uncertain or partially observable, but the uncertainty is expressed within a space the agent already knows how to use.
 
-This gap between the agent's knowledge and the true state of the world is not merely a quantitative shortcoming that can be solved by training on more data or enumerating more cases.
-It is a qualitative property of the agent--environment relationship: the world may contain structure that is not derivable from, or even expressible within, the agent's current representational framework.
-That gap creates the space in which novelty arises.
-The remainder of this chapter develops the conceptual vocabulary needed to describe that gap and the requirements it imposes on open-world agents.
+Now suppose the traffic lights malfunction and a human traffic controller enters the intersection to direct vehicles with hand gestures.
+The vehicle may detect the person while lacking the concepts needed to interpret the interaction.
+It may not represent the person's role as an authorized controller, the gestures as communicative actions, their temporal structure and meaning, or the rule that the controller's directions determine right of way when the signal is inactive.
+A safe fallback such as stopping or requesting human intervention may prevent immediate harm, but it does not give the vehicle the competence to understand the situation and proceed autonomously.
+Doing so may require distinctions and relationships that were absent from its original model.
+
+An \emph{open-world setting} provides no guarantee that the agent's initial modeling framework will remain sufficient.
+The agent may encounter previously unknown objects, properties, relations, actions, events, goals, rules, or task constraints~\citep{langley2020open,boult2021towards}.
+These conditions need not result from rare or adversarial events: ordinary operation beyond the scope of the agent's design and experience can expose the same limitations.
+The big world hypothesis explains why such incompleteness is persistent.
+In many realistic learning problems, the environment exceeds the agent's perceptual and representational capacity by orders of magnitude, forcing it to act through partial observations, limited representations, and approximate solutions~\citep{javed2024bigworld}.
+
+The malfunctioning intersection exposes the limits of the vehicle's original model.
+Until this point, the vehicle has operated as if every relevant situation could be understood using its existing objects, signals, and traffic rules.
+The controller's gestures introduce information that may not fit within that model.
+This is the central open-world problem: an agent may encounter situations that its existing knowledge cannot adequately represent or explain.
+The unfamiliar aspects of such an encounter are novel relative to that agent.
+The next section develops this view of novelty and considers the different ways an agent may recognize that its knowledge is insufficient.
