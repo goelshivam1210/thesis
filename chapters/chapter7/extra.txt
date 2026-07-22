@@ -1,0 +1,10 @@
+
+The research in this area -- open world learning is still in fundamental stages, which makes it an exciting venue for open problems and future directions. Specifically from this dissertation we identify several future directions:
+
+-- Multi-agent and collaborative settings in force-based setups -- how can same policies be used for more collaborative multiple robotics settings -- two robots psuhign objects, transfer to multiple embodiments..
+
+-- Composable skills primitives to do complicated manipulation tasks through active learning on-the-fly. flex framework givesa foundation for that..
+-- Human robot interaction in novelty handling -- building from the rapidlearn fraemwork how we can use human inputs to resolve to novelties -- language being one of them, not just human demonstrations but more like how humans and AI can do a task together and then continually build on the task. lifelong learing by human AI collaborations. 
+-- How can foundational models enable novelty handling and enable better priors 
+-- Learning using smaller state represnetations and agent determine representation based on task to improve learning efficency 
+-- important open problem is how we can learn quickly withiut access to simulation environment -- novelty in real workd cannot be anticipated so haaving access to a sim is a big assumption .. moreover reset in the world is also not possible -- point towards some works onnreset free and some continula learning perspectivesf from the sutton's lab..

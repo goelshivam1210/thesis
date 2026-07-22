@@ -1,28 +1,28 @@
 \section{Dissertation Outline and Contributions}
 \label{sec:contributions}
 
-This dissertation develops methods and frameworks for enabling autonomous agents and robots to operate effectively in open-world environments, where previously learned knowledge may become incomplete or invalid. The contributions address three aspects of this problem: (1) how to systematically study agent behavior under novelty, (2) how to enable efficient adaptation when execution failures occur, and (3) how to design interaction representations that support generalization across diverse objects, tasks, and embodiment.
+In this dissertation, we develop methods and frameworks for enabling autonomous agents and robots to operate effectively in open-world environments, where previously learned knowledge may become incomplete or invalid. The contributions address three aspects of this problem: (1) how to systematically study agent behavior under novelty, (2) how to enable efficient adaptation when execution failures occur, and (3) how to design interaction representations that support generalization across diverse objects, tasks, and embodiments.
 
-A unifying theme across these contributions is the role of structured abstractions in shaping how agents remain effective under mismatch between their internal models and the environment. In particular, this work shows how abstractions support two complementary responses developed conceptually in \cref{ch:novelty_open_world}: localized accommodation when existing behavior must be revised, and assimilation through generalization when a representation makes environmental variation manageable within existing competence.
+A unifying theme across these contributions is the role of structured abstractions in shaping how agents remain effective under mismatch between their internal models and the environment. In particular, we show how abstractions support two complementary responses developed conceptually in \cref{ch:novelty_open_world}: localized accommodation when existing behavior must be revised, and assimilation through generalization when a representation makes environmental variation manageable within existing competence.
 
 The main contributions of this dissertation are summarized as follows:
 
 \begin{itemize}
 
 \item \textbf{Evaluation frameworks for open-world novelty.}  
-This work introduces benchmark environments, formalism, and evaluation methodologies that enable the systematic study of agent behavior under novelty. The proposed environments support controlled injection of diverse classes of novelty, including changes to objects, environment dynamics, and task structure. 
+We introduce benchmark environments, formalisms, and evaluation methodologies that enable the systematic study of agent behavior under novelty. The proposed environments support controlled injection of diverse classes of novelty, including changes to objects, environment dynamics, and task structure.
 
 In addition to enabling reproducible experimentation, these benchmarks provide metrics that characterize the dynamics of agent behavior under novelty, including how quickly deviations from expected outcomes are detected, how performance degrades following a change, and how effectively the agent recovers. These contributions establish foundations for analyzing adaptation and generalization in open-world settings.
 
 \item \textbf{Action abstractions for efficient adaptation under novelty.}  
-This work develops hybrid planning--learning methods that enable agents to recover from execution failures caused by novelty. The key idea is to leverage structured action abstractions that associate high-level operators with executable behaviors, allowing failures to be localized to specific components of a plan.
+We develop hybrid planning--learning methods that enable agents to recover from execution failures caused by novelty. The key idea is to leverage structured action abstractions that associate high-level operators with executable behaviors, allowing failures to be localized to specific components of a plan.
 
 When execution fails, these abstractions enable the agent to convert a global failure into a targeted learning problem, focusing exploration on acquiring only the missing behavior required to restore successful execution. This results in significantly improved sample efficiency compared to unstructured reinforcement learning approaches, while preserving previously valid knowledge. In the terminology of \cref{ch:novelty_open_world}, this is localized behavioral accommodation: the agent extends the competence associated with a failed operator without relearning the entire task.
 
 \item \textbf{Interaction abstractions for generalizable skill learning in robotics.}  
-This work introduces object-centric, force-based representations for robotic manipulation that capture interaction at the level of object dynamics rather than robot-specific control. By decoupling learned policies from particular robot embodiments and control strategies, these abstractions enable skills to generalize across objects with similar physical semantics, across variations in object parameters, and across different robotic platforms.
+We present object-centric, force-based representations for robotic manipulation that capture interaction at the level of object dynamics rather than robot-specific control. By decoupling learned policies from particular robot embodiments and control strategies, these abstractions enable skills to generalize across objects with similar physical semantics, across variations in object parameters, and across different robotic platforms.
 
-Through experiments on articulated and heavy object manipulation tasks, this work shows that representing interaction in force space reduces unnecessary exploration and enables efficient learning of behaviors that transfer across environments. These results demonstrate how appropriate abstractions over interaction support assimilation through generalization: variation in objects, physical conditions, and embodiment can be handled within an existing policy representation without task- or embodiment-specific retraining.
+Through experiments on articulated and heavy-object manipulation tasks, we show that representing interaction in force space reduces unnecessary exploration and enables efficient learning of behaviors that transfer across environments. These results demonstrate how appropriate abstractions over interaction support assimilation through generalization: variation in objects, physical conditions, and embodiment can be handled within an existing policy representation without task- or embodiment-specific retraining.
 
 \end{itemize}
 

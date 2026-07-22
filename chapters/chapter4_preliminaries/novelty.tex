@@ -1,8 +1,8 @@
 \section{Novelty}
 \label{sec:novelty}
 
-\Cref{ch:novelty_open_world} developed novelty as an agent-relative mismatch between the world and an agent's knowledge.
-Here we formalize that idea within the agent--environment framework of the preceding sections and introduce the taxonomies used throughout the dissertation.
+In \cref{ch:novelty_open_world}, we developed an agent-relative account of novelty as a mismatch between the world and an agent's knowledge.
+Here, we formalize that idea within the agent--environment framework of the preceding sections and introduce the taxonomies used throughout the dissertation.
 
 \subsection{An Agent-Relative Definition of Novelty}
 \label{sec:novelty_definition}
@@ -93,7 +93,7 @@ At the \emph{planning level}, novelty may render the symbolic model incomplete: 
 
 At the \emph{execution level}, novelty may cause an executor to fail while the symbolic plan remains valid: the environment dynamics have changed such that $e(\Operator)$ no longer achieves $\Eff_{\Operator}$, even though $\Pre_{\Operator}$ is satisfied under $\Abstraction$. The IPT remains plannable but is no longer solvable, yielding the kind of problem later formalized as a stretch-IPT (\cref{def:stretch_ipt}). This corresponds to obstructive novelty (\cref{def:obstructive}) and manifests as a discrepancy between expected and observed symbolic states after an operator is dispatched for execution.
 
-This distinction is operationally significant. Prohibitive novelties demand changes to $\PlanningDomain$ or $\Operators$; obstructive novelties demand changes to the executor mapping $e$---learning or replacing executors for operators whose symbolic specifications remain valid. \Cref{ch:rapid_learn} develops a neurosymbolic architecture that addresses both failure modes through a cascading recovery pipeline, and formalizes obstructive failures as an \emph{executor discovery problem} in which the agent learns new executors for failed operators while preserving the existing symbolic plan structure.
+This distinction is operationally significant. Prohibitive novelties demand changes to $\PlanningDomain$ or $\Operators$; obstructive novelties demand changes to the executor mapping $e$---learning or replacing executors for operators whose symbolic specifications remain valid. In \cref{ch:rapid_learn}, we present a neurosymbolic architecture that addresses both failure modes through a cascading recovery pipeline. We also formalize obstructive failures as an \emph{executor discovery problem} in which the agent learns new executors for failed operators while preserving the existing symbolic plan structure.
 
 In either case, the hybrid decomposition localizes failure. When an executor fails, the agent knows \emph{which} operator was being executed and can compare $\Eff_{\Operator}$ against $\Abstraction(s')$ for the post-execution state $s'$. This converts what would otherwise be a global performance degradation into a targeted adaptation problem. Without this structure, a failure in the environment would be an undifferentiated signal with no indication of what specifically went wrong.
 

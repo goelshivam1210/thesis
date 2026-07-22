@@ -34,21 +34,21 @@ By encoding task-relevant invariances, they can expand the range of environmenta
 By decomposing knowledge and behavior into identifiable, revisable components, they can make accommodation localizable when that knowledge or behavior is no longer sufficient.
 A monolithic policy may register novelty only as degraded performance, whereas a structured agent can sometimes identify the failed operator, executor, object relation, or interaction variable and restrict revision to the component that no longer matches the world.
 
-This dissertation addresses a specific subset of the broader open-world problem through three complementary contributions.
+In this dissertation, we address a specific subset of the broader open-world problem through three complementary contributions.
 First, systematic progress requires environments in which diverse agents can be developed and compared under controlled change.
 Existing SAIL-ON-inspired environments and open-world benchmarks have made novelty injection measurable~\citep{senator2019science,holder2025introduction,balloch2022novgrid,goss2023polycraft,feeney2022novelcraft}.
-\Cref{ch:benchmarks} introduces \NovelGridworlds{} and \NovelGym{}, configurable environments that support modular transformations of entities, actions, tasks, and dynamics, together with protocols and metrics for characterizing the impact of novelty and the subsequent course of adaptation.
+In \cref{ch:benchmarks}, we present \NovelGridworlds{} and \NovelGym{}, configurable environments that support modular transformations of entities, actions, tasks, and dynamics, together with protocols and metrics for characterizing the impact of novelty and the subsequent course of adaptation.
 The accompanying software ecosystem supports the development and evaluation of modular agent architectures designed for open-world settings.
 This contribution operationalizes the study of how novelty affects existing knowledge and behavior and when an adaptive response becomes necessary.
 
 Second, open-world agents require mechanisms for localized accommodation after execution failure.
 Replanning can rearrange known operators, and undirected exploration can discover behavior in principle, but neither by itself identifies the precise missing behavior when an expected action effect no longer occurs.
-\Cref{ch:rapid_learn} studies action abstractions in which symbolic operators are associated with executable behaviors.
+In \cref{ch:rapid_learn}, we study action abstractions in which symbolic operators are associated with executable behaviors.
 When an executor fails, the intended effects of its operator define what recovery must accomplish, converting global task failure into a targeted skill-learning problem while preserving unaffected knowledge and behaviors.
 
 Third, agents should not be forced to accommodate every change they encounter.
 Some apparent novelty results from representations that are unnecessarily tied to a particular object, physical condition, robot, or control space.
-\Cref{ch:flex,ch:pho} study interaction abstractions that represent manipulation at the level of object interaction rather than robot-specific control.
+In \cref{ch:flex,ch:pho}, we study interaction abstractions that represent manipulation at the level of object interaction rather than robot-specific control.
 By capturing forces, object dynamics, and other task-relevant invariances, these abstractions allow existing skills to generalize across objects, physical parameters, and embodiments; in the terminology of this chapter, they expand the range of variation that can be assimilated without structural revision or retraining.
 
 The action and interaction contributions therefore instantiate complementary consequences of the framework taken from \cref{ch:novelty_open_world}.

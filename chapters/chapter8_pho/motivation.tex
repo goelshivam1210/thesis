@@ -1,7 +1,7 @@
 \section{Introduction}
 \label{sec:pho_motivation}
 
-\Cref{ch:flex} showed that an object-centric force representation can separate an articulated manipulation skill from the robot that executes it. This chapter asks how far the same principle can be carried when the object is not constrained by a joint. The setting is rigid-body transport: a robot must push an object along a desired path without knowing its mass or the friction between the object and the supporting surface.
+The results in \cref{ch:flex} show that an object-centric force representation can separate an articulated manipulation skill from the robot that executes it. We now ask how far the same principle can be carried when the object is not constrained by a joint. The setting is rigid-body transport: a robot must push an object along a desired path without knowing its mass or the friction between the object and the supporting surface.
 
 This problem removes a source of structure that \FLEX{} could exploit. A drawer or door moves along a prismatic or revolute joint, so its allowable motion is geometrically constrained. A rigid object on a plane can both translate and rotate, and its response to contact depends on the resistance it encounters. The same command that moves a light box smoothly across one floor may barely move a heavier box on another; an unsuitable force direction can also cause the object to rotate or drift away from the path. Successful transport therefore requires a policy that represents progress relative to the path while adjusting its forces to the current interaction regime.
 
