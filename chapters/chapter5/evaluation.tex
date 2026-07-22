@@ -13,7 +13,7 @@ This section presents experimental evaluations at three levels, building from th
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.8\textwidth]{figures/chapter5/rapid-learn-prenovelty-screenshot.png}
-    \caption{Screenshot of the NovelGridworld-Pogostick environment. The agent (triangle) can navigate in the environment and collect items such as trees(shown in yellow). The agent can use the crafting-table to craft complicated items such as tree-tap, sticks etc. Blue spaces represent air blocks through which the agent can navigate, and purple blocks represent walls.}
+    \caption[NovelGridworld-Pogostick environment]{Screenshot of the NovelGridworld-Pogostick environment. The agent (triangle) navigates the environment and collects resources such as trees (yellow). At the crafting table, the agent can craft intermediate items such as tree taps and sticks. Blue spaces represent traversable air blocks, and purple blocks represent walls.}
     \label{fig:ngw_pogostick_screenshot}
 \end{figure}
 
@@ -93,7 +93,7 @@ Three variants of \RAPidLearn{} were compared: \emph{RAPid-KGE-UCB} (with upper 
     \end{subfigure}
     \\[8pt]
     \includegraphics[width=0.65\textwidth]{figures/chapter5/rapid_graph_label.pdf}
-    \caption{Learning curves (success rate vs.\ training time steps) for four of the five novelty scenarios. All \RAPidLearn{} variants (KGE-UCB, KGE-UAB, EG) converge one to two orders of magnitude faster than the transfer learning baselines (Actor-Critic Transfer and Policy Reuse). Shaded regions denote one standard deviation over 10 independent trials. Transfer learning baselines did not converge on the RT hard scenario within the evaluation budget and are therefore omitted from that panel.}
+    \caption[Learning curves across novelty scenarios]{Learning curves (success rate vs.\ training time steps) for four of the five novelty scenarios. All \RAPidLearn{} variants (KGE-UCB, KGE-UAB, EG) converge one to two orders of magnitude faster than the transfer learning baselines (Actor-Critic Transfer and Policy Reuse). Shaded regions denote one standard deviation over 10 independent trials. Transfer learning baselines did not converge on the RT hard scenario within the evaluation budget and are therefore omitted from that panel.}
     \label{fig:rapid_learn_curves}
 \end{figure}
 
@@ -141,7 +141,7 @@ In the axe-to-break hard novelty, RAPid-KGE-UCB adapts in approximately $2.35 \t
 % 		\caption{Caption 2}
 		\label{fig:axeFCT}
 	\end{minipage}
-	\caption{Baseline learning curves on the four novelties. Green curve shows the actor-critic transfer, and the red curve shows policy-reuse. Each plot demonstrates the performance during the novelty adaptation phase.}
+	\caption[Baseline learning curves during adaptation]{Baseline learning curves for four novelties. The green curve shows actor-critic transfer, and the red curve shows policy reuse. Each plot reports performance during novelty adaptation.}
     \label{fig:baselines_plots}
 \end{figure*}
 

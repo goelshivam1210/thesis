@@ -1,4 +1,4 @@
-\section{\FLEX{}: Force-Based Learning for Articulated Object Manipulation}
+\section[Force-Based Articulated-Object Manipulation]{\FLEX{}: Force-Based Learning for Articulated Object Manipulation}
 \label{sec:flex}
 
 This section presents \FLEX{} (Force-based Learning for EXtended Manipulation)~\citep{fang2025flex}, a framework for learning object-centric manipulation policies in force space for articulated objects such as drawers, doors, microwaves, and dishwashers. The key idea is to decouple policy learning from robot-specific dynamics entirely: policies are trained in simulation by applying forces directly to objects, without modeling any robot. At deployment, the learned forces are transferred to physical robots through an operational space controller, enabling direct cross-platform transfer without retraining.
@@ -23,7 +23,7 @@ A \emph{prismatic joint} allows linear motion along a fixed axis. The position o
         \includegraphics[width=\textwidth]{figures/chapter6/joint_config_rev.png}
         \caption{Revolute joint}
     \end{subfigure}
-    \caption{Illustration of the two joint configurations used in \FLEX{}. (a) A prismatic joint allows linear motion along a fixed axis $h_p$. (b) A revolute joint allows rotational motion around an axis $h_r$ with radius $r$. The state representation for each joint type captures the joint axis direction and the current displacement or projected position, providing an object-centric description independent of robot kinematics.}
+    \caption[Prismatic and revolute joint configurations]{Illustration of the two joint configurations used in \FLEX{}. (a) A prismatic joint allows linear motion along a fixed axis $h_p$. (b) A revolute joint allows rotational motion around an axis $h_r$ with radius $r$. The state representation for each joint type captures the joint axis direction and the current displacement or projected position, providing an object-centric description independent of robot kinematics.}
     \label{fig:flex_joints}
 \end{figure}
 
@@ -51,7 +51,7 @@ A critical feature of this formulation is that no robot is present in the traini
 \begin{figure}[t]
     \centering
     \includegraphics[width=\textwidth]{figures/chapter6/framework_diagram_final.jpeg}
-    \caption{Architecture of \FLEX{}. Force-based skill learning (left) trains object-centric policies in simulation without any robot. Interactive joint parameter estimation (center) infers the object's joint type and configuration from physical interaction. Robot execution (right) maps the learned forces to joint torques through an operational space controller, enabling deployment on any robot platform.}
+    \caption[Architecture of \FLEX{}]{Architecture of \FLEX{}. Force-based skill learning (left) trains object-centric policies in simulation without any robot. Interactive joint parameter estimation (center) infers the object's joint type and configuration from physical interaction. Robot execution (right) maps the learned forces to joint torques through an operational space controller, enabling deployment on any robot platform.}
     \label{fig:flex_architecture}
 \end{figure}
 
@@ -95,7 +95,7 @@ The final component translates the learned force-based policies to physical robo
 \begin{figure}[t]
     \centering
     \includegraphics[width=\textwidth]{figures/chapter6/illustrative_figure.jpg}
-    \caption{\FLEX{} learns force-based skills for manipulating articulated objects across various robots by decoupling policy learning from robot dynamics. The UR5e opens a cabinet, Kinova opens a microwave door, Panda opens a dishwasher rack, and a real UR5 opens a drawer---all using the same learned policies without retraining.}
+    \caption[Cross-object and cross-robot manipulation with \FLEX{}]{\FLEX{} learns force-based skills for manipulating articulated objects across various robots by decoupling policy learning from robot dynamics. The UR5e opens a cabinet, Kinova opens a microwave door, Panda opens a dishwasher rack, and a real UR5 opens a drawer---all using the same learned policies without retraining.}
     \label{fig:flex_results}
 \end{figure}
 

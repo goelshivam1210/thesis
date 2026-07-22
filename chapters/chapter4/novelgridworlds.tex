@@ -11,7 +11,7 @@ Each \NovelGridworlds{} environment is a discrete gridworld of configurable size
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.8\textwidth]{figures/chapter4/screen-shot_ng.png}
-    \caption{Screenshot of the NovelGridworld-Bow-v0 environment. The agent (triangle) faces the crafting table (green). Sticks (yellow) and strings (orange) are distributed in the gridworld. Blue spaces represent air blocks through which the agent can navigate, and purple blocks represent walls.}
+    \caption[NovelGridworld-Bow-v0 environment]{Screenshot of the NovelGridworld-Bow-v0 environment. The agent (triangle) faces the crafting table (green). Sticks (yellow) and strings (orange) are distributed in the gridworld. Blue spaces represent air blocks through which the agent can navigate, and purple blocks represent walls.}
     \label{fig:ngw_screenshot}
 \end{figure}
 
@@ -71,7 +71,7 @@ A central contribution of \NovelGridworlds{} is a structured taxonomy for classi
         \caption{Fire wall (object/attribute, detrimental)}
         \label{fig:ngw_novelty_firewall}
     \end{subfigure}
-    \caption{Representative \NovelGridworlds{} novelty scenarios discussed in the evaluation (fence, axe, and fire wall). Each panel shows how the grid layout and entities change under the corresponding novelty.}
+    \caption[Representative \NovelGridworlds{} novelty scenarios]{Representative \NovelGridworlds{} novelty scenarios discussed in the evaluation (fence, axe, and fire wall). Each panel shows how the grid layout and entities change under the corresponding novelty.}
     \label{fig:ngw_novelty_examples}
 \end{figure}
 
@@ -82,7 +82,7 @@ A central contribution of \NovelGridworlds{} is a structured taxonomy for classi
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.75\textwidth]{figures/chapter4/venn_diag_4.png}
-    \caption{Venn diagram classifying all twelve novelties implemented in \NovelGridworlds{} by the novelty class they affect. Novelties in overlapping regions span multiple classes simultaneously.}
+    \caption[Novelty classes in \NovelGridworlds{}]{Venn diagram classifying all twelve novelties implemented in \NovelGridworlds{} by the novelty class they affect. Novelties in overlapping regions span multiple classes simultaneously.}
     \label{fig:ngw_venn_diag}
 \end{figure}
 
@@ -140,7 +140,7 @@ Two types of agents were evaluated: a symbolic planning agent implemented using 
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.8\textwidth]{figures/chapter4/results_latest.png}
-    \caption{Learning performance of the RL agent on NovelGridworld-Bow-v0. The vertical line at 2 million time steps marks the introduction of novelty. Break increase (orange) shows improved reward but reduced success rate. Fire wall (green) causes complete failure. Action remapping (blue) shows partial recovery.}
+    \caption[RL performance before and after novelty]{Learning performance of the RL agent on NovelGridworld-Bow-v0. The vertical line at 2 million time steps marks the introduction of novelty. Break increase (orange) shows improved reward but reduced success rate. Fire wall (green) causes complete failure. Action remapping (blue) shows partial recovery.}
     \label{fig:ngw_rl_curves}
 \end{figure}
 

@@ -1,4 +1,4 @@
-\section{A Neurosymbolic Architecture for Open-World Novelty Handling}
+\section[Neurosymbolic Architecture for Novelty Handling]{A Neurosymbolic Architecture for Open-World Novelty Handling}
 \label{sec:architecture}
 
 RAPid-Learn addresses the specific problem of recovering from execution impasses caused by novelty. However, a complete open-world agent must handle the full lifecycle of novelty: detecting that something has changed, characterizing the nature of the change, exploring the environment to gather information, and accommodating the novelty to continue task performance. This section presents a neurosymbolic cognitive architecture~\citep{goel2024neurosymbolic} that integrates RAPid-Learn within a broader framework for novelty handling. The architecture combines symbolic inference, neural inference, and reinforcement learning, with each component contributing to different aspects of novelty detection and accommodation.
@@ -23,7 +23,7 @@ The architecture, depicted in \cref{fig:architecture}, consists of four main com
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\textwidth]{figures/chapter5/diarcgram.pdf}
-    \caption{High-level architecture of the neurosymbolic cognitive architecture for novelty handling. The four main components communicate through the shared knowledge repository $\mathcal{K} = (\KB, \Theta)$. Symbolic inference (task planner, goal manager) generates and executes plans, detecting novelties through expectation violations. Neural inference (vision model, agent model) detects visual and behavioral anomalies and asserts novelty descriptions into $\KB$. When execution fails, the novelty exploration component applies a cascading sequence of recovery strategies---culminating in the RAPid-Learn executor learner---interacting with the environment through the domain interface, which mediates symbolic state observations, images, and LiDAR sensor data.}
+    \caption[Neurosymbolic architecture for novelty handling]{High-level architecture of the neurosymbolic cognitive architecture for novelty handling. The four main components communicate through the shared knowledge repository $\mathcal{K} = (\KB, \Theta)$. Symbolic inference (task planner, goal manager) generates and executes plans, detecting novelties through expectation violations. Neural inference (vision model, agent model) detects visual and behavioral anomalies and asserts novelty descriptions into $\KB$. When execution fails, the novelty exploration component applies a cascading sequence of recovery strategies---culminating in the RAPid-Learn executor learner---interacting with the environment through the domain interface, which mediates symbolic state observations, images, and LiDAR sensor data.}
     \label{fig:architecture}
 \end{figure}
 

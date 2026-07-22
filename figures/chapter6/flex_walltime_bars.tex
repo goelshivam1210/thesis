@@ -4,7 +4,7 @@
     \begin{axis}[
         ybar=2pt,
         bar width=15pt,
-        width=\textwidth, height=8cm,
+        width=0.97\textwidth, height=8cm,
         enlarge x limits=0.2,
         ymode=log,
         log origin=infty,
@@ -32,6 +32,6 @@
     \legend{\FLEX{}, End-to-end RL ($\geq$24\,h), CIPS}
     \end{axis}
     \end{tikzpicture}
-    \caption{Bar-chart visualization of the training wall time reported in \cref{tab:flex_results} (log scale, lower is better). Error bars denote one standard deviation; GAMMA is omitted as it is a pre-trained perception model with no training cost reported. \FLEX{} trains one to two orders of magnitude faster than the reinforcement learning baselines, with end-to-end RL requiring at least $24$ hours to reach even negligible success.}
+    \caption[Training time of \FLEX{} and reinforcement-learning baselines]{Bar-chart visualization of the training wall time reported in \cref{tab:flex_results} (log scale, lower is better). Error bars denote one standard deviation; GAMMA is omitted as it is a pre-trained perception model with no training cost reported. \FLEX{} trains one to two orders of magnitude faster than the reinforcement learning baselines, with end-to-end RL requiring at least $24$ hours to reach even negligible success.}
     \label{fig:flex_walltime_bars}
 \end{figure}

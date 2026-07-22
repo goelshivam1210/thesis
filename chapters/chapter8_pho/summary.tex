@@ -185,7 +185,11 @@ Seeds                              & $0$--$9$ ($10$ seeds total) \\
 When the buffer exceeds its maximum capacity, the oldest $1/5$ of transitions are discarded.
 
 \noindent\textbf{Model selection.}
-The best model is selected based on a composite score: $0.5 \times \text{full-arc success rate} + 0.5 \times \text{generalization success rate}$, evaluated every $25$ episodes on in-distribution conditions.
+The best model is selected every $25$ episodes on in-distribution conditions using the composite score
+\[
+0.5 \times \text{full-arc success rate}
++ 0.5 \times \text{generalization success rate}.
+\]
 The generalization evaluation uses random arc geometries with radius $r \sim \mathcal{U}(1, 2)$\,m and angular span variation of $\pm 60^\circ$ from the nominal $120^\circ$ training arc.
 
 \subsection{Network Architecture}

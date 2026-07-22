@@ -28,6 +28,7 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.temp
+/tmp/
 
 # Chapter working notes (not part of the thesis source)
 *_paper_digest*.md

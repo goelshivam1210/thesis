@@ -72,11 +72,10 @@ Finally finally, I wanted a blank page between the title and abstract. So I defi
 
 \usepackage{amssymb,amsfonts,amsthm,amsmath,mathtools}
 \usepackage{physics,mathrsfs}
-\usepackage{lipsum}
 \usepackage[base]{babel}
 \usepackage{booktabs}
-\usepackage{yfonts}
 \usepackage{setspace}
+\usepackage{microtype}
 \usepackage[numbers]{natbib}
 \usepackage[hidelinks]{hyperref}
 \usepackage[capitalize,nameinlink,noabbrev]{cleveref}
@@ -194,9 +193,6 @@ Finally finally, I wanted a blank page between the title and abstract. So I defi
 \usepackage{xcolor}
 \usepackage{soul}
 
-% \usepackage{xcolor}
-\usepackage{listings}
-
 \lstdefinelanguage{PDDL}{
   sensitive=false,
   alsoletter={:?-},
@@ -265,10 +261,14 @@ Finally finally, I wanted a blank page between the title and abstract. So I defi
   colorlinks=true,
   linkcolor=black,
   citecolor=citationRed,
-  urlcolor=black
+  urlcolor=black,
+  pdftitle={Structured Abstractions for Learning and Adaptation in Open-World Environments},
+  pdfauthor={Shivam Goel},
+  pdfsubject={Doctoral dissertation in Computer Science},
+  pdfkeywords={open-world autonomy, novelty, adaptation, generalization, robotics, reinforcement learning}
 }
 \newif\ifrevs
-\revstrue   % ← set \revsfalse to hide all revision markup
+\revsfalse  % Clean dissertation. Use \revstrue only for a marked review copy.
 
 \colorlet{revR1}{blue}
 \colorlet{revR2}{orange!80!black}
@@ -296,10 +296,26 @@ Finally finally, I wanted a blank page between the title and abstract. So I defi
 \pagestyle{fancy}
 \setlength{\headheight}{25.16252pt}
 \addtolength{\topmargin}{-13.16252pt}
-\fancyhead[RE]{Chapter \thechapter}
+\fancyhf{}
 \fancyhead[LE,RO]{\thepage}
-\fancyhead[LO]{\rightmark}
-\cfoot{}
+\fancyhead[RE]{\nouppercase{\leftmark}}
+\fancyhead[LO]{\nouppercase{\rightmark}}
+\renewcommand{\chaptermark}[1]{\markboth{Chapter~\thechapter}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection\quad #1}}
+
+% Keep captions restrained and consistent while preserving dissertation spacing.
+\captionsetup{
+  font=small,
+  labelfont=bf,
+  labelsep=period,
+  justification=justified,
+  singlelinecheck=false
+}
+
+% Discourage isolated first and last lines without forcing arbitrary page breaks.
+\clubpenalty=5000
+\widowpenalty=5000
+\displaywidowpenalty=5000
 
 \theoremstyle{plain}
 \newtheorem{definition}{Definition}
@@ -363,26 +379,28 @@ Finally finally, I wanted a blank page between the title and abstract. So I defi
 \begin{document}
 
 \pagenumbering{roman}
+\pagestyle{plain}
 
 \input{macros/notation}
 \input{frontmatter/titlepage}
-\input{frontmatter/dedication}
 
 % after title page, begin double spacing
 \begin{doublespace}
 
 
 \input{frontmatter/abstract}
+\input{frontmatter/dedication}
 \input{frontmatter/acknowledgments}
 
 
 \tableofcontents
-\listoffigures
 \listoftables
-% \cleardoublepage
+\listoffigures
+\cleardoublepage
 
-\setcounter{page}{0}
 \pagenumbering{arabic}
+\input{frontmatter/repeated_title}
+\pagestyle{fancy}
 
 %Chapters (use include/includeonly for fast focus builds)
 \input{frontmatter/preface}

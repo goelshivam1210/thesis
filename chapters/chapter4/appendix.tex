@@ -16,32 +16,43 @@
 \subsection{Action Space}
 \label{sec:ng_action_space}
 
-\rev{The action space for the hybrid agent is composed of higher-level action operators such as \texttt{approach <entity>}. These are implemented as executors that use the primitive actions available in the environment to execute the operators. Therefore the hybrid agent's action space includes both higher-level operators (implemented as lower-level action executors) and primitive actions. For the RL agent, each higher-level operator is grounded. The exhaustive list of the actions used:}
-\begin{itemize}
-    \item \rev{\texttt{collect}}
-    \item \rev{\texttt{break\_block}}
-    \item \rev{\texttt{approach\_oak\_log}}
-    \item \rev{\texttt{approach\_diamond\_ore}}
-    \item \rev{\texttt{approach\_crafting\_table}}
-    \item \rev{\texttt{approach\_block\_of\_platinum}}
-    \item \rev{\texttt{approach\_entity\_103}}
-    \item \rev{\texttt{interact\_103}}
-    \item \rev{\texttt{select\_oak\_log}}
-    \item \rev{\texttt{select\_iron\_pickaxe}}
-    \item \rev{\texttt{select\_sapling}}
-    \item \rev{\texttt{select\_tree\_tap}}
-    \item \rev{\texttt{select\_crafting\_table}}
-    \item \rev{\texttt{deselect\_item}}
-    \item \rev{\texttt{craft\_stick}}
-    \item \rev{\texttt{craft\_planks}}
-    \item \rev{\texttt{craft\_block\_of\_diamond}}
-    \item \rev{\texttt{craft\_pogo\_stick}}
-    \item \rev{\texttt{trade\_block\_of\_titanium\_1}}
-    \item \rev{\texttt{move\_forward}, \texttt{move\_backward}, \texttt{move\_left}, \texttt{move\_right}}
-    \item \rev{\texttt{rotate\_left}, \texttt{rotate\_right}}
-    \item \rev{\texttt{place}}
-    \item \rev{\texttt{<slot 1>}, \texttt{<slot 2>} (vary during post-novelty situations)}
-\end{itemize}
+\rev{The hybrid agent's action space contains higher-level operators, such as \texttt{approach <entity>}, together with the primitive actions used by their executors. For the RL agent, every higher-level operator is grounded to a specific argument. The complete grounded action set used in the experiments is listed below.}
+
+\begin{center}
+\small
+\setlength{\tabcolsep}{10pt}
+\renewcommand{\arraystretch}{1.16}
+\arrayrulecolor{codeRule}
+\begin{tabularx}{0.92\textwidth}{>{\ttfamily\raggedright\arraybackslash}X>{\ttfamily\raggedright\arraybackslash}X}
+\toprule
+\multicolumn{2}{c}{\normalfont\textbf{Grounded action set}} \\
+\midrule
+\rowcolor{codeBackground}
+collect & break\_block \\
+approach\_oak\_log & approach\_diamond\_ore \\
+\rowcolor{codeBackground}
+approach\_crafting\_table & approach\_block\_of\_platinum \\
+approach\_entity\_103 & interact\_103 \\
+\rowcolor{codeBackground}
+select\_oak\_log & select\_iron\_pickaxe \\
+select\_sapling & select\_tree\_tap \\
+\rowcolor{codeBackground}
+select\_crafting\_table & deselect\_item \\
+craft\_stick & craft\_planks \\
+\rowcolor{codeBackground}
+craft\_block\_of\_diamond & craft\_pogo\_stick \\
+trade\_block\_of\_titanium\_1 & move\_forward \\
+\rowcolor{codeBackground}
+move\_backward & move\_left \\
+move\_right & rotate\_left \\
+\rowcolor{codeBackground}
+rotate\_right & place \\
+<slot 1> & <slot 2> \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\rev{The two placeholder actions, \texttt{<slot 1>} and \texttt{<slot 2>}, are assigned as needed in post-novelty settings.}
 
 
 \subsection{Observation Spaces}
@@ -73,16 +84,31 @@
 
 \rev{The reward function plays a critical role in guiding the RL agent toward completing the multi-step crafting task. Because the pogostick task requires the agent to achieve a sequence of subgoals in order---collecting resources, crafting intermediaries, trading, and finally crafting the pogostick---a sparse reward signal (rewarding only final task completion) leads to prohibitively slow learning. Instead, we use a \emph{plan-based shaped reward} that leverages the symbolic planner to decompose the task into an ordered queue of subgoals and assigns intermediate rewards as subgoals are achieved.}
 
-\rev{The reward-shaping mechanism works as follows. The planner generates a plan $P$ for the current task, from which an ordered queue $\mathcal{Q}$ of subgoals is extracted. The subgoals used in the pogostick task are:}
-\begin{enumerate}[leftmargin=*]
-    \item \rev{\texttt{break \textlangle block of platinum\textrangle}}
-    \item \rev{\texttt{trade block of titanium}}
-    \item \rev{\texttt{break block of diamond}}
-    \item \rev{\texttt{break tree}}
-    \item \rev{\texttt{craft planks}}
-    \item \rev{\texttt{craft stick}}
-    \item \rev{\texttt{craft pogostick}}
-\end{enumerate}
+\rev{The reward-shaping mechanism works as follows. The planner generates a plan $P$ for the current task, from which an ordered queue $\mathcal{Q}$ of subgoals is extracted. For the pogostick task, the queue contains the following sequence.}
+
+\begin{center}
+\small
+\setlength{\tabcolsep}{8pt}
+\renewcommand{\arraystretch}{1.14}
+\arrayrulecolor{codeRule}
+\begin{tabularx}{0.80\textwidth}{>{\centering\arraybackslash}p{0.10\textwidth}>{\raggedright\arraybackslash}X}
+\toprule
+\textbf{Step} & \textbf{Planner-derived subgoal} \\
+\midrule
+\rowcolor{codeBackground}
+1 & \texttt{break \textlangle block of platinum\textrangle} \\
+2 & \texttt{trade block of titanium} \\
+\rowcolor{codeBackground}
+3 & \texttt{break block of diamond} \\
+4 & \texttt{break tree} \\
+\rowcolor{codeBackground}
+5 & \texttt{craft planks} \\
+6 & \texttt{craft stick} \\
+\rowcolor{codeBackground}
+7 & \texttt{craft pogostick} \\
+\bottomrule
+\end{tabularx}
+\end{center}
 
 \rev{A reward is only given for the first unachieved subgoal in the queue. Once a subgoal is achieved for the first time, it becomes a \emph{past goal} and the next subgoal in the queue becomes the active target. Two additional mechanisms prevent reward exploitation:}
 \begin{itemize}[leftmargin=*]
@@ -92,6 +118,7 @@
 
 \rev{Algorithm~\ref{alg:reward_func} formalizes this training routine.}
 
+\newpage
 \input{chapters/chapter4/algo}
 
 \subsubsection{Pre-Novelty Base RL}

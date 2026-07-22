@@ -1,4 +1,4 @@
-\section{Pushing Heavy Objects: Force Policies for Rigid Body Transport}
+\section{Force Policies for Rigid-Body Transport}
 \label{sec:pho}
 
 The previous section demonstrated that object-centric force-space policies enable generalizable manipulation of articulated objects whose motion is constrained by joints. This section extends the approach to a complementary class of sustained-contact manipulation: transporting rigid objects along prescribed paths through sustained boundary contact, where the primary challenge is not joint-constrained motion but unknown and varying contact resistance due to object mass and surface friction~\citep{goel2025pho}.
@@ -13,7 +13,7 @@ This setting presents three coupled sub-problems: (1) learning an object-centric
 \begin{figure}[t]
     \centering
     \includegraphics[width=\textwidth]{figures/chapter6/arch.pdf}
-    \caption{Architecture of the pushing heavy objects framework. The policy is trained in simulation (top right) using a parameterized MDP conditioned on an interaction descriptor $z$. At deployment (bottom), the robot estimates $z$ through impedance-based force probing and constructs the object-centric state from proprioceptive sensing, then executes the learned boundary forces through compliant impedance control.}
+    \caption[Architecture of the pushing framework]{Architecture of the pushing heavy objects framework. The policy is trained in simulation (top right) using a parameterized MDP conditioned on an interaction descriptor $z$. At deployment (bottom), the robot estimates $z$ through impedance-based force probing and constructs the object-centric state from proprioceptive sensing, then executes the learned boundary forces through compliant impedance control.}
     \label{fig:pho_architecture}
 \end{figure}
 
@@ -34,7 +34,7 @@ where $e^\text{lat}_t$ is the signed lateral deviation from the path, $e^\theta_
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.55\textwidth]{figures/chapter6/state_description.png}
-    \caption{Diagrammatic representation of the state space in the parameterized MDP. The object's pose is represented relative to the reference path through lateral deviation $e^\text{lat}_t$, heading error $e^\theta_t$, and velocity components along the path tangent and normal. The normalized contact-resistance descriptor $z$ conditions the policy on the interaction regime.}
+    \caption[Path-relative state representation]{Diagrammatic representation of the state space in the parameterized MDP. The object's pose is represented relative to the reference path through lateral deviation $e^\text{lat}_t$, heading error $e^\theta_t$, and velocity components along the path tangent and normal. The normalized contact-resistance descriptor $z$ conditions the policy on the interaction regime.}
     \label{fig:pho_state}
 \end{figure}
 
@@ -62,7 +62,7 @@ z = \text{clip}\left(\frac{f_\text{max}}{F_\text{max}}, 0, 1\right).
 \begin{algorithm}[t]
 \vspace*{0.2cm}
 \footnotesize
-\caption{\footnotesize Reactive Force Estimation via Impedance Probing}
+\caption{Reactive force estimation via impedance probing.}
 \label{alg:force_probe}
 \begin{algorithmic}[1]
 \REQUIRE Probe axis $\hat{u}$, step size $\delta$, max steps $N$, window size $w$, break threshold $\Delta_f$, $F_{\max}$
@@ -162,7 +162,7 @@ Policies were trained in MuJoCo~\citep{todorov2012mujoco} with mass randomized o
         \includegraphics[width=\textwidth]{figures/chapter6/12pt5kg-baseline.jpg}
         \caption{Baseline, 12.5\,kg}
     \end{subfigure}
-    \caption{Chronophotographic composites of real-world box transport on the Boston Dynamics Spot. Top row: proposed force-based policy under $8.8$~kg (a) and $12.5$~kg (c) payloads, showing consistent trajectory tracking. Bottom row: kinematic baseline under the same conditions (b, d), showing frequent deviation and failure to reach the goal.}
+    \caption[Real-world box transport with the Boston Dynamics Spot]{Chronophotographic composites of real-world box transport on the Boston Dynamics Spot. Top row: proposed force-based policy under $8.8$~kg (a) and $12.5$~kg (c) payloads, showing consistent trajectory tracking. Bottom row: kinematic baseline under the same conditions (b, d), showing frequent deviation and failure to reach the goal.}
     \label{fig:pho_realworld}
 \end{figure}
 \subsubsection{Real-World Experiments}

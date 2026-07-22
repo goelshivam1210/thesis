@@ -32,7 +32,7 @@ Observations can take multiple forms depending on the agent's sensor configurati
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.7\textwidth]{figures/chapter4/sensor_rep.png}
-    \caption{Illustration of the agent's sensor representations in \NovelGym{}. (Left) A LiDAR-like representation emitting beams at angular increments. (Right) An image-based local view representation using one-hot vector encodings.}
+    \caption[Sensor representations in \NovelGym{}]{Illustration of the agent's sensor representations in \NovelGym{}. (Left) A LiDAR-like representation emitting beams at angular increments. (Right) An image-based local view representation using one-hot vector encodings.}
     \label{fig:ng_sensors}
 \end{figure}
 
@@ -63,7 +63,7 @@ The \NovelGym{} ecosystem is composed of two main components: the environment an
 \begin{figure}[t]
     \centering
     \includegraphics[width=\textwidth]{figures/chapter4/novelgym_architecture.pdf}
-    \caption{System design of the \NovelGym{} ecosystem. Blue highlights the environment modules and purple highlights the agent modules. The novelty injector (red) transforms the environment based on specified configurations.}
+    \caption[System design of the \NovelGym{} ecosystem]{System design of the \NovelGym{} ecosystem. Blue highlights the environment modules and purple highlights the agent modules. The novelty injector (red) transforms the environment based on specified configurations.}
     \label{fig:ng_architecture}
 \end{figure}
 
@@ -165,7 +165,7 @@ The architecture also integrates a modular reinforcement learning framework (Tia
         \draw[measure, brown!70!black] (10.9,0) -- (10.9,\ypost);
         \node[annot, brown!70!black, anchor=south, align=center] at (10.9,\ypost) {$S_{\text{post}}$};
     \end{tikzpicture}
-    \caption{Illustration of the \NovelGym{} evaluation protocol and performance over time: the learning agent's success rate (black) as training progresses, with novelty injection (red) dividing the pre- and post-novelty regimes. At initialization the agent's policy is effectively random, so the curve begins at the random-action baseline (blue) and learning lifts it above this chance-level reference. Novelty injection collapses performance back to the chance-level baseline; the post-novelty learning curve then restarts from this baseline point and adaptation gradually recovers performance to $S_{\text{post}}$. The annotated regions correspond to the metrics in \cref{sec:ng_evaluation}: pre-novelty asymptotic performance ($S_{\text{pre}}$), novelty impact ($I_{\text{novelty}}$), time to adapt ($T_{\text{adapt}}$), and post-novelty asymptotic performance ($S_{\text{post}}$).}
+    \caption[\NovelGym{} evaluation protocol and metrics]{Illustration of the \NovelGym{} evaluation protocol and performance over time: the learning agent's success rate (black) as training progresses, with novelty injection (red) dividing the pre- and post-novelty regimes. At initialization the agent's policy is effectively random, so the curve begins at the random-action baseline (blue) and learning lifts it above this chance-level reference. Novelty injection collapses performance back to the chance-level baseline; the post-novelty learning curve then restarts from this baseline point and adaptation gradually recovers performance to $S_{\text{post}}$. The annotated regions correspond to the metrics in \cref{sec:ng_evaluation}: pre-novelty asymptotic performance ($S_{\text{pre}}$), novelty impact ($I_{\text{novelty}}$), time to adapt ($T_{\text{adapt}}$), and post-novelty asymptotic performance ($S_{\text{post}}$).}
     \label{fig:ng_metrics}
 \end{figure}
 
@@ -189,7 +189,7 @@ The benchmark task in \NovelGym{} is a Minecraft-inspired pogostick crafting tas
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.75\textwidth]{figures/chapter4/ngw-screenshot.png}
-    \caption{\rev{Screenshot of the \NovelGym{} environment running the pogostick crafting task. The agent (blue arrow) navigates a grid containing oak logs (brown), diamond ore (teal), platinum blocks (silver), a crafting table, and a trader (green face). The right panel displays the current episode, step count, agent facing direction, selected action, total cost, and inventory contents.}}
+    \caption[\NovelGym{} pogostick crafting task]{\rev{Screenshot of the \NovelGym{} environment running the pogostick crafting task. The agent (blue arrow) navigates a grid containing oak logs (brown), diamond ore (teal), platinum blocks (silver), a crafting table, and a trader (green face). The right panel displays the current episode, step count, agent facing direction, selected action, total cost, and inventory contents.}}
     \label{fig:ngw2_screenshot}
 \end{figure}
 
@@ -205,7 +205,7 @@ Five environment transformations were selected for evaluation, spanning detrimen
 \begin{figure}[t]
     \centering
     \includegraphics[width=\textwidth]{figures/chapter4/novelties.png}
-    \caption{Illustration of the pre-novelty environment and three novelty scenarios: fire, fence, and chest. Each transformation modifies specific components of the environment formalism.}
+    \caption[\NovelGym{} novelty scenarios]{Illustration of the pre-novelty environment and three novelty scenarios: fire, fence, and chest. Each transformation modifies specific components of the environment formalism.}
     \label{fig:ng_novelties}
 \end{figure}
 

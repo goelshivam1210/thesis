@@ -11,7 +11,7 @@ The \RAPidLearn{} framework operates as follows. The agent begins with an integr
 \begin{figure}
     \centering
     \includegraphics[width=1\linewidth]{figures/chapter5/rapid_learn_overview.jpg}
-    \caption{Overview of the Rapid-Learn Framework}
+    \caption{Overview of the \RAPidLearn{} framework.}
     \label{fig:rapid_learn_overview}
 \end{figure}
 %
@@ -204,7 +204,7 @@ The learned executor is added to the agent's executor set $\Executors$ and mappe
 \begin{figure}[t]
     \centering
     \includegraphics[width=\textwidth]{figures/chapter5/running_example_overview.png}
-    \caption{Overview of the agent in action.(a) Illustrates the \NovelGridworlds{} domain in the pre-novelty scenario, showing an agent in a walled arena surrounded by \emph{trees}, and facing a \emph{crafting-table}. (b) Shows the scenario when the environment introduces the \emph{rubber-tree-hard} novelty and the agent reaches an impasse.(c) \emph{Executor-Discovery} phase when the agent accommodates the novelty using our approach RAPid-KGE-UCB. (d) Agent successfully resolves the plan execution impasse. (e) Agent reaches the goal state of crafting a \emph{pogo-stick}.}
+    \caption[\RAPidLearn{} recovery from the rubber-tree novelty]{Overview of the agent's response to novelty. (a) The agent operates in the pre-novelty \NovelGridworlds{} domain. (b) The environment introduces the \emph{rubber-tree-hard} novelty, causing an impasse. (c) During executor discovery, the agent accommodates the novelty using RAPid-KGE-UCB. (d) The agent resolves the plan-execution impasse. (e) The agent reaches the goal state by crafting a \emph{pogo-stick}.}
     % first collects the axe and then breaks the tree. Once the executor converges, it is stored and the agent resumes executing the original plan to reach its goal.}
     \label{fig:running_example_overview}
 \end{figure}

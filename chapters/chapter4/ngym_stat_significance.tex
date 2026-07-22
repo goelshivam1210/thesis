@@ -18,12 +18,12 @@ Table~\ref{tab:ng_stat_sig} reports the $p$-values and significance verdicts.}
 \begin{table}[!tb]
 \footnotesize
 \begin{center}
-\begin{tabular}{>{\centering}p{4.4cm}>{\centering}p{1.2cm}>{\centering}p{1.8cm}p{0.1cm}}
+\begin{tabular}{>{\centering}p{4.3cm}>{\centering}p{1.2cm}>{\centering}p{2.1cm}}
 
 \arrayrulecolor{taupegray}\toprule
 \textbf{\begin{small}Methods\end{small}} &
 {\textbf{\begin{small}$p$-value\end{small}}} &
-\textbf{\begin{small}Statistically Significant\end{small}}\tabularnewline
+\makecell{\textbf{Statistically}\\\textbf{significant}}\tabularnewline
 \midrule
 
 % ── AXE ──
@@ -64,7 +64,7 @@ RL(PPO) $\leftrightarrow$ TRL     & $<0.001$ & Yes$^\ddagger$\tabularnewline
 \multicolumn{3}{l}{\small $^\dagger$ High variance in TRL+ICM ($\pm 198$k steps) limits power.}\\
 \multicolumn{3}{l}{\small $^\ddagger$ Significant but reversed: TRL adapts faster than hybrid on Fire.}\\
 \end{tabular}
-\caption{\rev{\small Results of unpaired $t$-test between the best-performing hybrid agent
+\caption[Statistical comparison of adaptation times]{\rev{Results of an unpaired $t$-test between the best-performing hybrid agent
 and each Transfer RL baseline on $T_\text{adapt}$ (time steps to adapt). The hybrid
 advantage is statistically significant across Axe, Trader, and Fence novelties.}}
 \label{tab:ng_stat_sig}
