@@ -5,28 +5,38 @@
 #   make clean    - Remove auxiliary files
 #   make bib      - Process bibliography only
 
-.PHONY: all clean watch bib cleanall
+.PHONY: all prepare clean watch bib cleanall
+.DEFAULT_GOAL := all
 
-LATEXMK = latexmk -pdf -interaction=nonstopmode -bibtex -outdir=build
+MAIN = main
+OUTDIR = build
+LATEXMK = latexmk -pdf -interaction=nonstopmode -bibtex -outdir=$(OUTDIR)
+SOURCE_DIRS = $(shell find chapters frontmatter figures macros tables -type d)
+OUTPUT_DIRS = $(addprefix $(OUTDIR)/,$(SOURCE_DIRS))
+
+# LaTeX does not create the nested output directories needed by \include.
+prepare:
+	mkdir -p $(OUTDIR) $(OUTPUT_DIRS)
 
 # Main target — latexmk only re-runs pdflatex/bibtex when sources change
-all:
-	$(LATEXMK) main.tex
-	cp build/main.pdf main.pdf
+all: prepare
+	$(LATEXMK) $(MAIN).tex
+	cp $(OUTDIR)/$(MAIN).pdf $(MAIN).pdf
 
 # Auto-compile on save (continuous preview mode)
-watch:
-	$(LATEXMK) -pvc main.tex
+watch: prepare
+	$(LATEXMK) -pvc $(MAIN).tex
 
 # Process bibliography only
 bib:
-	bibtex main
+	bibtex $(OUTDIR)/$(MAIN)
 
 # Clean auxiliary files
 clean:
-	latexmk -c -outdir=build
+	latexmk -c -outdir=$(OUTDIR) $(MAIN).tex
 	rm -f *.bbl *.blg *.aux *.log *.out *.toc *.lof *.lot *.fdb_latexmk *.fls
 
 # Clean everything including PDF
-cleanall: clean
-	rm -f main.pdf
+cleanall:
+	latexmk -C -outdir=$(OUTDIR) $(MAIN).tex
+	rm -f *.bbl *.blg *.aux *.log *.out *.toc *.lof *.lot *.fdb_latexmk *.fls $(MAIN).pdf
